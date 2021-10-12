@@ -1,0 +1,17 @@
+{
+    "name": "eugene-erg/graph",
+    "minimum-stability": "dev",
+    "require": {
+        "ext-json": "*",
+        "php": ">=7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "EugeneErg\\Graph\\": "src/"
+        }
+    },
+    "description": "",
+    "require-dev": {
+
+    }
+}
