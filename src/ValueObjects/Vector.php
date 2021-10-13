@@ -1,4 +1,5 @@
-<?php namespace EugeneErg\Graph\ValueObjects;
+<?php declare(strict_types = 1);
+namespace EugeneErg\Graph\ValueObjects;
 
 use EugeneErg\Graph\ValueObjects\Collections\AbstractCollection;
 use EugeneErg\Graph\ValueObjects\Collections\FloatCollection;

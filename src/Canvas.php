@@ -1,4 +1,5 @@
-<?php namespace EugeneErg\Graphs;
+<?php declare(strict_types = 1);
+namespace EugeneErg\Graphs;
 
 class Canvas
 {

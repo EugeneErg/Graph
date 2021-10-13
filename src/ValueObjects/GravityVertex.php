@@ -1,4 +1,5 @@
-<?php namespace EugeneErg\Graph\ValueObjects;
+<?php declare(strict_types = 1);
+namespace EugeneErg\Graph\ValueObjects;
 
 /**
  * @property-read int[] vertexes

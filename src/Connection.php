@@ -1,4 +1,5 @@
-<?php namespace EugeneErg\Graph;
+<?php declare(strict_types = 1);
+namespace EugeneErg\Graph;
 
 class Connection
 {

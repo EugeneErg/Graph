@@ -1,4 +1,5 @@
-<?php namespace EugeneErg\Graph\ValueObjects\Collections;
+<?php declare(strict_types = 1);
+namespace EugeneErg\Graph\ValueObjects\Collections;
 
 /**
  * @see IntCollection::getProduct()
