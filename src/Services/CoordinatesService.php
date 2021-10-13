@@ -8,7 +8,7 @@ use EugeneErg\Graph\ValueObjects\GravityInterface;
 use EugeneErg\Graph\ValueObjects\Line2D;
 use EugeneErg\Graph\ValueObjects\Topology;
 
-class CoordinatesService
+class CoordinatesService extends AbstractService
 {
     /**
      * @param Topology $topology

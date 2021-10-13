@@ -5,15 +5,8 @@ use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 use EugeneErg\Graph\ValueObjects\Intersection;
 
-class IntersectionService
+class IntersectionService extends AbstractService
 {
-    /* @var CanvasService */
-    private $canvasService;
-
-    public function __construct()
-    {
-        $this->canvasService = new CanvasService();
-    }
     /**
      * @param ClearGraph $branch
      * @param int[] $path
@@ -23,7 +16,7 @@ class IntersectionService
     public function getIntersections(ClearGraph $branch, array $path, array $outerVertexes): array
     {
         $canvas = new Canvas($branch);
-        $this->canvasService->pixels($canvas, $path, 1);
+        CanvasService::instance()->pixels($canvas, $path, 1);
         $color = 1;
         $colors = [];
         $intersections = [];
@@ -40,7 +33,7 @@ class IntersectionService
                     continue;
                 }
 
-                $colors[$color] = $this->canvasService->fill($canvas, $vertexB, ++$color);
+                $colors[$color] = CanvasService::instance()->fill($canvas, $vertexB, ++$color);
             }
         }
 

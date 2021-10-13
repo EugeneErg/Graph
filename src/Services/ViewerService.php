@@ -8,16 +8,8 @@ use EugeneErg\Graph\ValueObjects\Point2D;
 use EugeneErg\Graph\ValueObjects\Polygon;
 use EugeneErg\Graph\ValueObjects\Topology;
 
-class ViewerService
+class ViewerService extends AbstractService
 {
-    /** @var CoordinatesService */
-    private $coordinatesService;
-
-    public function __construct()
-    {
-        $this->coordinatesService = new CoordinatesService();
-    }
-
     private const GRAPH_RADIUS = 200;
     private const VERTEX_RADIUS = 5;
 
@@ -86,7 +78,7 @@ class ViewerService
         int $graphRadius = self::GRAPH_RADIUS,
         int $vertexRadius = self::VERTEX_RADIUS
     ): string {
-        $coordinates = $this->coordinatesService->getCoordinates($topology, $edges, $graphRadius);
+        $coordinates = CoordinatesService::instance()->getCoordinates($topology, $edges, $graphRadius);
 
         return $this->returnTemplate('templates/svg', [
             'coordinates' => $coordinates,

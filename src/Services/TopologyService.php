@@ -4,16 +4,6 @@ namespace EugeneErg\Graph\Services;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 use EugeneErg\Graph\ValueObjects\Topology;
 
-class TopologyService
+class TopologyService extends AbstractService
 {
-    /** @var GraphService */
-    private $graphService;
-    /** @var EdgeService */
-    private $edgeService;
-
-    public function __construct()
-    {
-        $this->graphService = new GraphService();
-        $this->edgeService = new EdgeService();
-    }
 }

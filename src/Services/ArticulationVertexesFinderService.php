@@ -3,14 +3,13 @@ namespace EugeneErg\Graph\Services;
 
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 
-class ArticulationVertexesFinderService
+class ArticulationVertexesFinderService extends AbstractService
 {
     private $children;
     private $result;
     private $number;
     private $index;
     private $graph;
-    private $addIndex;
 
     /**
      * @param ClearGraph $graph
@@ -30,7 +29,6 @@ class ArticulationVertexesFinderService
         $this->result = [];
         $this->number = [];
         $this->index = [];
-        $this->addIndex = [];
         $this->dfs($graph->vertexes[0]);
 
         if ($this->children > 1) {

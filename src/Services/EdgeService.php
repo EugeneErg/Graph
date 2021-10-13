@@ -18,15 +18,8 @@ use EugeneErg\Graph\ValueObjects\Topology;
 use EugeneErg\Graph\ValueObjects\Tree;
 use EugeneErg\Graph\ValueObjects\Trouble;
 
-class EdgeService
+class EdgeService extends AbstractService
 {
-    private $troubleService;
-
-    public function __construct()
-    {
-        $this->troubleService = new TroubleService();
-    }
-
     /**
      * @param Edge $edge
      * @return Edge[]

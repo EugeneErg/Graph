@@ -3,7 +3,7 @@ namespace EugeneErg\Graph\Services;
 
 use EugeneErg\Graph\ValueObjects\Canvas;
 
-class CanvasService
+class CanvasService extends AbstractService
 {
     public function fill(Canvas $canvas, int $vertex, int $color): array
     {

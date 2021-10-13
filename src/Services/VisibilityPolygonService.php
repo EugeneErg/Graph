@@ -10,13 +10,8 @@ use EugeneErg\Graph\ValueObjects\Point2D;
 use EugeneErg\Graph\ValueObjects\Polygon;
 use EugeneErg\Graph\ValueObjects\Ray2D;
 
-class VisibilityPolygonService
+class VisibilityPolygonService extends AbstractService
 {
-    public function __construct()
-    {
-
-    }
-
     public function getVisibilityPolygon(Polygon $polygon, Point2D ...$visors): Polygon
     {
         $polygons = CustomCollection::map(

@@ -11,29 +11,6 @@ use Exception;
 
 class GraphService
 {
-    /* @var CanvasService */
-    private $canvasService;
-    /** @var ArticulationVertexesFinderService */
-    private $articulationVertexesFinderService;
-    /** @var EdgeService */
-    private $edgeService;
-    /** @var IntersectionService */
-    private $intersectionService;
-    /** @var ViewerService */
-    private $viewerService;
-    /** @var TreeService */
-    private $treeService;
-
-    public function __construct()
-    {
-        $this->canvasService = new CanvasService();
-        $this->articulationVertexesFinderService = new ArticulationVertexesFinderService();
-        $this->edgeService = new EdgeService();
-        $this->intersectionService = new IntersectionService();
-        $this->viewerService = new ViewerService();
-        $this->treeService = new TreeService();
-    }
-
     /**
      * @param ClearGraph $graph
      * @return Edge[]
@@ -52,7 +29,7 @@ class GraphService
                 $edges[$number] = $this->splitOnTreeEdges($branch);
             }
 
-            $result[] = $this->edgeService->mergeTree($edges, $tree);
+            $result[] = EdgeService::instance()->mergeTree($edges, $tree);
         }
 
         /*foreach ($trees as $tree) {
@@ -76,7 +53,7 @@ class GraphService
         $result = [];
 
         foreach ($this->splitGraphOnDisconnected($graph) as $graph) {
-            $result[] = $this->treeService->fromConnectionGraph($graph);
+            $result[] = TreeService::instance()->fromConnectionGraph($graph);
         }
 
         return $result;
@@ -333,7 +310,7 @@ class GraphService
         $steps = [];
         static $step = 0;
 
-        $intersections = $this->intersectionService->getIntersections($branch, $path, $outerVertexes);
+        $intersections = IntersectionService::instance()->getIntersections($branch, $path, $outerVertexes);
         $matrix = $this->getIntersectionMatrix($path, $intersections);
 
         /*foreach ($intersections as $number => $intersection) {
@@ -405,7 +382,7 @@ class GraphService
             for ($i = $number + 1; $i < count($intersections); $i++) {
                 $intersectionB = $intersections[$i];
 
-                if ($this->intersectionService->isConflicted($intersectionA, $intersectionB, $path)) {
+                if (IntersectionService::instance()->isConflicted($intersectionA, $intersectionB, $path)) {
                     $matrix[$number][$i] = 1;
                 }
             }

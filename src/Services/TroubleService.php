@@ -7,7 +7,7 @@ use EugeneErg\Graph\ValueObjects\GravityVertex;
 use EugeneErg\Graph\ValueObjects\Solution;
 use EugeneErg\Graph\ValueObjects\Temp\SubGraph;
 
-class TroubleService
+class TroubleService extends AbstractService
 {
     /**
      * @param Solution[] $solutions

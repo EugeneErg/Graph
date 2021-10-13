@@ -5,12 +5,8 @@ use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 use EugeneErg\Graph\ValueObjects\Tree;
 
-class TreeService
+class TreeService extends AbstractService
 {
-    /* @var CanvasService */
-    private $canvasService;
-    /** @var ArticulationVertexesFinderService */
-    private $articulationVertexesFinderService;
     /** @var int[] */
     private $articulationVertex;
     /** @var Canvas */
@@ -18,19 +14,9 @@ class TreeService
     /** @var array */
     private $result;
 
-    public function __construct()
-    {
-        $this->canvasService = new CanvasService();
-        $this->articulationVertexesFinderService = new ArticulationVertexesFinderService();
-    }
-
-    /**
-     * @param ClearGraph $graph
-     * @return Tree
-     */
     public function fromConnectionGraph(ClearGraph $graph): Tree
     {
-        $this->articulationVertex = $this->articulationVertexesFinderService
+        $this->articulationVertex = ArticulationVertexesFinderService::instance()
             ->getArticulationVertexesInConnectedGraph($graph);
 
         if (!count($this->articulationVertex)) {
@@ -71,8 +57,8 @@ class TreeService
                 }
 
                 $result = true;
-                $this->canvasService->pixels($this->canvas, [$vertexA], ++$color);
-                $vertexes = $this->canvasService->fill($this->canvas, $vertexB, $color);
+                CanvasService::instance()->pixels($this->canvas, [$vertexA], ++$color);
+                $vertexes = CanvasService::instance()->fill($this->canvas, $vertexB, $color);
                 $vertexes[$vertexA] = $vertexA;
 
                 if (!$this->split($color)) {
