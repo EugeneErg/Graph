@@ -1,4 +1,4 @@
-<?php namespace EugeneErg\Graphs\ValueObjects;
+<?php namespace EugeneErg\Graph\ValueObjects;
 
 /**
  * @see ClearGraph::setOuterEdgeAttribute()

@@ -1,11 +1,11 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\Canvas;
-use EugeneErg\Graphs\ValueObjects\ClearGraph;
-use EugeneErg\Graphs\ValueObjects\Edge;
-use EugeneErg\Graphs\ValueObjects\Graph;
-use EugeneErg\Graphs\ValueObjects\Intersection;
-use EugeneErg\Graphs\ValueObjects\Tree;
+use EugeneErg\Graph\ValueObjects\Canvas;
+use EugeneErg\Graph\ValueObjects\ClearGraph;
+use EugeneErg\Graph\ValueObjects\Edge;
+use EugeneErg\Graph\ValueObjects\Graph;
+use EugeneErg\Graph\ValueObjects\Intersection;
+use EugeneErg\Graph\ValueObjects\Tree;
 use Exception;
 
 class GraphService

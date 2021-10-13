@@ -1,11 +1,11 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\ClearGraph;
-use EugeneErg\Graphs\ValueObjects\Graph;
-use EugeneErg\Graphs\ValueObjects\GravityInterface;
-use EugeneErg\Graphs\ValueObjects\Point2D;
-use EugeneErg\Graphs\ValueObjects\Polygon;
-use EugeneErg\Graphs\ValueObjects\Topology;
+use EugeneErg\Graph\ValueObjects\ClearGraph;
+use EugeneErg\Graph\ValueObjects\Graph;
+use EugeneErg\Graph\ValueObjects\GravityInterface;
+use EugeneErg\Graph\ValueObjects\Point2D;
+use EugeneErg\Graph\ValueObjects\Polygon;
+use EugeneErg\Graph\ValueObjects\Topology;
 
 class ViewerService
 {

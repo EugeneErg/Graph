@@ -1,6 +1,6 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\Canvas;
+use EugeneErg\Graph\ValueObjects\Canvas;
 
 class CanvasService
 {

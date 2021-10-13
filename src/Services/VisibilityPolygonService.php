@@ -1,13 +1,13 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\Angle;
-use EugeneErg\Graphs\ValueObjects\Collections\CustomCollection;
-use EugeneErg\Graphs\ValueObjects\Collections\ScalarCollection;
-use EugeneErg\Graphs\ValueObjects\Line;
-use EugeneErg\Graphs\ValueObjects\Line2D;
-use EugeneErg\Graphs\ValueObjects\Point2D;
-use EugeneErg\Graphs\ValueObjects\Polygon;
-use EugeneErg\Graphs\ValueObjects\Ray2D;
+use EugeneErg\Graph\ValueObjects\Angle;
+use EugeneErg\Graph\ValueObjects\Collections\CustomCollection;
+use EugeneErg\Graph\ValueObjects\Collections\ScalarCollection;
+use EugeneErg\Graph\ValueObjects\Line;
+use EugeneErg\Graph\ValueObjects\Line2D;
+use EugeneErg\Graph\ValueObjects\Point2D;
+use EugeneErg\Graph\ValueObjects\Polygon;
+use EugeneErg\Graph\ValueObjects\Ray2D;
 
 class VisibilityPolygonService
 {

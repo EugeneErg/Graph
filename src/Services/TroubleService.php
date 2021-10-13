@@ -1,10 +1,10 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\Arc;
-use EugeneErg\Graphs\ValueObjects\Edge;
-use EugeneErg\Graphs\ValueObjects\GravityVertex;
-use EugeneErg\Graphs\ValueObjects\Solution;
-use EugeneErg\Graphs\ValueObjects\Temp\SubGraph;
+use EugeneErg\Graph\ValueObjects\Arc;
+use EugeneErg\Graph\ValueObjects\Edge;
+use EugeneErg\Graph\ValueObjects\GravityVertex;
+use EugeneErg\Graph\ValueObjects\Solution;
+use EugeneErg\Graph\ValueObjects\Temp\SubGraph;
 
 class TroubleService
 {

@@ -1,7 +1,7 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\ClearGraph;
-use EugeneErg\Graphs\ValueObjects\Topology;
+use EugeneErg\Graph\ValueObjects\ClearGraph;
+use EugeneErg\Graph\ValueObjects\Topology;
 
 class TopologyService
 {

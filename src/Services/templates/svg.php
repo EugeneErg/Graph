@@ -4,7 +4,7 @@
  * @var int $radius
  * @var int $diameter
  * @var int $graphRadius
- * @var EugeneErg\Graphs\ValueObjects\Graph $graph
+ * @var EugeneErg\Graph\ValueObjects\Graph $graph
  * @var string $caption
  */
 ?>

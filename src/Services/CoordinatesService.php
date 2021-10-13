@@ -1,11 +1,11 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\Arc;
-use EugeneErg\Graphs\ValueObjects\Point2D;
-use EugeneErg\Graphs\ValueObjects\Edge;
-use EugeneErg\Graphs\ValueObjects\GravityInterface;
-use EugeneErg\Graphs\ValueObjects\Line2D;
-use EugeneErg\Graphs\ValueObjects\Topology;
+use EugeneErg\Graph\ValueObjects\Arc;
+use EugeneErg\Graph\ValueObjects\Point2D;
+use EugeneErg\Graph\ValueObjects\Edge;
+use EugeneErg\Graph\ValueObjects\GravityInterface;
+use EugeneErg\Graph\ValueObjects\Line2D;
+use EugeneErg\Graph\ValueObjects\Topology;
 
 class CoordinatesService
 {

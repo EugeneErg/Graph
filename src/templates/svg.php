@@ -5,7 +5,7 @@
  * @var int $diameter
  * @var int $graphRadius
  * @var string[] $captions
- * @var \EugeneErg\Graphs\AdjacencyMatrix $matrix
+ * @var \EugeneErg\Graph\AdjacencyMatrix $matrix
  */
 ?>
 <svg version="1.1"

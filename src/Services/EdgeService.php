@@ -1,21 +1,21 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\Arc;
-use EugeneErg\Graphs\ValueObjects\Solution;
-use EugeneErg\Graphs\ValueObjects\Edge;
-use EugeneErg\Graphs\ValueObjects\Gravity;
-use EugeneErg\Graphs\ValueObjects\GravityInterface;
-use EugeneErg\Graphs\ValueObjects\GravityVertex;
-use EugeneErg\Graphs\ValueObjects\Replacement;
-use EugeneErg\Graphs\ValueObjects\Temp\Combine;
-use EugeneErg\Graphs\ValueObjects\Temp\Path;
-use EugeneErg\Graphs\ValueObjects\Temp\Problem;
-use EugeneErg\Graphs\ValueObjects\Temp\Replace;
-use EugeneErg\Graphs\ValueObjects\Temp\Step;
-use EugeneErg\Graphs\ValueObjects\Temp\SubGraph;
-use EugeneErg\Graphs\ValueObjects\Topology;
-use EugeneErg\Graphs\ValueObjects\Tree;
-use EugeneErg\Graphs\ValueObjects\Trouble;
+use EugeneErg\Graph\ValueObjects\Arc;
+use EugeneErg\Graph\ValueObjects\Solution;
+use EugeneErg\Graph\ValueObjects\Edge;
+use EugeneErg\Graph\ValueObjects\Gravity;
+use EugeneErg\Graph\ValueObjects\GravityInterface;
+use EugeneErg\Graph\ValueObjects\GravityVertex;
+use EugeneErg\Graph\ValueObjects\Replacement;
+use EugeneErg\Graph\ValueObjects\Temp\Combine;
+use EugeneErg\Graph\ValueObjects\Temp\Path;
+use EugeneErg\Graph\ValueObjects\Temp\Problem;
+use EugeneErg\Graph\ValueObjects\Temp\Replace;
+use EugeneErg\Graph\ValueObjects\Temp\Step;
+use EugeneErg\Graph\ValueObjects\Temp\SubGraph;
+use EugeneErg\Graph\ValueObjects\Topology;
+use EugeneErg\Graph\ValueObjects\Tree;
+use EugeneErg\Graph\ValueObjects\Trouble;
 
 class EdgeService
 {

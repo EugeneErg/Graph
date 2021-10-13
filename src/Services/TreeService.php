@@ -1,8 +1,8 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\Canvas;
-use EugeneErg\Graphs\ValueObjects\ClearGraph;
-use EugeneErg\Graphs\ValueObjects\Tree;
+use EugeneErg\Graph\ValueObjects\Canvas;
+use EugeneErg\Graph\ValueObjects\ClearGraph;
+use EugeneErg\Graph\ValueObjects\Tree;
 
 class TreeService
 {

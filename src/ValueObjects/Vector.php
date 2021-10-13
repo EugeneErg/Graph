@@ -1,7 +1,7 @@
-<?php namespace EugeneErg\Graphs\ValueObjects;
+<?php namespace EugeneErg\Graph\ValueObjects;
 
-use EugeneErg\Graphs\ValueObjects\Collections\AbstractCollection;
-use EugeneErg\Graphs\ValueObjects\Collections\FloatCollection;
+use EugeneErg\Graph\ValueObjects\Collections\AbstractCollection;
+use EugeneErg\Graph\ValueObjects\Collections\FloatCollection;
 
 /**
  * @method bool offsetExists(int $offset)

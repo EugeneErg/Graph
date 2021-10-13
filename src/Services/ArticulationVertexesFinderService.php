@@ -1,6 +1,6 @@
-<?php namespace EugeneErg\Graphs\Services;
+<?php namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graphs\ValueObjects\ClearGraph;
+use EugeneErg\Graph\ValueObjects\ClearGraph;
 
 class ArticulationVertexesFinderService
 {

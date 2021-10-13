@@ -1,6 +1,6 @@
-<?php namespace EugeneErg\Graphs\ValueObjects\Temp;
+<?php namespace EugeneErg\Graph\ValueObjects\Temp;
 
-use EugeneErg\Graphs\ValueObjects\Edge;
+use EugeneErg\Graph\ValueObjects\Edge;
 
 /**
  * @see Problem::__get()

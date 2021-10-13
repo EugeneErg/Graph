@@ -1,4 +1,4 @@
-<?php namespace EugeneErg\Graphs\ValueObjects\Temp;
+<?php namespace EugeneErg\Graph\ValueObjects\Temp;
 
 class Step extends AbstractTempDto
 {

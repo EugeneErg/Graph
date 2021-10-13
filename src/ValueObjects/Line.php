@@ -1,6 +1,6 @@
-<?php namespace EugeneErg\Graphs\ValueObjects;
+<?php namespace EugeneErg\Graph\ValueObjects;
 
-use EugeneErg\Graphs\ValueObjects\Collections\IntCollection;
+use EugeneErg\Graph\ValueObjects\Collections\IntCollection;
 
 /**
  * @see Line::getPointA()

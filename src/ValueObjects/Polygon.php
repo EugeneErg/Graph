@@ -1,6 +1,6 @@
-<?php namespace EugeneErg\Graphs\ValueObjects;
+<?php namespace EugeneErg\Graph\ValueObjects;
 
-use EugeneErg\Graphs\ValueObjects\Collections\AbstractCollection;
+use EugeneErg\Graph\ValueObjects\Collections\AbstractCollection;
 
 /**
  * @method Point2D current()
