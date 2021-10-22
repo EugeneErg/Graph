@@ -7,9 +7,14 @@ namespace EugeneErg\Graph\ValueObjects;
  * @see Edge::getParentAttribute()
  * @property-read Edge $parent
  */
-class Edge extends AbstractValueObjectMutable
+class Edge extends AbstractValueObject
 {
+    /** @var null|self */
     private $parent = null;
+    /** @var int[] */
+    private $vertexes;
+    /** @var Edge[] */
+    private $children;
 
     /**
      * Edge constructor.
@@ -18,7 +23,8 @@ class Edge extends AbstractValueObjectMutable
      */
     public function __construct(array $vertexes, array $children = [])
     {
-        parent::__construct($vertexes, $children);
+        $this->vertexes = $vertexes;
+        $this->children = $children;
 
         foreach ($children as $child) {
             $child->parent = $this;
@@ -55,7 +61,6 @@ class Edge extends AbstractValueObjectMutable
         return $result;
     }
 
-
     public function findVertex(int $vertex): ?int
     {
         $result = array_search($vertex, $this->vertexes, true);
@@ -71,8 +76,19 @@ class Edge extends AbstractValueObjectMutable
         ));
     }
 
-    protected function getParentAttribute(): ?self
+    protected function getParent(): ?self
     {
         return $this->parent;
+    }
+
+    /** @return Edge[] */
+    public function getChildren(): array
+    {
+        return $this->children;
+    }
+
+    public function toArray(): array
+    {
+        return $this->vertexes;
     }
 }

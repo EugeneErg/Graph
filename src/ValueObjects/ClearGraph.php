@@ -1,6 +1,12 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
+use EugeneErg\Graph\Collections\Collection;
+use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntegerMatrix;
+use EugeneErg\Graph\Services\Assert\Argument;
+use EugeneErg\Graph\Services\AssertService;
+
 /**
  * @see ClearGraph::setOuterEdgeAttribute()
  * @method void setOuterEdge(array $path)
@@ -11,19 +17,18 @@ namespace EugeneErg\Graph\ValueObjects;
  */
 class ClearGraph extends Graph
 {
-    public function __construct(array $connections, ?array $vertexes = null)
+    public function __construct(IntegerMatrix $connections, ?array $vertexes = null)
     {
-        $clearConnections = [];
+        $connections->foreach(function (int $value, int $vertexA, int $vertexB) use ($connections): void {
+            AssertService::instance()->equal(
+                new Argument($value, 1, "connections[{$vertexA}][{$vertexB}]"),
+                new Argument($connections[$vertexB][$vertexA] ?? null, 1, "connections[{$vertexB}][{$vertexA}]"),
+                null,
+                [ClearGraph::class, '__construct']
+            );
+        }, 2);
 
-        foreach ($connections as $vertexA => $connection) {
-            foreach ($connection as $vertexB => $value) {
-                if ($value !== null) {
-                    $clearConnections[$vertexA][$vertexB] = $clearConnections[$vertexB][$vertexA] = 1;
-                }
-            }
-        }
-
-        parent::__construct($clearConnections, $vertexes);
+        parent::__construct($connections, $vertexes);
     }
 
     public function setOuterEdgeAttribute(object $attributes, array $path): void

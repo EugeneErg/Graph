@@ -1,6 +1,7 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Services;
 
+use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 use EugeneErg\Graph\ValueObjects\Tree;
@@ -57,7 +58,7 @@ class TreeService extends AbstractService
                 }
 
                 $result = true;
-                CanvasService::instance()->pixels($this->canvas, [$vertexA], ++$color);
+                CanvasService::instance()->pixels($this->canvas, new IntegerCollection([$vertexA]), ++$color);
                 $vertexes = CanvasService::instance()->fill($this->canvas, $vertexB, $color);
                 $vertexes[$vertexA] = $vertexA;
 

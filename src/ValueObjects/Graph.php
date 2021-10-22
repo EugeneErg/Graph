@@ -1,6 +1,10 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
+use EugeneErg\Graph\Collections\Collection;
+use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntegerMatrix;
+
 /**
  * @property-read int[] $vertexes
  * @property-read int[][] $connections
@@ -17,11 +21,15 @@ class Graph extends AbstractValueObjectMutable
      * @param int[][] $connections
      * @param int[] $vertexes
      */
-    public function __construct(array $connections, ?array $vertexes = null)
+    public function __construct(IntegerMatrix $connections, ?array $vertexes = null)
     {
+        $clearConnections = Collection::map(function (IntegerCollection $integerCollection): array {
+            return $integerCollection->toArray();
+        }, $connections)->toArray();
+
         parent::__construct(
-            $connections,
-            $vertexes ?? array_keys(array_replace($connections, ...$connections))
+            $clearConnections,
+            $vertexes ?? array_keys(array_replace($clearConnections, ...$clearConnections))
         );
     }
 
@@ -51,7 +59,7 @@ class Graph extends AbstractValueObjectMutable
 
     public function createSupGraph(int ...$vertexes): Graph
     {
-        $connections = [];
+        $connections = new IntegerMatrix();
 
         foreach ($vertexes as $vertexA) {
             foreach ($vertexes as $vertexB) {

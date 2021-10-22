@@ -1,20 +1,20 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Services;
 
+use EugeneErg\Graph\Collections\BoolCollection;
+use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntersectionCollection;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 use EugeneErg\Graph\ValueObjects\Intersection;
 
 class IntersectionService extends AbstractService
 {
-    /**
-     * @param ClearGraph $branch
-     * @param int[] $path
-     * @param bool[] $outerVertexes
-     * @return Intersection[]
-     */
-    public function getIntersections(ClearGraph $branch, array $path, array $outerVertexes): array
-    {
+    public function getIntersections(
+        ClearGraph $branch,
+        IntegerCollection $path,
+        BoolCollection $outerVertexes
+    ): IntersectionCollection {
         $canvas = new Canvas($branch);
         CanvasService::instance()->pixels($canvas, $path, 1);
         $color = 1;
@@ -43,7 +43,7 @@ class IntersectionService extends AbstractService
             $outerColors[$canvas->getColor($outerVertex)] = true;
         }
 
-        $result = [];
+        $result = new IntersectionCollection();
 
         foreach ($colors as $color => $vertexes) {
             $result[] = new Intersection(
@@ -56,8 +56,11 @@ class IntersectionService extends AbstractService
         return $result;
     }
 
-    public function isConflicted(Intersection $intersectionA, Intersection $intersectionB, array $path): bool
-    {
+    public function isConflicted(
+        Intersection $intersectionA,
+        Intersection $intersectionB,
+        IntegerCollection $path
+    ): bool {
         $can = 0;
         $step = 0;
 

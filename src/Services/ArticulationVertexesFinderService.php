@@ -1,38 +1,37 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Services;
 
+use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
+use EugeneErg\Graph\ValueObjects\Graph;
 
 class ArticulationVertexesFinderService extends AbstractService
 {
+    /** @var int */
     private $children;
+    /** @var IntegerCollection */
     private $result;
+    /** @var IntegerCollection */
     private $number;
+    /** @var IntegerCollection */
     private $index;
+    /** @var Graph */
     private $graph;
 
-    /**
-     * @param ClearGraph $graph
-     * @return int[]
-     */
-    public function getArticulationVertexesInConnectedGraph(ClearGraph $graph): array
+    public function getArticulationVertexesInConnectedGraph(ClearGraph $graph): IntegerCollection
     {
-        $this->refresh($graph);
+        $this->prepare($graph);
+        $this->refresh();
 
         return $this->result;
     }
 
-    private function refresh(ClearGraph $graph): void
+    private function refresh(): void
     {
-        $this->graph = $graph;
-        $this->children = 0;
-        $this->result = [];
-        $this->number = [];
-        $this->index = [];
-        $this->dfs($graph->vertexes[0]);
+        $this->dfs($this->graph->vertexes[0]);
 
         if ($this->children > 1) {
-            $this->result[$graph->vertexes[0]] = $graph->vertexes[0];
+            $this->result[$this->graph->vertexes[0]] = $this->graph->vertexes[0];
         }
     }
 
@@ -60,5 +59,14 @@ class ArticulationVertexesFinderService extends AbstractService
                 }
             }
         }
+    }
+
+    private function prepare(ClearGraph $graph): void
+    {
+        $this->graph = $graph;
+        $this->children = 0;
+        $this->result = new IntegerCollection();
+        $this->number = new IntegerCollection();
+        $this->index = new IntegerCollection();
     }
 }

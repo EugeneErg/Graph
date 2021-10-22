@@ -1,18 +1,20 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Services;
 
+use EugeneErg\Graph\Collections\BoolCollection;
+use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\ValueObjects\Canvas;
 
 class CanvasService extends AbstractService
 {
-    public function fill(Canvas $canvas, int $vertex, int $color): array
+    public function fill(Canvas $canvas, int $vertex, int $color): IntegerCollection
     {
         $oldColor = $canvas->getColor($vertex);
         $canvas->addVertex($vertex, $color);
-        $result[$vertex] = $vertex;
-        reset($result);
+        $result = new IntegerCollection([$vertex => $vertex]);
+        $result->rewind();
 
-        while ($vertex !== false) {
+        while ($vertex !== null) {
             foreach ($canvas->graph->getRow($vertex) as $connectionVertex => $value) {
                 if ($canvas->getColor($connectionVertex) === $oldColor) {
                     $canvas->addVertex($connectionVertex, $color);
@@ -20,13 +22,13 @@ class CanvasService extends AbstractService
                 }
             }
 
-            $vertex = next($result);
+            $vertex = $result->next();
         }
 
         return $result;
     }
 
-    public function pixels(Canvas $canvas, array $vertexes, int $color): void
+    public function pixels(Canvas $canvas, IntegerCollection $vertexes, int $color): void
     {
         foreach ($vertexes as $vertex) {
             $canvas->addVertex($vertex, $color);
@@ -34,15 +36,15 @@ class CanvasService extends AbstractService
         }
     }
 
-    public function incFill(Canvas $canvas, int $vertex, int $color): array
+    public function incFill(Canvas $canvas, int $vertex, int $color): IntegerCollection
     {
         $oldColor = $canvas->getColor($vertex);
         $canvas->addVertex($vertex, $color);
-        $result[$vertex] = $vertex;
-        reset($result);
-        $connect = [];
+        $result = new IntegerCollection([$vertex => $vertex]);
+        $result->rewind();
+        $connect = new BoolCollection();
 
-        while ($vertex !== false) {
+        while ($vertex !== null) {
             if (!isset($connect[$vertex])) {
                 foreach ($canvas->graph->getRow($vertex) as $connectionVertex => $value) {
                     if ($canvas->getColor($connectionVertex) === $oldColor) {
@@ -58,7 +60,7 @@ class CanvasService extends AbstractService
                 }
             }
 
-            $vertex = next($result);
+            $vertex = $result->next();
         }
 
         return $result;

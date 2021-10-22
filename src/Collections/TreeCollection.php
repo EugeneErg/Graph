@@ -2,6 +2,7 @@
 
 namespace EugeneErg\Graph\Collections;
 
+use EugeneErg\Graph\Services\AssertService;
 use EugeneErg\Graph\ValueObjects\Tree;
 
 /**
@@ -9,13 +10,15 @@ use EugeneErg\Graph\ValueObjects\Tree;
  * @method Tree|null current()
  * @method Tree|null next()
  * @method Tree|null rewind()
- * @method __construct(Tree[] $records)
+ * @method __construct(Tree[] $items)
  * @method Tree[] toArray()
  */
 class TreeCollection extends AbstractCollection
 {
     public static function isValidElement($value): bool
     {
-        return $value instanceof Tree;
+        AssertService::instance()->type(Tree::class, $value);
+
+        return true;
     }
 }
