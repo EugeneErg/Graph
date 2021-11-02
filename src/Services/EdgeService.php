@@ -68,7 +68,7 @@ class EdgeService extends AbstractService
             $lastNumber += count($edgeMatrix[$branch]);
         }
 
-        $edgeLists = EdgeCollection::merge(...$edgeMatrix);
+        $edgeLists = EdgeCollection::fromMerge(...$edgeMatrix);
 
         if (count($addToEdgeList)) {
             $edgeLists->push(...$addToEdgeList);
@@ -104,12 +104,12 @@ class EdgeService extends AbstractService
          * $edgeMap[У какой ветки][какая вершина][есть в каком ребре] = ребро
          * $edgeLists[] - все существующие ребра
          */
-        $connections = new IntegerCollection($graph->getRow($root));
+        $connections = $graph->connections[$root] ?? new IntegerCollection();
 
         while (null !== $vertex = $connections->rewind()) {
             $branch = $connections->key();
             unset($connections[$branch]);
-            $connections = array_replace($connections, $graph->getRow($branch));
+            $connections = array_replace($connections, $graph->connections[$branch] ?? []);
             $edgeNumberA = $steps[$step++] ?? $edgeMap[$root][$vertex]->getRandomKey();
             var_dump('edgeNumberA', $edgeNumberA);
             $edgeA = $edgeMap[$root][$vertex][$edgeNumberA];

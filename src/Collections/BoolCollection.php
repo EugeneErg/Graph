@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace EugeneErg\Graph\Collections;
 
-use EugeneErg\Graph\Services\AssertService;
-
 /**
  * @method bool offsetGet(int|string $offset)
  * @method bool|null current()
@@ -13,10 +11,5 @@ use EugeneErg\Graph\Services\AssertService;
  */
 class BoolCollection extends AbstractCollection
 {
-    public static function isValidElement($value): bool
-    {
-        AssertService::instance()->type('bool', $value);
-
-        return true;
-    }
+    protected const ELEMENT_CLASS = 'bool';
 }

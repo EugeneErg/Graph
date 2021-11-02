@@ -1,7 +1,6 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Collections;
 
-use EugeneErg\Graph\Services\AssertService;
 use EugeneErg\Graph\ValueObjects\Vertex;
 
 /**
@@ -14,10 +13,5 @@ use EugeneErg\Graph\ValueObjects\Vertex;
  */
 class VertexesCollection extends AbstractCollection
 {
-    public static function isValidElement($value): bool
-    {
-        AssertService::instance()->type(Vertex::class, $value);
-
-        return true;
-    }
+    protected const ELEMENT_CLASS = Vertex::class;
 }

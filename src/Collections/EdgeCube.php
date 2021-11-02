@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace EugeneErg\Graph\Collections;
 
-use EugeneErg\Graph\Services\AssertService;
-
 /**
  * @method EdgeMatrix offsetGet(int|string $offset)
  * @method EdgeMatrix|null current()
@@ -13,15 +11,5 @@ use EugeneErg\Graph\Services\AssertService;
  */
 class EdgeCube extends AbstractMatrix
 {
-    public static function isValidElement($value): bool
-    {
-        AssertService::instance()->type(EdgeMatrix::class, $value);
-
-        return true;
-    }
-
-    protected function createEmptyElement($key): EdgeMatrix
-    {
-        return new EdgeMatrix();
-    }
+    protected const ELEMENT_CLASS = EdgeMatrix::class;
 }

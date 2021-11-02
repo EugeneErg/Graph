@@ -29,8 +29,6 @@ class GraphService extends AbstractService
         $trees = $this->convertToTrees($graph);
         $result = new EdgeMatrix();
 
-        var_dump($trees);die;
-
         foreach ($trees as $tree) {
             $edges = new EdgeCollection();
 
@@ -49,12 +47,12 @@ class GraphService extends AbstractService
             }
         }*/
 
-        return EdgeCollection::merge(...$result);
+        return EdgeCollection::fromMerge(...$result);
     }
 
     private function convertToTrees(ClearGraph $graph): TreeCollection
     {
-        return TreeCollection::map(function (ClearGraph $graph): Tree {
+        return TreeCollection::fromMap(function (ClearGraph $graph): Tree {
             return TreeService::instance()->fromConnectionGraph($graph);
         }, $this->splitGraphOnDisconnected($graph));
     }
@@ -69,7 +67,7 @@ class GraphService extends AbstractService
                 ->getArticulationVertexesInConnectedGraph($connectedGraphs);
         }
 
-        return count($result) ? IntegerCollection::replace(...$result) : new IntegerCollection();
+        return count($result) ? IntegerCollection::fromReplace(...$result) : new IntegerCollection();
     }
 
     public function splitGraphOnDisconnected(ClearGraph $graph): GraphCollection
@@ -79,22 +77,24 @@ class GraphService extends AbstractService
         }
 
         $canvas = new Canvas($graph);
-        $operations = new IntegerMatrix();
-
-        foreach ($graph->vertexes as $vertex) {
-            if ($canvas->getColor($vertex) === 0) {
-                $operations[] = CanvasService::instance()->fill($canvas, $vertex, 1);
-            }
-        }
+        $operations = IntegerMatrix::fromForeach(
+            $graph->vertexes,
+            function (int $vertex) use ($canvas): ?IntegerCollection {
+                return $canvas->getColor($vertex) === 0
+                    ? CanvasService::instance()->fill($canvas, $vertex, 1)
+                    : null;
+            },
+            1,
+            true
+        );
 
         if ($operations->count() === 1) {
             return new GraphCollection([$graph]);
         }
 
-        return GraphCollection::map(function(IntegerCollection $operation) use ($graph): Graph {
-            /** @var int[] $operation */
-            return $graph->createSupGraph(...$operation);
-        }, $operations);
+        return GraphCollection::fromMap(function(IntegerCollection $operation) use ($graph): Graph {
+            return $graph->createSupGraph($operation);
+        }, false, $operations);
     }
 
     private function splitOnTreeEdges(ClearGraph $branch, ?IntegerCollection $outerEdge = null): Edge
@@ -111,9 +111,9 @@ class GraphService extends AbstractService
         $edgeVertexesKey = $steps[$step++] ?? array_rand($branch->vertexes);
         var_dump('edgeVertexesKey', $edgeVertexesKey);
         $edgeVertexes = $hasOuter
-            ? IntegerCollection::flip($outerEdge)
+            ? IntegerCollection::fromFlip($outerEdge)
             : new IntegerCollection([$branch->vertexes[$edgeVertexesKey] => 0]);
-        $outerVertexes = BoolCollection::map(function (): bool {return true;}, $edgeVertexes);
+        $outerVertexes = BoolCollection::fromMap(function (): bool {return true;}, $edgeVertexes);
         $resultChildren = [];
         $first = !$hasOuter;
         $needOuter = false;
@@ -122,7 +122,7 @@ class GraphService extends AbstractService
         do {
             foreach ($edgeVertexes as $vertexA => $v) {
                 unset($edgeVertexes[$vertexA]);
-                foreach ($branch->getRow($vertexA) as $vertexB => $value) {
+                foreach ($branch->connections[$vertexA] ?? [] as $vertexB => $value) {
                     if (
                         ($value !== 1 || $needOuter)
                         && ($value !== 2 || !$needOuter)
@@ -141,7 +141,7 @@ class GraphService extends AbstractService
                     }
 
                     foreach ($path as $pos => $vertex) {
-                        if ($branch->getValue($vertexA, $vertex) === 1 && $pos > 1) {
+                        if (($branch->connections[$vertexA][$vertex] ?? null) === 1 && $pos > 1) {
                             $path->splice($pos + 1);
 
                             break;
@@ -156,7 +156,7 @@ class GraphService extends AbstractService
                     }
 
                     $first = false;
-                    $flipPath = IntegerCollection::flip($path);
+                    $flipPath = IntegerCollection::fromFlip($path);
 
                     if (!$needOuter || $hasOuter) {
                         if (count($innerVertexes) === 0) {
@@ -164,7 +164,7 @@ class GraphService extends AbstractService
                             //echo '<h3>path is new edge</h3>';;
                         } else {
                             /** @var ClearGraph $graph */
-                            $graph = $branch->createSupGraph(...$path->toArray(), ...$innerVertexes);
+                            $graph = $branch->createSupGraph(IntegerCollection::fromMerge($path, $innerVertexes));
                             $graph->setOuterEdge($path->toArray());
                             $resultChildren[] = $this->splitOnTreeEdges($graph, $path);
                         }
@@ -201,19 +201,19 @@ class GraphService extends AbstractService
     public function findShortEdge(ClearGraph $graph, int $vertexA, int $vertexB, bool $first = false): IntegerCollection
     {
         if ($first) {
-            $graph->unsetValue($vertexB, $vertexA);
+            unset($graph->connections[$vertexB][$vertexA]);
         } else {
-            foreach ($graph->getRow($vertexA) as $vertex => $value) {
+            foreach ($graph->connections[$vertexA] ?? [] as $vertex => $value) {
                 if ($value === 1) {
-                    $graph->unsetValue($vertex, $vertexA);
+                    unset($graph->connections[$vertex][$vertexA]);
                 }
             }
         }
 
         $result = $this->findShortPath($graph, $vertexA, $vertexB);
 
-        foreach ($graph->getRow($vertexA) as $vertex => $value) {
-            $graph->setValue($vertex, $vertexA, $value);
+        foreach ($graph->connections[$vertexA] ?? [] as $vertex => $value) {
+            $graph->connections[$vertex][$vertexA] = $value;
         }
 
         return $result;
@@ -231,7 +231,7 @@ class GraphService extends AbstractService
             $innerVertexes[] = $intersection->vertexes;
         }
 
-        return count($innerVertexes) ? IntegerCollection::merge(...$innerVertexes) : new IntegerCollection();
+        return count($innerVertexes) ? IntegerCollection::fromMerge(...$innerVertexes) : new IntegerCollection();
     }
 
     private function findShortPath(Graph $graph, int $vertexA, int $vertexB): ?IntegerCollection
@@ -245,14 +245,14 @@ class GraphService extends AbstractService
                 $currentValue = !empty($values[$currentVertex]);
                 unset($values[$currentVertex]);
 
-                if ($graph->hasConnection($currentVertex, $vertexA)) {
+                if (isset($graph->connections[$currentVertex][$vertexA])) {
                     CanvasService::instance()->pixels($canvas, new IntegerCollection([$vertexA]), 1);
                     $steps[$step + 1][$vertexA] = $currentVertex;
 
                     break(2);
                 }
 
-                foreach ($graph->getRow($currentVertex) as $nextVertex => $value) {
+                foreach ($graph->connections[$currentVertex] ?? [] as $nextVertex => $value) {
                     if (
                         $canvas->getColor($nextVertex) === 0
                         && (
@@ -326,7 +326,7 @@ class GraphService extends AbstractService
             $newKnowns = [];
 
             foreach ($knowns as $vertexA => $isOuter) {
-                foreach ($matrix->getRow($vertexA) as $vertexB => $value) {
+                foreach ($matrix->connections[$vertexA] ?? [] as $vertexB => $value) {
                     if (isset($unknowns[$vertexB])) {
                         $unknowns[$vertexB]->isOuter = !$isOuter;
                         $newKnowns[$vertexB] = !$isOuter;
@@ -372,6 +372,6 @@ class GraphService extends AbstractService
             }
         }
 
-        return new ClearGraph($matrix, IntegerCollection::keys($intersections)->toArray());
+        return new ClearGraph($matrix, IntegerCollection::fromKeys($intersections)->toArray());
     }
 }

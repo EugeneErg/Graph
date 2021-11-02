@@ -15,7 +15,7 @@ class CanvasService extends AbstractService
         $result->rewind();
 
         while ($vertex !== null) {
-            foreach ($canvas->graph->getRow($vertex) as $connectionVertex => $value) {
+            foreach ($canvas->graph->connections[$vertex] ?? [] as $connectionVertex => $value) {
                 if ($canvas->getColor($connectionVertex) === $oldColor) {
                     $canvas->addVertex($connectionVertex, $color);
                     $result[$connectionVertex] = $connectionVertex;
@@ -46,7 +46,7 @@ class CanvasService extends AbstractService
 
         while ($vertex !== null) {
             if (!isset($connect[$vertex])) {
-                foreach ($canvas->graph->getRow($vertex) as $connectionVertex => $value) {
+                foreach ($canvas->graph->connections[$vertex] ?? [] as $connectionVertex => $value) {
                     if ($canvas->getColor($connectionVertex) === $oldColor) {
                         $canvas->addVertex($connectionVertex, $color);
                         $result[$connectionVertex] = $connectionVertex;

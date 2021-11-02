@@ -4,89 +4,57 @@ namespace EugeneErg\Graph\ValueObjects;
 use EugeneErg\Graph\Collections\Collection;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
+use EugeneErg\Graph\Services\Assert\Argument;
+use EugeneErg\Graph\Services\AssertService;
 
 /**
- * @property-read int[] $vertexes
- * @property-read int[][] $connections
- * @see Graph::setValueAttribute()
- * @method void setValue(int $vertexA, int $vertexB, int $value)
- * @see Graph::unsetValueAttribute()
- * @method int|null unsetValue(int $vertexA, int $vertexB)
- * @see Graph::addVertexAttribute()
- * @method int addVertex(int $vertex)
+ * @see Graph::getVertexes()
+ * @property-read IntegerCollection $vertexes
+ * @see Graph::getConnections()
+ * @property-read IntegerMatrix $connections
  */
-class Graph extends AbstractValueObjectMutable
+class Graph extends AbstractValueObject
 {
-    /**
-     * @param int[][] $connections
-     * @param int[] $vertexes
-     */
-    public function __construct(IntegerMatrix $connections, ?array $vertexes = null)
-    {
-        $clearConnections = Collection::map(function (IntegerCollection $integerCollection): array {
-            return $integerCollection->toArray();
-        }, $connections)->toArray();
+    /** @var IntegerMatrix */
+    private $connections;
+    /** @var IntegerCollection  */
+    private $vertexes;
 
-        parent::__construct(
-            $clearConnections,
-            $vertexes ?? array_keys(array_replace($clearConnections, ...$clearConnections))
+    public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes)
+    {
+        $this->connections = $connections;
+        $realVertex = IntegerCollection::fromKeys(
+            Collection::fromReplace(false, $this->connections, ...$this->connections)
         );
-    }
 
-    public function hasConnection(int $vertexA, int $vertexB, bool $considerDirected = true): bool
-    {
-        return isset($this->connections[$vertexA][$vertexB])
-            || (!$considerDirected && isset($this->connections[$vertexB][$vertexA]));
-    }
-
-    public function getRow(int $vertex): array
-    {
-        return $this->connections[$vertex] ?? [];
-    }
-
-    public function getValue(int $vertexA, int $vertexB): ?int
-    {
-        return $this->connections[$vertexA][$vertexB] ?? null;
-    }
-
-    public function addVertexAttribute(object $attributes, int $vertex): int
-    {
-        $result = count($attributes->vertexes);
-        $attributes->vertexes[] = $vertex;
-
-        return $result;
-    }
-
-    public function createSupGraph(int ...$vertexes): Graph
-    {
-        $connections = new IntegerMatrix();
-
-        foreach ($vertexes as $vertexA) {
-            foreach ($vertexes as $vertexB) {
-                $value = $this->getValue($vertexA, $vertexB);
-
-                if ($value !== null) {
-                    $connections[$vertexA][$vertexB] = $value;
-                }
-            }
+        if ($vertexes !== null) {
+            $difference = $realVertex->difference($vertexes);
+            AssertService::instance()->equals(
+                true,
+                new Argument($difference->isEmpty(), 2, 'vertexes'),
+                'Does not contain vertices ' . $difference->implode(',')
+                . ' present in ' . new Argument($connections, 1, 'connections'),
+                [Graph::class, '__construct']
+            );
         }
 
-        $class = get_class($this);
-
-        return new $class($connections, $vertexes);
+        $this->vertexes = $vertexes ?? $realVertex;
     }
 
-    public function unsetValueAttribute(object $attributes, int $vertexA, int $vertexB): ?int
+    public function createSupGraph(IntegerCollection $vertexes): Graph
     {
-        $result = $attributes->connections[$vertexA][$vertexB] ?? null;
-        unset($attributes->connections[$vertexA][$vertexB]);
+        $connections = new IntegerMatrix();
+        $vertexes->foreach(
+            function (int $vertexA) use ($vertexes, $connections): void {
+                $vertexes->foreach(function (int $vertexB) use ($vertexA, $connections): void {
+                    if (isset($this->connections[$vertexA][$vertexB])) {
+                        $connections->set($this->connections[$vertexA][$vertexB], $vertexA, $vertexB);
+                    }
+                });
+            }
+        );
 
-        return $result;
-    }
-
-    public function setValueAttribute(object $attributes, int $vertexA, int $vertexB, int $value): void
-    {
-        $attributes->connections[$vertexA][$vertexB] = $value;
+        return new static($connections, $vertexes->values());
     }
 
     public function direct(int $vertex): Graph
@@ -95,7 +63,7 @@ class Graph extends AbstractValueObjectMutable
         $connections = $this->connections;
 
         for ($vertexes = [$vertex => $parent]; $vertex !== null; $vertex = key($vertexes)) {
-            foreach ($this->getRow($vertex) as $vertexB => $value) {
+            foreach ($this->connections[$vertex] ?? [] as $vertexB => $value) {
                 if ($vertexB !== $parent) {
                     unset($connections[$vertexB][$vertex]);
                     $vertexes[$vertexB] = $vertex;
@@ -108,8 +76,13 @@ class Graph extends AbstractValueObjectMutable
         return new Graph($connections, $this->vertexes);
     }
 
-    public function setRow(int $vertex, array $raw): void
+    public function getConnections(): IntegerMatrix
     {
-        $this->getAttributes()->connections[$vertex] = $raw;
+        return $this->connections;
+    }
+
+    public function getVertexes(): IntegerCollection
+    {
+        return $this->vertexes;
     }
 }

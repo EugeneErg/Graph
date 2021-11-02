@@ -13,21 +13,11 @@ use EugeneErg\Graph\Services\AssertService;
  */
 class IntegerMatrix extends AbstractMatrix
 {
-    public static function isValidElement($value): bool
-    {
-        AssertService::instance()->type(IntegerCollection::class, $value);
+    protected const ELEMENT_CLASS = IntegerCollection::class;
 
-        return true;
-    }
-
-    public static function isValidKey($key): bool
+    public static function validateKey($key): void
     {
-        return is_integer($key);
-    }
-
-    protected function createEmptyElement($key): IntegerCollection
-    {
-        return new IntegerCollection();
+        AssertService::instance()->type('integer', $key);
     }
 }
 

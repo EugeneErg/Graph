@@ -1,10 +1,11 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Collections;
 
-class Collection extends AbstractCollection
+class Collection extends AbstractMatrix
 {
-    public static function isValidElement($value): bool
+    protected const ELEMENT_CLASS = Collection::class;
+
+    public static function validateElement($value): void
     {
-        return true;
     }
 }

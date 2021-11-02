@@ -1,28 +1,23 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
-use EugeneErg\Graph\Collections\Collection;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Services\Assert\Argument;
 use EugeneErg\Graph\Services\AssertService;
 
-/**
- * @see ClearGraph::setOuterEdgeAttribute()
- * @method void setOuterEdge(array $path)
- * @see ClearGraph::joinOuterEdgeAttribute()
- * @method void joinOuterEdge(array $path)
- * @see ClearGraph::deleteConnectionsAttribute()
- * @method void deleteConnections(array $vertexes)
- */
 class ClearGraph extends Graph
 {
-    public function __construct(IntegerMatrix $connections, ?array $vertexes = null)
+    public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes = null)
     {
         $connections->foreach(function (int $value, int $vertexA, int $vertexB) use ($connections): void {
-            AssertService::instance()->equal(
+            AssertService::instance()->equals(
                 new Argument($value, 1, "connections[{$vertexA}][{$vertexB}]"),
-                new Argument($connections[$vertexB][$vertexA] ?? null, 1, "connections[{$vertexB}][{$vertexA}]"),
+                new Argument(
+                    $connections[$vertexB][$vertexA] ?? null,
+                    1,
+                    "connections[{$vertexB}][{$vertexA}]"
+                ),
                 null,
                 [ClearGraph::class, '__construct']
             );
@@ -31,42 +26,42 @@ class ClearGraph extends Graph
         parent::__construct($connections, $vertexes);
     }
 
-    public function setOuterEdgeAttribute(object $attributes, array $path): void
+    public function setOuterEdge(IntegerCollection $path): void
     {
-        $prev = end($path);
+        $prev = $path->end();
 
         foreach ($path as $vertex) {
-            $attributes->connections[$prev][$vertex] = $attributes->connections[$vertex][$prev] = 2;
+            $this->connections[$prev][$vertex] = $this->connections[$vertex][$prev] = 2;
             $prev = $vertex;
         }
     }
 
-    public function joinOuterEdgeAttribute(object $attributes, array $path): void
+    public function joinOuterEdge(IntegerCollection $path): void
     {
-        $prevVertex = end($path);
+        $prevVertex = $path->end();
 
         foreach ($path as $currentVertex) {
-            $value = $attributes->connections[$currentVertex][$prevVertex];
+            $value = $this->connections[$currentVertex][$prevVertex];
 
             if ($value === 2) {
                 unset(
-                    $attributes->connections[$currentVertex][$prevVertex],
-                    $attributes->connections[$prevVertex][$currentVertex]
+                    $this->connections[$currentVertex][$prevVertex],
+                    $this->connections[$prevVertex][$currentVertex]
                 );
             } else {
-                $attributes->connections[$currentVertex][$prevVertex]
-                    = $attributes->connections[$prevVertex][$currentVertex] = $value + 1;
+                $this->connections[$currentVertex][$prevVertex]
+                    = $this->connections[$prevVertex][$currentVertex] = $value + 1;
             }
 
             $prevVertex = $currentVertex;
         }
     }
 
-    public function deleteConnectionsAttribute(object $attributes, array $vertexes): void
+    public function deleteConnections(IntegerCollection $vertexes): void
     {
         foreach ($vertexes as $vertexA) {
-            foreach ($attributes->connections[$vertexA] ?? [] as $vertexB => $value) {
-                unset($attributes->connections[$vertexA][$vertexB], $attributes->connections[$vertexB][$vertexA]);
+            foreach ($this->connections[$vertexA] ?? [] as $vertexB => $value) {
+                unset($this->connections[$vertexA][$vertexB], $this->connections[$vertexB][$vertexA]);
             }
         }
     }

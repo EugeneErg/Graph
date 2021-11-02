@@ -5,6 +5,8 @@ use EugeneErg\Graph\Services\Assert\Argument;
 use TypeError;
 use ValueError;
 
+include_once __DIR__ . '/Assert/error_classes.php';
+
 class AssertService extends AbstractService
 {
     /**
@@ -130,7 +132,7 @@ class AssertService extends AbstractService
         //version_compare(): Argument #3 ($operator) must be a valid comparison operator
     }
 
-    public function equal($expectedValue, $value, ?string $message = null, $methodName = null): void
+    public function equals($expectedValue, $value, ?string $message = null, $methodName = null): void
     {
         [$valueName, $value] = $this->getNameAndValue($value);
         [$expectedName, $expectedValue] = $this->getNameAndValue($expectedValue, null);

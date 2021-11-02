@@ -32,7 +32,15 @@ abstract class AbstractValueObject implements JsonSerializable
     {
         $method = 'has' . ucfirst($name);
 
-        return method_exists($this, $method) && $this->$method();
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }
+
+        $method = 'get' . ucfirst($name);
+
+        if (method_exists($this, $method)) {
+            return $this->$method() !== null;
+        }
     }
 
     public function toArray(): array

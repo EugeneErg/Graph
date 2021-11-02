@@ -3,18 +3,25 @@ namespace EugeneErg\Graph\Collections;
 
 abstract class AbstractMatrix extends AbstractCollection
 {
-    /** @inheritDoc */
-    public function offsetGet($offset)
+    protected function createEmptyElement($key, array $items = []): AbstractCollection
     {
-        if (!static::isValidKey($offset) || $this->offsetExists($offset)) {
-            return parent::offsetGet($offset);
-        }
+        $class = static::ELEMENT_CLASS;
 
-        $result = $this->createEmptyElement($offset);
-        $this->offsetSet($offset, $result);
+        return is_a($class, self::class, true)
+            ? $class::fromRecursiveArray($items)
+            : $class::fromArray($items);
+    }
+
+    /** @return $this */
+    public static function fromRecursiveArray(array $items = []): self
+    {
+        $result = static::fromArray();
+
+        foreach ($items as $key => $item) {
+            $result[$key] = $item instanceof AbstractCollection
+            ? $item : $result->createEmptyElement($key, $item);
+        }
 
         return $result;
     }
-
-    abstract protected function createEmptyElement($key);
 }

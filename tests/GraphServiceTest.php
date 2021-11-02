@@ -12,15 +12,18 @@ use PHPUnit\Framework\TestCase;
 class GraphServiceTest extends TestCase
 {
     /** @dataProvider splitGraphOnDisconnectedData */
-    public function testSplitGraphOnDisconnected(array $graph, array $expectedConnections, array $expectedVertexes): void
-    {
-        $graphs = GraphService::instance()->splitGraphOnDisconnected($this->arrayToClearGraph($graph));
-        $resultConnections = array_map(function (ClearGraph $graph): array {
+    public function testSplitGraphOnDisconnected(
+        IntegerMatrix $graph,
+        Collection $expectedConnections,
+        IntegerMatrix $expectedVertexes
+    ): void {
+        $graphs = GraphService::instance()->splitGraphOnDisconnected($this->createClearGraph($graph));
+        $resultConnections = Collection::fromMap(function (ClearGraph $graph): IntegerMatrix {
             return $graph->connections;
-        }, $graphs->toArray());
-        $resultVertexes = array_map(function (ClearGraph $graph): array {
+        }, false, $graphs);
+        $resultVertexes = IntegerMatrix::fromMap(function (ClearGraph $graph): IntegerCollection {
             return $graph->vertexes;
-        }, $graphs->toArray());
+        }, false, $graphs);
         //var_dump('$expected', $expected, '$result', $result);
         $this->assertEquals($expectedConnections, $resultConnections);
         $this->assertEquals($expectedVertexes, $resultVertexes);
@@ -33,7 +36,7 @@ class GraphServiceTest extends TestCase
     }
 
     /** @dataProvider getEdgesData */
-    public function testGetEdges(array $graph, array $expected, bool $hasError): void
+    public function testGetEdges(IntegerMatrix $graph, Collection $expected, bool $hasError): void
     {
         if ($hasError) {
             $this->expectException(\Exception::class);
@@ -50,62 +53,61 @@ class GraphServiceTest extends TestCase
     {
         return [
             'single' => [
-                [
+                IntegerMatrix::fromRecursiveArray([
                     [0,1,1],
                     [1,0,1],
                     [1,1,0],
-                ],
-                [
-                    [
+                ]),
+                new Collection([
+                    IntegerMatrix::fromRecursiveArray([
                         0 => [1 => 1, 2 => 1],
                         1 => [0 => 1, 2 => 1],
                         2 => [0 => 1, 1 => 1],
-                    ],
-                ],
-                [
+                    ]),
+                ]),
+                IntegerMatrix::fromRecursiveArray([
                     [0,1,2],
-                ],
+                ]),
             ],
             [
-                [
+                IntegerMatrix::fromRecursiveArray([
                     [0,1,0,0],
                     [1,0,0,0],
                     [0,0,0,1],
                     [0,0,1,0],
-                ],
-                [
-                    [
+                ]),
+                new Collection([
+                    IntegerMatrix::fromRecursiveArray([
                         0 => [1 => 1],
                         1 => [0 => 1],
-                    ],
-                    [
+                    ]),
+                    IntegerMatrix::fromRecursiveArray([
                         2 => [3 => 1],
                         3 => [2 => 1],
-                    ],
-                ],
-                [
+                    ]),
+                ]),
+                IntegerMatrix::fromRecursiveArray([
                     [0,1],
                     [2,3],
-                ],
+                ]),
             ],
             [
-                [
+                IntegerMatrix::fromRecursiveArray([
                     [0,1,0],
                     [1,0,0],
                     [0,0,0],
-                ],
-                [
-                    [
+                ]),
+                new Collection([
+                    IntegerMatrix::fromRecursiveArray([
                         0 => [1 => 1],
                         1 => [0 => 1],
-                    ],
-                    [
-                    ],
-                ],
-                [
+                    ]),
+                    IntegerMatrix::fromRecursiveArray(),
+                ]),
+                IntegerMatrix::fromRecursiveArray([
                     [0,1],
                     [2],
-                ],
+                ]),
             ],
         ];
     }
@@ -127,13 +129,13 @@ class GraphServiceTest extends TestCase
         ];
     }
 
-    private function arrayToClearGraph(array $graph): ClearGraph
+    private function createClearGraph(IntegerMatrix $graph): ClearGraph
     {
-        $connections = IntegerMatrix::map(function (array $integers): IntegerCollection {
-            return new IntegerCollection((new Collection($integers))->filter(function(int $value): bool {
+        $connections = $graph->map(function (IntegerCollection $integers): IntegerCollection {
+            return $integers->filter(function (int $value): bool {
                 return $value !== 0;
-            })->toArray());
-        }, new Collection($graph));
+            });
+        });
 
         return new ClearGraph($connections);
     }
