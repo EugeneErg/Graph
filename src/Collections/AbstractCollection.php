@@ -659,10 +659,11 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         $class = static::ELEMENT_CLASS;
 
         if (is_a($class, AbstractCollection::class, true)) {
-            foreach ($items as $key => $item) {
-                $result[$key] = $item instanceof AbstractCollection
-                    ? $item : $class::fromRecursiveArray($item);
-            }
+            array_walk($items, function (&$item) use ($class): void {
+                if (!$item instanceof AbstractCollection) {
+                    $item = $class::fromRecursiveArray($item);
+                }
+            });
         }
 
         return static::fromArray($items);

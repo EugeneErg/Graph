@@ -26,7 +26,7 @@ class GraphService extends AbstractService
      */
     public function getEdges(ClearGraph $graph): EdgeCollection
     {
-        $trees = $this->convertToTrees($graph);
+        $trees = TreeService::instance()->createFromGraph($graph);
         $result = new EdgeMatrix();
 
         foreach ($trees as $tree) {
@@ -48,13 +48,6 @@ class GraphService extends AbstractService
         }*/
 
         return EdgeCollection::fromMerge(...$result);
-    }
-
-    private function convertToTrees(ClearGraph $graph): TreeCollection
-    {
-        return TreeCollection::fromMap(function (ClearGraph $graph): Tree {
-            return TreeService::instance()->fromConnectionGraph($graph);
-        }, $this->splitGraphOnDisconnected($graph));
     }
 
     public function getArticulationVertex(ClearGraph $graph): IntegerCollection

@@ -17,22 +17,15 @@ class GraphServiceTest extends TestCase
         Collection $expectedConnections,
         IntegerMatrix $expectedVertexes
     ): void {
-        $graphs = GraphService::instance()->splitGraphOnDisconnected($this->createClearGraph($graph));
+        $graphs = GraphService::instance()->splitGraphOnDisconnected(Helper::instance()->createClearGraph($graph));
         $resultConnections = Collection::fromMap(function (ClearGraph $graph): IntegerMatrix {
             return $graph->connections;
         }, false, $graphs);
         $resultVertexes = IntegerMatrix::fromMap(function (ClearGraph $graph): IntegerCollection {
             return $graph->vertexes;
         }, false, $graphs);
-        //var_dump('$expected', $expected, '$result', $result);
         $this->assertEquals($expectedConnections, $resultConnections);
         $this->assertEquals($expectedVertexes, $resultVertexes);
-        //$this->assertEquals([], array_diff($result, $expectedConnections));
-    }
-
-    public function q(): void
-    {
-
     }
 
     /** @dataProvider getEdgesData */
@@ -127,16 +120,5 @@ class GraphServiceTest extends TestCase
                 false,
             ],
         ];
-    }
-
-    private function createClearGraph(IntegerMatrix $graph): ClearGraph
-    {
-        $connections = $graph->map(function (IntegerCollection $integers): IntegerCollection {
-            return $integers->filter(function (int $value): bool {
-                return $value !== 0;
-            });
-        });
-
-        return new ClearGraph($connections);
     }
 }

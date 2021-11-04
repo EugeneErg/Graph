@@ -20,7 +20,7 @@ class Graph extends AbstractValueObject
     /** @var IntegerCollection  */
     private $vertexes;
 
-    public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes)
+    public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes = null)
     {
         $this->connections = $connections;
         $realVertex = IntegerCollection::fromKeys(
