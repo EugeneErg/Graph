@@ -1,12 +1,14 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Services;
 
+use EugeneErg\Graph\Collections\AbstractCollection;
 use EugeneErg\Graph\Collections\BoolCollection;
 use EugeneErg\Graph\Collections\EdgeCollection;
 use EugeneErg\Graph\Collections\EdgeMatrix;
 use EugeneErg\Graph\Collections\GraphCollection;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
+use EugeneErg\Graph\Collections\Interruptions\CBreak;
 use EugeneErg\Graph\Collections\IntersectionCollection;
 use EugeneErg\Graph\Collections\TreeCollection;
 use EugeneErg\Graph\ValueObjects\Canvas;
@@ -26,19 +28,11 @@ class GraphService extends AbstractService
      */
     public function getEdges(ClearGraph $graph): EdgeCollection
     {
-        $trees = TreeService::instance()->createFromGraph($graph);
-        $result = new EdgeMatrix();
-
-        foreach ($trees as $tree) {
-            $edges = new EdgeCollection();
-
-            /** @var ClearGraph $branch */
-            foreach ($tree->branches as $number => $branch) {
-                $edges[$number] = $this->splitOnTreeEdges($branch);
-            }
-
-            $result[] = EdgeService::instance()->mergeTree($edges, $tree);
-        }
+        $result = EdgeMatrix::fromMap(function (Tree $tree) {
+            return EdgeService::instance()->mergeTree(EdgeCollection::fromMap(function (ClearGraph $branch): Edge {
+                return $this->splitOnTreeEdges($branch);
+            }, false, $tree->branches), $tree);
+        }, false, TreeService::instance()->createFromGraph($graph));
 
         /*foreach ($trees as $tree) {
             /** @var ClearGraph $branch * /
@@ -70,16 +64,13 @@ class GraphService extends AbstractService
         }
 
         $canvas = new Canvas($graph);
-        $operations = IntegerMatrix::fromForeach(
-            $graph->vertexes,
-            function (int $vertex) use ($canvas): ?IntegerCollection {
-                return $canvas->getColor($vertex) === 0
-                    ? CanvasService::instance()->fill($canvas, $vertex, 1)
-                    : null;
-            },
-            1,
-            true
-        );
+        $operations = new IntegerMatrix();
+
+        foreach ($graph->vertexes as $vertex) {
+            if ($canvas->getColor($vertex) === 0) {
+                $operations[] = CanvasService::instance()->fill($canvas, $vertex, 1);
+            }
+        }
 
         if ($operations->count() === 1) {
             return new GraphCollection([$graph]);
@@ -92,21 +83,17 @@ class GraphService extends AbstractService
 
     private function splitOnTreeEdges(ClearGraph $branch, ?IntegerCollection $outerEdge = null): Edge
     {
-        //$steps = [4,3,1,1];
-        static $step = 0;
-
-        if (count($branch->vertexes) < 4) {
+        if ($branch->vertexes->count() < 4) {
             return new Edge($branch->vertexes);
         }
 
         $hasOuter = $outerEdge !== null;
         $outerEdge = $outerEdge ?? new IntegerCollection();
-        $edgeVertexesKey = $steps[$step++] ?? array_rand($branch->vertexes);
-        var_dump('edgeVertexesKey', $edgeVertexesKey);
+        $edgeVertexesKey = $branch->vertexes->getRandomKey();
         $edgeVertexes = $hasOuter
-            ? IntegerCollection::fromFlip($outerEdge)
+            ? $outerEdge->flip()
             : new IntegerCollection([$branch->vertexes[$edgeVertexesKey] => 0]);
-        $outerVertexes = BoolCollection::fromMap(function (): bool {return true;}, $edgeVertexes);
+        $outerVertexes = BoolCollection::fromMap(function (): bool {return true;}, false, $edgeVertexes);
         $resultChildren = [];
         $first = !$hasOuter;
         $needOuter = false;
@@ -115,6 +102,7 @@ class GraphService extends AbstractService
         do {
             foreach ($edgeVertexes as $vertexA => $v) {
                 unset($edgeVertexes[$vertexA]);
+
                 foreach ($branch->connections[$vertexA] ?? [] as $vertexB => $value) {
                     if (
                         ($value !== 1 || $needOuter)
@@ -153,12 +141,12 @@ class GraphService extends AbstractService
 
                     if (!$needOuter || $hasOuter) {
                         if (count($innerVertexes) === 0) {
-                            $resultChildren[] = new Edge($path->toArray());
+                            $resultChildren[] = new Edge($path);
                             //echo '<h3>path is new edge</h3>';;
                         } else {
                             /** @var ClearGraph $graph */
                             $graph = $branch->createSupGraph(IntegerCollection::fromMerge($path, $innerVertexes));
-                            $graph->setOuterEdge($path->toArray());
+                            $graph->setOuterEdge($path);
                             $resultChildren[] = $this->splitOnTreeEdges($graph, $path);
                         }
                     } elseif (!count($outerEdge)) {
@@ -172,7 +160,7 @@ class GraphService extends AbstractService
                         $outerVertexes[$vertex] = true;
                     }
 
-                    $branch->joinOuterEdge($path->toArray());
+                    $branch->joinOuterEdge($path);
                     $branch->deleteConnections($innerVertexes);
                     $edgeVertexes = array_replace($edgeVertexes, $flipPath);
 
@@ -180,7 +168,7 @@ class GraphService extends AbstractService
                 }
             }
 
-            $edgeVertexes = array_flip($branch->vertexes);
+            $edgeVertexes = $branch->vertexes->flip();
             $needOuter = true;
         } while (!$finish);
 
@@ -188,7 +176,7 @@ class GraphService extends AbstractService
             throw new \Exception('Is not planar graph');
         }
 
-        return new Edge($outerEdge->toArray(), $resultChildren);
+        return new Edge($outerEdge, $resultChildren);
     }
 
     public function findShortEdge(ClearGraph $graph, int $vertexA, int $vertexB, bool $first = false): IntegerCollection

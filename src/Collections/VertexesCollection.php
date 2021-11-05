@@ -2,6 +2,7 @@
 namespace EugeneErg\Graph\Collections;
 
 use EugeneErg\Graph\ValueObjects\Vertex;
+use Traversable;
 
 /**
  * @method Vertex offsetGet(int|string $offset)
@@ -9,6 +10,7 @@ use EugeneErg\Graph\ValueObjects\Vertex;
  * @method Vertex|null next()
  * @method Vertex|null rewind()
  * @method __construct(Vertex[] $items)
+ * @method Vertex[] getIterator()
  * @method Vertex[] toArray()
  */
 class VertexesCollection extends AbstractCollection

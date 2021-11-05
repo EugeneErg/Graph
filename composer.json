@@ -3,7 +3,7 @@
     "minimum-stability": "dev",
     "require": {
         "ext-json": "*",
-        "php": ">=7.1"
+        "php": ">=7.4"
     },
     "autoload": {
         "psr-4": {

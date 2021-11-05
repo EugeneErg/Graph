@@ -44,15 +44,14 @@ class Graph extends AbstractValueObject
     public function createSupGraph(IntegerCollection $vertexes): Graph
     {
         $connections = new IntegerMatrix();
-        $vertexes->foreach(
-            function (int $vertexA) use ($vertexes, $connections): void {
-                $vertexes->foreach(function (int $vertexB) use ($vertexA, $connections): void {
-                    if (isset($this->connections[$vertexA][$vertexB])) {
-                        $connections->set($this->connections[$vertexA][$vertexB], $vertexA, $vertexB);
-                    }
-                });
+
+        foreach ($vertexes as $vertexA) {
+            foreach ($vertexes as $vertexB) {
+                if (isset($this->connections[$vertexA][$vertexB])) {
+                    $connections->set($this->connections[$vertexA][$vertexB], $vertexA, $vertexB);
+                }
             }
-        );
+        }
 
         return new static($connections, $vertexes->values());
     }

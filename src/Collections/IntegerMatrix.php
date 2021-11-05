@@ -9,6 +9,7 @@ use EugeneErg\Graph\Services\AssertService;
  * @method IntegerCollection|null next()
  * @method IntegerCollection|null rewind()
  * @method __construct(IntegerCollection[] $items)
+ * @method IntegerCollection[] getIterator()
  * @method IntegerCollection[] toArray()
  */
 class IntegerMatrix extends AbstractMatrix

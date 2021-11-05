@@ -9,6 +9,7 @@ use EugeneErg\Graph\ValueObjects\Edge;
  * @method Edge|null next()
  * @method Edge|null rewind()
  * @method __construct(Edge[] $items)
+ * @method Edge[] getIterator()
  * @method Edge[] toArray()
  */
 class EdgeCollection extends AbstractCollection

@@ -10,7 +10,7 @@ class ClearGraph extends Graph
 {
     public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes = null)
     {
-        $connections->foreach(function (int $value, int $vertexA, int $vertexB) use ($connections): void {
+        foreach ($connections->level(2) as [$vertexA, $vertexB, $value]) {
             AssertService::instance()->equals(
                 new Argument($value, 1, "connections[{$vertexA}][{$vertexB}]"),
                 new Argument(
@@ -21,7 +21,7 @@ class ClearGraph extends Graph
                 null,
                 [ClearGraph::class, '__construct']
             );
-        }, 2);
+        }
 
         parent::__construct($connections, $vertexes);
     }

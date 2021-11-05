@@ -30,13 +30,14 @@ class TreeService extends AbstractService
 
         $result = new IntegerMatrix();
         $this->split($articulationVertex, new Canvas($graph), $result);
-        $branches = GraphCollection::fromForeach($result, function (IntegerCollection $vertexes) use ($graph): Graph {
+        $branches = GraphCollection::fromMap(function (IntegerCollection $vertexes) use ($graph): Graph {
             return $graph->createSupGraph($vertexes);
-        });
+        }, false, $result);
         $connections = new IntegerMatrix();
-        $result->foreach(function (int $vertex, int $index, int $number) use ($connections): void {
+
+        foreach ($result->level(2) as [$index, $number, $vertex]) {
             $connections->set($number, $vertex, null);
-        }, 2);
+        }
 
         return new Tree($graph, $branches, $connections);
     }
@@ -57,23 +58,20 @@ class TreeService extends AbstractService
 
             unset($articulationVertex[$vertexA]);
 
-            ($canvas->graph->connections[$vertexA] ?? new IntegerCollection())->foreach(
-                function (int $value, int $vertexB)
-                use ($canvas, $maxColor, &$hasResult, $articulationVertex, $vertexA, &$color, $result): void {
-                    if ($canvas->getColor($vertexB) !== $maxColor) {
-                        return;
-                    }
-
-                    $hasResult = true;
-                    CanvasService::instance()->pixels($canvas, new IntegerCollection([$vertexA]), ++$color);
-                    $vertexes = CanvasService::instance()->fill($canvas, $vertexB, $color);
-                    $vertexes[$vertexA] = $vertexA;
-
-                    if (!$this->split($articulationVertex, $canvas, $result, $color)) {
-                        $result[] = $vertexes;
-                    }
+            foreach($canvas->graph->connections[$vertexA] ?? [] as $vertexB => $value) {
+                if ($canvas->getColor($vertexB) !== $maxColor) {
+                    continue;
                 }
-            );
+
+                $hasResult = true;
+                CanvasService::instance()->pixels($canvas, new IntegerCollection([$vertexA]), ++$color);
+                $vertexes = CanvasService::instance()->fill($canvas, $vertexB, $color);
+                $vertexes[$vertexA] = $vertexA;
+
+                if (!$this->split($articulationVertex, $canvas, $result, $color)) {
+                    $result[] = $vertexes;
+                }
+            }
         }
 
         return $hasResult;

@@ -2,6 +2,7 @@
 
 namespace EugeneErg\Graph\Collections;
 
+use EugeneErg\Graph\ValueObjects\Graph;
 use EugeneErg\Graph\ValueObjects\Tree;
 
 /**
@@ -10,6 +11,7 @@ use EugeneErg\Graph\ValueObjects\Tree;
  * @method Tree|null next()
  * @method Tree|null rewind()
  * @method __construct(Tree[] $items)
+ * @method Tree[] getIterator()
  * @method Tree[] toArray()
  */
 class TreeCollection extends AbstractCollection

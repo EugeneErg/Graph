@@ -1,39 +1,35 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
+use EugeneErg\Graph\Collections\EdgeCollection;
+use EugeneErg\Graph\Collections\IntegerCollection;
+
 /**
- * @property-read int[] $vertexes
- * @property-read Edge[] $children
+ * @see Edge::getVertexes()
+ * @property-read IntegerCollection $vertexes
+ * @see Edge::getChildren()
+ * @property-read EdgeCollection $children
  * @see Edge::getParentAttribute()
  * @property-read Edge $parent
  */
 class Edge extends AbstractValueObject
 {
-    /** @var null|self */
     private $parent = null;
-    /** @var int[] */
     private $vertexes;
-    /** @var Edge[] */
     private $children;
 
-    /**
-     * Edge constructor.
-     * @param int[] $vertexes
-     * @param self[] $children
-     */
-    public function __construct(array $vertexes, array $children = [])
+    public function __construct(IntegerCollection $vertexes, ?EdgeCollection $children = null)
     {
         $this->vertexes = $vertexes;
         $this->children = $children;
-
-        foreach ($children as $child) {
+        ($children ?? new EdgeCollection())->foreach(function (Edge $child) {
             $child->parent = $this;
-        }
+        });
     }
 
     public function getNormalVertexNumber(int $offset): int
     {
-        $count = count($this->vertexes);
+        $count = $this->vertexes->count();
 
         return ($offset < 0 && $offset !== - $count ? $count : 0) + ($offset % $count);
     }
@@ -43,9 +39,9 @@ class Edge extends AbstractValueObject
         return $this->vertexes[$this->getNormalVertexNumber($offset)];
     }
 
-    public function getVertexes(int $offset, int $count = null): array
+    public function getVertexes(int $offset = 0, int $count = null): IntegerCollection
     {
-        $result = [];
+        $result = new IntegerCollection();
         $count = $count ?? count($this->vertexes);
 
         if ($count < 0) {
@@ -63,17 +59,14 @@ class Edge extends AbstractValueObject
 
     public function findVertex(int $vertex): ?int
     {
-        $result = array_search($vertex, $this->vertexes, true);
-
-        return $result === false ? null : $result;
+        return $this->vertexes->search($vertex, true);
     }
 
-    public function replace(array $vertexes, int $start, int $length): Edge
+    public function replace(IntegerCollection $vertexes, int $start, int $length): Edge
     {
-        return new Edge(array_merge(
-            $this->getVertexes($length + $start, count($this->vertexes) - $length),
-            $vertexes
-        ));
+        return new Edge(
+            $this->getVertexes($length + $start, count($this->vertexes) - $length)->merge($vertexes)
+        );
     }
 
     protected function getParent(): ?self
@@ -81,14 +74,13 @@ class Edge extends AbstractValueObject
         return $this->parent;
     }
 
-    /** @return Edge[] */
-    public function getChildren(): array
+    public function getChildren(): EdgeCollection
     {
         return $this->children;
     }
 
     public function toArray(): array
     {
-        return $this->vertexes;
+        return $this->vertexes->toArray();
     }
 }

@@ -9,6 +9,7 @@ use EugeneErg\Graph\ValueObjects\Graph;
  * @method Graph|null next()
  * @method Graph|null rewind()
  * @method __construct(Graph[] $items)
+ * @method Graph[] getIterator()
  * @method Graph[] toArray()
  */
 class GraphCollection extends AbstractCollection

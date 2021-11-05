@@ -24,13 +24,14 @@ class Tree extends AbstractValueObject
         $this->graph = $graph;
         $this->branches = $branches ?? new GraphCollection();
         $this->connections = new Graph(new IntegerMatrix());
-        ($connections ?? new IntegerMatrix())->foreach(function (IntegerCollection $subBranches, int $vertex): void {
-            $subBranches->foreach(function (int $branchA) use ($subBranches, $vertex): void {
-                $subBranches->foreach(function (int $branchB) use ($branchA, $vertex): void {
+
+        foreach ($connections ?? [] as $vertex => $subBranches) {
+            foreach ($subBranches as $branchA) {
+                foreach ($subBranches as $branchB) {
                     $this->connections->connections->set($vertex, $branchA, $branchB);
-                });
-            });
-        });
+                }
+            }
+        }
     }
 
     public function getBranches(): GraphCollection

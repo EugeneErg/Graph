@@ -7,6 +7,7 @@ namespace EugeneErg\Graph\Collections;
  * @method int|null next()
  * @method int|null rewind()
  * @method __construct(int[] $items)
+ * @method int[] getIterator()
  * @method int[] toArray()
  */
 class IntegerCollection extends AbstractCollection

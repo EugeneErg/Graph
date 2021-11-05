@@ -2,15 +2,17 @@
 namespace EugeneErg\Graph\Collections;
 
 use ArrayAccess;
+use ArrayObject;
 use Countable;
 use Error;
 use EugeneErg\Graph\Enums\CollectionFilterEnum;
-use EugeneErg\Graph\Services\Assert\Argument;
 use EugeneErg\Graph\Services\AssertService;
 use EugeneErg\Graph\ValueObjects\AbstractValueObject;
-use Iterator;
+use Generator;
+use IteratorAggregate;
 use JsonSerializable;
 use Throwable;
+use Traversable;
 
 /**
  * @see AbstractCollection::fromValues()
@@ -21,6 +23,8 @@ use Throwable;
  * @method $this unique(callable|null $callback = null)
  * @see AbstractCollection::fromKeys()
  * @method $this keys(mixed|null $searchValue = null, bool $strict = false)
+ * @see AbstractCollection::fromReduce()
+ * @method mixed reduce(callable $callback, $initial = null)
  * @see AbstractCollection::fromWalk()
  * @method $this walk(callable $callback)
  * @see AbstractCollection::fromRandomKeys()
@@ -28,7 +32,7 @@ use Throwable;
  * @see AbstractCollection::fromFlip()
  * @method $this flip()
  */
-abstract class AbstractCollection extends AbstractValueObject implements JsonSerializable, Iterator, ArrayAccess, Countable
+abstract class AbstractCollection extends AbstractValueObject implements JsonSerializable, IteratorAggregate, ArrayAccess, Countable
 {
     protected const ELEMENT_CLASS = null;
 
@@ -339,38 +343,6 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         return static::fromArray($array, $filtered);
     }
 
-    public function foreach(callable $callback, int $level = 1): void
-    {
-        static::fromForeach($this, $callback, $level, true);
-    }
-
-    /**
-     * @param AbstractCollection $collection
-     * @param callable $callback
-     * @param int $level
-     * @return static
-     */
-    public static function fromForeach(
-        self $collection,
-        callable $callback,
-        int $level = 1,
-        bool $filtered = false
-    ): self {
-        AssertService::instance()->greater(
-            0,
-            new Argument($level, 3, 'level'),
-            null,
-            [AbstractCollection::class, 'fromForeach']
-        );
-
-        return static::fromArray(static::recursiveForeach(
-            $collection,
-            $callback,
-            $level,
-            $filtered
-        ));
-    }
-
     public function push(...$items): int
     {
         $this->validateItems($items);
@@ -403,44 +375,6 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
     public function map(callable $callback, AbstractCollection ...$collections): self
     {
         return static::fromMap($callback, false, $this, ...$collections);
-    }
-
-    private static function recursiveForeach(
-        $data,
-        callable $callback,
-        int $level,
-        bool $filtered,
-        array $keys = [],
-        array &$result = []
-    ): array {
-        if ($data instanceof AbstractCollection) {
-            $data = $data->items;
-        }
-
-        foreach ($data as $key => $value) {
-            $nextKeys = $keys;
-            $nextKeys[] = $key;
-
-            if ($level > 1) {
-                static::recursiveForeach(
-                    $value,
-                    $callback,
-                    $level - 1,
-                    $filtered,
-                    $nextKeys,
-                    $result
-                );
-            } else {
-                $value = $callback($value, ...$nextKeys);
-
-                if (!$filtered || static::isValidElement($value)) {
-                    $key = static::getNextKey($result);
-                    $key === null ? $result[] = $value : $result[$key] = $value;
-                }
-            }
-        }
-
-        return $result;
     }
 
     public static function __set_state(array $items): self
@@ -706,5 +640,63 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         }
 
         throw new Error('cannot create new child element');
+    }
+
+    /** @return int|string|null */
+    public function search($needle, bool $strict = false)
+    {
+        $result = array_search($needle, $this->items, $strict);
+
+        return $result === false ? null : $result;
+    }
+
+    public function getKeyValueByPosition(int $position): ?array
+    {
+        $result = array_slice($this->items, $position, 1, true);
+        $value = reset($result);
+        $key = key($result);
+
+        return $key === null ? null : [$key, $value];
+    }
+
+    public function getKeyByPosition(int $position)
+    {
+        return $this->getKeyValueByPosition($position)[0] ?? null;
+    }
+
+    public function getValueByPosition(int $position)
+    {
+        return $this->getKeyValueByPosition($position)[1] ?? null;
+    }
+
+    public function getIterator(): Traversable
+    {
+        return new ArrayObject($this->items);
+    }
+
+    public static function fromReduce(AbstractCollection $collection, callable $callback, $initial = null)
+    {
+        array_reduce($collection->items, $callback, $initial);
+    }
+
+    public function level(int $level): Generator
+    {
+        $foreach = [];
+        $keys = [];
+
+        for ($i = 0; $i < $level; $i++) {
+            $foreach[] = sprintf('foreach ($value%1$s as $key%2$s => $value%2$s) {', $i, $i + 1);
+            $keys[] = sprintf('$key%s', $i + 1);
+        }
+
+        $keys[] = sprintf('$value%s', $level);
+
+        return eval(
+            'return (function ($value0): Generator {'
+             . implode('', $foreach)
+            . 'yield [' . implode(',', $keys) . '];'
+            . str_repeat('}', $level)
+            . '})($this);'
+        );
     }
 }
