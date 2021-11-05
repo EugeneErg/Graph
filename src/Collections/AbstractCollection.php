@@ -41,21 +41,33 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         $this->items = $items;
     }
 
-    private function setRecursive($items, $value, ...$keys)
+    private static function staticSet($array, $value, $key, ...$keys)
     {
-        if (!count($keys)) {
-            return $value;
+        if ($key === null && $array instanceof AbstractCollection) {
+            $key = $array::getNextKey($array->items);
         }
 
-        $key = array_pop($keys);
+        if ($key !== null && isset($array[$key])) {
+            $array[$key] = count($keys) > 0 ? static::staticSet($array[$key], $value, ...$keys) : $value;
+        } else {
+            $value = array_reduce(array_reverse($keys), function ($value, $key): array {
+                return [$key => $value];
+            }, $value);
 
-        return $items instanceof AbstractCollection
-            ? $items->set($value, $key, ...$keys)
-            : [$key => $this->setRecursive($items[$key] ?? null, $value, ...$keys)];
+            if ($array instanceof AbstractCollection) {
+                $key === null
+                    ? $array[] = $array::createChildElement($value)
+                    : $array[$key] = $array::createChildElement($value);
+            } else {
+                $key === null ? $array[] = $value : $array[$key] = $value;
+            }
+        }
+
+        return $array;
     }
 
     /** @return $this */
-    protected static function fromArray(array $items = [], bool $filtered = false): self
+    public static function fromArray(array $items = [], bool $filtered = false): self
     {
         return new static(
             $filtered ? array_filter($items, [static::class, 'isValid'], ARRAY_FILTER_USE_BOTH) : $items
@@ -117,7 +129,15 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
      */
     public function offsetSet($offset, $value): void
     {
-        $this->set($value, $offset);
+        $this->validate($value, $offset);
+
+        if ($offset === null) {
+            $offset = static::getNextKey($this->items);
+        }
+
+        $offset === null
+            ? $this->items[] = $value
+            : $this->items[$offset] = $value;
     }
 
     /**
@@ -128,27 +148,7 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
      */
     public function set($value, $key, ...$keys): self
     {
-        if ($key === null) {
-            $key = static::getNextKey($this->items);
-        }
-
-        $value = $this->setRecursive(
-            $key === null || !isset($this->items[$key]) ? null : $this->items[$key],
-            $value,
-            ...$keys
-        );
-        $class = static::ELEMENT_CLASS;
-
-        if (is_a($class, AbstractCollection::class, true) && is_array($value)) {
-            $value = $class::fromRecursiveArray($value);
-        }
-
-        $this->validate($value, $key);
-        $key === null
-            ? $this->items[] = $value
-            : $this->items[$key] = $value;
-
-        return $this;
+        return static::staticSet($this, $value, $key, ...$keys);
     }
 
     /** @param int|string $offset */
@@ -160,6 +160,36 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
     public function toArray(): array
     {
         return $this->items;
+    }
+
+    public function toArrayRecursive(): array
+    {
+        return self::staticToArrayRecursive($this);
+    }
+
+    private static function staticToArrayRecursive($data)
+    {
+        if (is_array($data)) {
+            return array_map(function ($item) {
+                return self::staticToArrayRecursive($item);
+            }, $data);
+        }
+
+        foreach (['toArray', '__debugInfo', '__sleep', '__serialize'] as $method) {
+            if (method_exists($data, $method)) {
+                return self::staticToArrayRecursive(call_user_func([$data, $method]));
+            }
+        }
+
+        if ($data instanceof JsonSerializable) {
+            return self::staticToArrayRecursive($data->jsonSerialize());
+        }
+
+        if (is_object($data)) {
+            return self::staticToArrayRecursive((array) $data);
+        }
+
+        return $data;
     }
 
     public function jsonSerialize(): array
@@ -656,16 +686,25 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
     /** @return $this */
     public static function fromRecursiveArray(array $items = []): self
     {
+        array_walk($items, function (&$item): void {
+            $item = static::createChildElement($item);
+        });
+
+        return static::fromArray($items);
+    }
+
+    public static function createChildElement($value)
+    {
+        if (static::isValidElement($value)) {
+            return $value;
+        }
+
         $class = static::ELEMENT_CLASS;
 
         if (is_a($class, AbstractCollection::class, true)) {
-            array_walk($items, function (&$item) use ($class): void {
-                if (!$item instanceof AbstractCollection) {
-                    $item = $class::fromRecursiveArray($item);
-                }
-            });
+            return $class::fromRecursiveArray($value);
         }
 
-        return static::fromArray($items);
+        throw new Error('cannot create new child element');
     }
 }

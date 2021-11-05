@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace EugeneErg\tests;
+namespace EugeneErg\Tests;
 
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
@@ -11,12 +11,10 @@ class Helper extends AssertService
 {
     public function createClearGraph(IntegerMatrix $graph): ClearGraph
     {
-        $connections = $graph->map(function (IntegerCollection $integers): IntegerCollection {
+        return new ClearGraph($graph->map(function (IntegerCollection $integers): IntegerCollection {
             return $integers->filter(function (int $value): bool {
                 return $value !== 0;
             });
-        });
-
-        return new ClearGraph($connections);
+        }));
     }
 }

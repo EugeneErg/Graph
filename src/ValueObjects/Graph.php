@@ -85,4 +85,12 @@ class Graph extends AbstractValueObject
     {
         return $this->vertexes;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'connections' => $this->connections,
+            'vertexes' => $this->vertexes,
+        ];
+    }
 }

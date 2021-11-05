@@ -24,7 +24,7 @@ class Tree extends AbstractValueObject
         $this->graph = $graph;
         $this->branches = $branches ?? new GraphCollection();
         $this->connections = new Graph(new IntegerMatrix());
-        $connections->foreach(function (IntegerCollection $subBranches, int $vertex): void {
+        ($connections ?? new IntegerMatrix())->foreach(function (IntegerCollection $subBranches, int $vertex): void {
             $subBranches->foreach(function (int $branchA) use ($subBranches, $vertex): void {
                 $subBranches->foreach(function (int $branchB) use ($branchA, $vertex): void {
                     $this->connections->connections->set($vertex, $branchA, $branchB);
@@ -46,5 +46,14 @@ class Tree extends AbstractValueObject
     public function getGraph(): Graph
     {
         return $this->graph;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'graph' => $this->graph,
+            'branches' => $this->branches,
+            'connections' => $this->connections,
+        ];
     }
 }

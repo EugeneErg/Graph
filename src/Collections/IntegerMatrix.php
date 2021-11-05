@@ -17,7 +17,7 @@ class IntegerMatrix extends AbstractMatrix
 
     public static function validateKey($key): void
     {
-        AssertService::instance()->type('integer', $key);
+        AssertService::instance()->type(['integer', 'NULL'], $key);
     }
 }
 

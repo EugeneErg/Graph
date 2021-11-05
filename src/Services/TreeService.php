@@ -57,20 +57,23 @@ class TreeService extends AbstractService
 
             unset($articulationVertex[$vertexA]);
 
-            foreach ($canvas->graph->connections[$vertexA] ?? [] as $vertexB => $value) {
-                if ($canvas->getColor($vertexB) !== $maxColor) {
-                    continue;
-                }
+            ($canvas->graph->connections[$vertexA] ?? new IntegerCollection())->foreach(
+                function (int $value, int $vertexB)
+                use ($canvas, $maxColor, &$hasResult, $articulationVertex, $vertexA, &$color, $result): void {
+                    if ($canvas->getColor($vertexB) !== $maxColor) {
+                        return;
+                    }
 
-                $hasResult = true;
-                CanvasService::instance()->pixels($canvas, new IntegerCollection([$vertexA]), ++$color);
-                $vertexes = CanvasService::instance()->fill($canvas, $vertexB, $color);
-                $vertexes[$vertexA] = $vertexA;
+                    $hasResult = true;
+                    CanvasService::instance()->pixels($canvas, new IntegerCollection([$vertexA]), ++$color);
+                    $vertexes = CanvasService::instance()->fill($canvas, $vertexB, $color);
+                    $vertexes[$vertexA] = $vertexA;
 
-                if (!$this->split($articulationVertex, $canvas, $result, $color)) {
-                    $result[] = $vertexes;
+                    if (!$this->split($articulationVertex, $canvas, $result, $color)) {
+                        $result[] = $vertexes;
+                    }
                 }
-            }
+            );
         }
 
         return $hasResult;
