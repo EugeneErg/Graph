@@ -48,7 +48,7 @@ class Graph extends AbstractValueObject
         foreach ($vertexes as $vertexA) {
             foreach ($vertexes as $vertexB) {
                 if (isset($this->connections[$vertexA][$vertexB])) {
-                    $connections->set($this->connections[$vertexA][$vertexB], $vertexA, $vertexB);
+                    $connections->set([$vertexA, $vertexB], $this->connections[$vertexA][$vertexB]);
                 }
             }
         }

@@ -146,13 +146,12 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
 
     /**
      * @param mixed $value
-     * @param int|string|null $key
-     * @param int|string|null ...$keys
+     * @param int[]|string[]|null[] ...$keys
      * @return $this
      */
-    public function set($value, $key, ...$keys): self
+    public function set(array $keys, $value): self
     {
-        return static::staticSet($this, $value, $key, ...$keys);
+        return static::staticSet($this, $value, ...$keys);
     }
 
     /** @param int|string $offset */
@@ -679,9 +678,10 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         array_reduce($collection->items, $callback, $initial);
     }
 
-    public function level(int $level): Generator
+    public function listByLevel(int $level): Generator
     {
-        $foreach = [];
+        return self::createGeneratorByLevel($this, $level);
+        /*$foreach = [];
         $keys = [];
 
         for ($i = 0; $i < $level; $i++) {
@@ -697,6 +697,22 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
             . 'yield [' . implode(',', $keys) . '];'
             . str_repeat('}', $level)
             . '})($this);'
-        );
+        );*/
+    }
+
+    private static function createGeneratorByLevel($data, int $level): Generator
+    {
+        if ($level === 1) {
+            foreach ($data as $key => $value) {
+                yield [$key, $value];
+            }
+        } else {
+            foreach ($data as $key => $value) {
+                foreach (self::createGeneratorByLevel($value, $level - 1) as $value2) {
+                    array_unshift($value2, $key);
+                    yield $value2;
+                }
+            }
+        }
     }
 }

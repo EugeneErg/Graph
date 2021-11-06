@@ -28,7 +28,7 @@ class Tree extends AbstractValueObject
         foreach ($connections ?? [] as $vertex => $subBranches) {
             foreach ($subBranches as $branchA) {
                 foreach ($subBranches as $branchB) {
-                    $this->connections->connections->set($vertex, $branchA, $branchB);
+                    $this->connections->connections->set([$branchA, $branchB], $vertex);
                 }
             }
         }
