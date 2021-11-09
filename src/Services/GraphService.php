@@ -94,7 +94,7 @@ class GraphService extends AbstractService
             ? $outerEdge->flip()
             : new IntegerCollection([$branch->vertexes[$edgeVertexesKey] => 0]);
         $outerVertexes = BoolCollection::fromMap(function (): bool {return true;}, false, $edgeVertexes);
-        $resultChildren = [];
+        $resultChildren = new EdgeCollection();
         $first = !$hasOuter;
         $needOuter = false;
         $finish = false;
@@ -164,7 +164,7 @@ class GraphService extends AbstractService
                     $branch->deleteConnections($innerVertexes);
                     $edgeVertexes = array_replace($edgeVertexes, $flipPath);
 
-                    continue(3);
+                    continue 3;
                 }
             }
 

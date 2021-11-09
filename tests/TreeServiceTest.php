@@ -12,7 +12,7 @@ class TreeServiceTest extends TestCase
     public function testCreateFromGraph(array $graph, array $expected): void
     {
         $trees = TreeService::instance()->createFromGraph(Helper::instance()
-            ->createClearGraph(IntegerMatrix::fromRecursiveArray($graph)));
+            ->createClearGraph($graph));
         $this->assertEquals($expected, $trees->toArrayRecursive());
     }
 

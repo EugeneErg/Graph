@@ -13,7 +13,7 @@ class GraphServiceTest extends TestCase
         array $expected
     ): void {
         $graphs = GraphService::instance()->splitGraphOnDisconnected(Helper::instance()
-            ->createClearGraph(IntegerMatrix::fromRecursiveArray($graph)));
+            ->createClearGraph($graph));
         $this->assertEquals($expected, $graphs->toArrayRecursive());
     }
 

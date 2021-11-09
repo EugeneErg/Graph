@@ -28,4 +28,9 @@ abstract class AbstractEnum
     {
         return $this->value;
     }
+
+    public function isEqual(AbstractEnum $enum): bool
+    {
+        return $this->value === $enum->value;
+    }
 }

@@ -5,6 +5,10 @@ use ArrayAccess;
 use ArrayObject;
 use Countable;
 use Error;
+use EugeneErg\Graph\Collections\Sort\Sort;
+use EugeneErg\Graph\Collections\Sort\SortDirectionEnum;
+use EugeneErg\Graph\Collections\Sort\SortFlagEnum;
+use EugeneErg\Graph\Collections\Sort\SortKeysStateEnum;
 use EugeneErg\Graph\Enums\CollectionFilterEnum;
 use EugeneErg\Graph\Services\AssertService;
 use EugeneErg\Graph\ValueObjects\AbstractValueObject;
@@ -31,6 +35,16 @@ use Traversable;
  * @method $this randomKeys(int $number)
  * @see AbstractCollection::fromFlip()
  * @method $this flip()
+ * @see AbstractCollection::fromChunk()
+ * @method $this chunk(int $length, bool $preserveKeys = false)
+ * @see AbstractCollection::fromSlice()
+ * @method $this slice(int $offset, int|null $length = null, bool $preserveKeys = false)
+ * @see AbstractCollection::fromReverse()
+ * @method $this reverse(bool $preserveKeys = false)
+ * @see AbstractCollection::fromColumn()
+ * @method $this column(string|null $columnKey = null, string|null $indexKey = null)
+ * @see AbstractCollection::fromWalkRecursive()
+ * @method $this walkRecursive(callable $callback, bool $filtered = false)
  */
 abstract class AbstractCollection extends AbstractValueObject implements JsonSerializable, IteratorAggregate, ArrayAccess, Countable
 {
@@ -531,12 +545,17 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         );
     }
 
-    public function splice(int $offset, ?int $length = null, ?AbstractCollection $replacement = null): self
-    {
+    public function splice(
+        int $offset,
+        ?int $length = null,
+        ?AbstractCollection $replacement = null,
+        bool $filtered = false
+    ): self {
         $this->validateItems($replacement->items);
 
         return static::fromArray(
-            array_splice($this->items, $offset, $length, $replacement->items ?? [])
+            array_splice($this->items, $offset, $length, $replacement->items ?? []),
+            $filtered
         );
     }
 
@@ -602,9 +621,24 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         return static::fromArray($result);
     }
 
-    public static function fromFillKeys(self $keys, $value, bool $filtered = false): self
+    public static function fromFillKeys(AbstractCollection $keys, $value, bool $filtered = false): self
     {
         return static::fromArray(array_fill_keys($keys->items, $value), $filtered);
+    }
+
+    public static function fromFill(int $startIndex, int $count, $value): self
+    {
+        return static::fromArray(array_fill($startIndex, $count, $value));
+    }
+
+    public static function fromCombine(AbstractCollection $keys, AbstractCollection $values, bool $filtered = false)
+    {
+        return static::fromArray(array_combine($keys->items, $values->items), $filtered);
+    }
+
+    public static function fromRange(string $start, string $end, float $step, bool $filtered = false): self
+    {
+        return static::fromArray(range($start, $end, $step), $filtered);
     }
 
     /**
@@ -617,16 +651,16 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
     }
 
     /** @return $this */
-    public static function fromRecursiveArray(array $items = []): self
+    public static function fromRecursiveArray(array $items = [], bool $filtered = false): self
     {
-        array_walk($items, function (&$item): void {
-            $item = static::createChildElement($item);
+        array_walk($items, function (&$item) use ($filtered): void {
+            $item = static::createChildElement($item, $filtered);
         });
 
-        return static::fromArray($items);
+        return static::fromArray($items, $filtered);
     }
 
-    public static function createChildElement($value)
+    public static function createChildElement($value, bool $filtered = false)
     {
         if (static::isValidElement($value)) {
             return $value;
@@ -635,10 +669,12 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         $class = static::ELEMENT_CLASS;
 
         if (is_a($class, AbstractCollection::class, true)) {
-            return $class::fromRecursiveArray($value);
+            return $class::fromRecursiveArray($value, $filtered);
         }
 
-        throw new Error('cannot create new child element');
+        if (!$filtered) {
+            throw new Error('cannot create new child element');
+        }
     }
 
     /** @return int|string|null */
@@ -678,6 +714,15 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         array_reduce($collection->items, $callback, $initial);
     }
 
+    /**
+     * @param int|callable ...$callbacks
+     * @return Generator
+     */
+    public function listBy(...$callbacks): Generator
+    {
+        return self::createGeneratorBy($this, ...$callbacks);
+    }
+
     public function listByLevel(int $level): Generator
     {
         return self::createGeneratorByLevel($this, $level);
@@ -700,6 +745,37 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         );*/
     }
 
+    /**
+     * @param Traversable|array $data
+     * @param int|callable ...$callbacks
+     * @return Generator
+     */
+    private static function createGeneratorBy($data, ...$callbacks): Generator
+    {
+        if (count($callbacks) === 0) {
+            foreach ($data as $key => $value) {
+                yield [$key, $value];
+            }
+        } else {
+            if ($callbacks[0] === 1) {
+                $callback = fn($value) => $value;
+                unset ($callbacks[0]);
+            } elseif (is_int($callbacks[0])) {
+                $callback = fn($value) => $value;
+                $callbacks[0] -= 1;
+            } else {
+                $callback = array_shift($callbacks);
+            }
+
+            foreach ($data as $key => $value) {
+                foreach (self::createGeneratorByLevel($callback($value), ...$callbacks) as $value2) {
+                    array_unshift($value2, $key);
+                    yield $value2;
+                }
+            }
+        }
+    }
+
     private static function createGeneratorByLevel($data, int $level): Generator
     {
         if ($level === 1) {
@@ -714,5 +790,171 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
                 }
             }
         }
+    }
+
+    public static function fromChunk(
+        AbstractCollection $collection,
+        int $length,
+        bool $preserveKeys = false,
+        bool $filtered = false
+    ): self {
+        return static::fromArray(array_chunk($collection->items, $length, $preserveKeys), $filtered);
+    }
+
+    public static function fromSlice(
+        AbstractCollection $collection,
+        int $offset,
+        ?int $length = null,
+        bool $preserveKeys = false,
+        bool $filtered = false
+    ): self {
+        return static::fromArray(array_slice($collection->items, $offset, $length, $preserveKeys), $filtered);
+    }
+
+    public static function fromReverse(
+        AbstractCollection $collection,
+        bool $preserveKeys = false,
+        bool $filtered = false
+    ): self {
+        return static::fromArray(array_reverse($collection->items, $preserveKeys), $filtered);
+    }
+
+    public static function fromColumn(
+        AbstractCollection $collection,
+        ?string $columnKey = null,
+        ?string $indexKey = null,
+        bool $filtered = false
+    ): self {
+        return static::fromArray(array_column($collection->items, $columnKey, $indexKey), $filtered);
+    }
+
+    public static function fromCountValues(AbstractCollection $collection, bool $filtered = false): self
+    {
+        return static::fromArray(array_count_values($collection->items), $filtered);
+    }
+
+    public static function fromWalkRecursive(
+        AbstractCollection $collection,
+        callable $callback,
+        bool $filtered = false
+    ): self {
+        $array = $collection->toArrayRecursive();
+        array_walk_recursive($array, function (&$item, $key) use ($callback) {
+            $item = $callback($item, $key);
+        });
+
+        return static::fromRecursiveArray($array, $filtered);
+    }
+
+    public static function fromReplaceRecursive(bool $filtered = false, AbstractCollection ...$collections): self
+    {
+        return count($collections)
+            ? static::fromRecursiveArray(array_replace_recursive(...array_map(
+                function (AbstractCollection $collection): array {
+                    return $collection->toArrayRecursive();
+                },
+                $collections
+            )), $filtered)
+            : static::fromArray();
+    }
+
+    public static function fromMergeRecursive(bool $filtered = false, AbstractCollection ...$collections): self
+    {
+        return count($collections)
+            ? static::fromRecursiveArray(array_merge_recursive(...array_map(
+                function (AbstractCollection $collection): array {
+                    return $collection->toArrayRecursive();
+                },
+                $collections
+            )), $filtered)
+            : static::fromArray();
+    }
+
+    public static function fromUpKeys(AbstractCollection $collection, bool $filtered = false): self
+    {
+        return static::fromArray(array_change_key_case($collection->items, CASE_UPPER), $filtered);
+    }
+
+    public static function fromLowKeys(AbstractCollection $collection, bool $filtered = false): self
+    {
+        return static::fromArray(array_change_key_case($collection->items, CASE_LOWER), $filtered);
+    }
+
+    public static function multiSort(Sort ...$sorts): void
+    {
+        if (!count($sorts)) {
+            return;
+        }
+
+        $arguments = [];
+
+        foreach ($sorts as $sort) {
+            $arguments[] = &$sort->getCollection()->items;
+            $arguments[] = $sort->getDirection()->getValue();
+            $arguments[] = $sort->getFlag()->getValue();
+        }
+
+        array_multisort(...$arguments);
+    }
+
+    /**
+     * @param SortFlagEnum|callable|null $flag
+     * @param SortKeysStateEnum|null $keysState
+     * @param SortDirectionEnum|null $direction
+     */
+    public function sort(
+        callable $flag = null,
+        ?SortKeysStateEnum $keysState = null,
+        ?SortDirectionEnum $direction = null
+    ): void {
+        $flag = $flag ?? SortFlagEnum::REGULAR();
+        $keysState = $keysState ?? SortKeysStateEnum::WITHOUT_KEYS();
+        $direction = $direction ?? SortDirectionEnum::ASC();
+
+        if ($flag instanceof SortFlagEnum) {
+            switch ([$keysState, $direction]) {
+                case [SortKeysStateEnum::WITHOUT_KEYS(), SortDirectionEnum::ASC()]:
+                    sort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::WITH_KEYS(), SortDirectionEnum::ASC()]:
+                    asort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::BY_KEYS(), SortDirectionEnum::ASC()]:
+                    ksort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::WITHOUT_KEYS(), SortDirectionEnum::DESC()]:
+                    rsort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::WITH_KEYS(), SortDirectionEnum::DESC()]:
+                    arsort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::BY_KEYS(), SortDirectionEnum::DESC()]:
+                    krsort($this->items, $flag->getValue());
+                    break;
+            }
+        } else {
+            if ($direction->isEqual(SortDirectionEnum::DESC())) {
+                $flag = function ($value1, $value2) use ($flag): int {
+                    return $flag($value2, $value1);
+                };
+            }
+
+            switch ($keysState) {
+                case SortKeysStateEnum::WITHOUT_KEYS():
+                    usort($this->items, $flag);
+                    break;
+                case SortKeysStateEnum::WITH_KEYS():
+                    uasort($this->items, $flag);
+                    break;
+                case SortKeysStateEnum::BY_KEYS():
+                    uksort($this->items, $flag);
+                    break;
+            }
+        }
+    }
+
+    public function shuffle(): void
+    {
+        shuffle($this->items);
     }
 }
