@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace EugeneErg\Tests;
 
-use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Services\GraphService;
 use PHPUnit\Framework\TestCase;
 

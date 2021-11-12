@@ -2,7 +2,6 @@
 
 namespace EugeneErg\Tests;
 
-use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Services\TreeService;
 use PHPUnit\Framework\TestCase;
 

@@ -2,9 +2,11 @@
 namespace EugeneErg\Graph\Collections;
 
 use ArrayAccess;
-use ArrayObject;
+use ArrayIterator;
 use Countable;
 use Error;
+use EugeneErg\Graph\Collections\Iterator\Iterator;
+use EugeneErg\Graph\Collections\Iterator\IteratorItem;
 use EugeneErg\Graph\Collections\Sort\Sort;
 use EugeneErg\Graph\Collections\Sort\SortDirectionEnum;
 use EugeneErg\Graph\Collections\Sort\SortFlagEnum;
@@ -706,7 +708,7 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
 
     public function getIterator(): Traversable
     {
-        return new ArrayObject($this->items);
+        return new ArrayIterator($this->items);
     }
 
     public static function fromReduce(AbstractCollection $collection, callable $callback, $initial = null)
@@ -715,12 +717,13 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
     }
 
     /**
+     * @param int|callable $callback
      * @param int|callable ...$callbacks
-     * @return Generator
+     * @return Generator|Iterator[]|IteratorItem[][]
      */
-    public function listBy(...$callbacks): Generator
+    public function listBy($callback = 1, ...$callbacks): Generator
     {
-        return self::createGeneratorBy($this, ...$callbacks);
+        return self::createGeneratorBy($this, $callback, ...$callbacks);
     }
 
     public function listByLevel(int $level): Generator
@@ -747,31 +750,31 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
 
     /**
      * @param Traversable|array $data
+     * @param int|callable $callback
      * @param int|callable ...$callbacks
-     * @return Generator
+     * @return Generator|Iterator[]|IteratorItem[][]
      */
-    private static function createGeneratorBy($data, ...$callbacks): Generator
+    private static function createGeneratorBy($data, $callback, ...$callbacks): Generator
     {
-        if (count($callbacks) === 0) {
-            foreach ($data as $key => $value) {
-                yield [$key, $value];
-            }
-        } else {
-            if ($callbacks[0] === 1) {
-                $callback = fn($value) => $value;
-                unset ($callbacks[0]);
-            } elseif (is_int($callbacks[0])) {
-                $callback = fn($value) => $value;
-                $callbacks[0] -= 1;
-            } else {
-                $callback = array_shift($callbacks);
+        if (is_int($callback)) {
+            if ($callback > 1) {
+                array_unshift($callbacks, $callback - 1);
             }
 
+            $callback = fn($value) => $value;
+        }
+
+        if (count($callbacks) > 0) {
             foreach ($data as $key => $value) {
-                foreach (self::createGeneratorByLevel($callback($value), ...$callbacks) as $value2) {
-                    array_unshift($value2, $key);
+                foreach (self::createGeneratorBy($callback($value), ...$callbacks) as $value2) {
+                    $value2->unshift([$key => $value]);
+
                     yield $value2;
                 }
+            }
+        } else {
+            foreach ($data as $key => $value) {
+                yield new Iterator([$key => $value]);
             }
         }
     }
