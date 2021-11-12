@@ -717,8 +717,8 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
     }
 
     /**
-     * @param int|callable $callback
-     * @param int|callable ...$callbacks
+     * @param callable|int|string|Traversable|array $callback
+     * @param callable|int|string|Traversable|array ...$callbacks
      * @return Generator|Iterator[]|IteratorItem[][]
      */
     public function listBy($callback = 1, ...$callbacks): Generator
@@ -726,32 +726,10 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         return self::createGeneratorBy($this, $callback, ...$callbacks);
     }
 
-    public function listByLevel(int $level): Generator
-    {
-        return self::createGeneratorByLevel($this, $level);
-        /*$foreach = [];
-        $keys = [];
-
-        for ($i = 0; $i < $level; $i++) {
-            $foreach[] = sprintf('foreach ($value%1$s as $key%2$s => $value%2$s) {', $i, $i + 1);
-            $keys[] = sprintf('$key%s', $i + 1);
-        }
-
-        $keys[] = sprintf('$value%s', $level);
-
-        return eval(
-            'return (function ($value0): Generator {'
-             . implode('', $foreach)
-            . 'yield [' . implode(',', $keys) . '];'
-            . str_repeat('}', $level)
-            . '})($this);'
-        );*/
-    }
-
     /**
      * @param Traversable|array $data
-     * @param int|callable $callback
-     * @param int|callable ...$callbacks
+     * @param callable|int|string|Traversable|array $callback
+     * @param callable|int|string|Traversable|array ...$callbacks
      * @return Generator|Iterator[]|IteratorItem[][]
      */
     private static function createGeneratorBy($data, $callback, ...$callbacks): Generator
@@ -762,6 +740,10 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
             }
 
             $callback = fn($value) => $value;
+        } elseif (!is_callable($callback) && is_string($callback)) {
+            $callback = fn($value) => is_object($value) ? $value->$callback : $value[$callback];
+        } elseif ((!is_callable($callback) && is_array($callback)) || $callback instanceof Traversable) {
+            $callback = fn() => $callback;
         }
 
         if (count($callbacks) > 0) {
@@ -775,22 +757,6 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         } else {
             foreach ($data as $key => $value) {
                 yield new Iterator([$key => $value]);
-            }
-        }
-    }
-
-    private static function createGeneratorByLevel($data, int $level): Generator
-    {
-        if ($level === 1) {
-            foreach ($data as $key => $value) {
-                yield [$key, $value];
-            }
-        } else {
-            foreach ($data as $key => $value) {
-                foreach (self::createGeneratorByLevel($value, $level - 1) as $value2) {
-                    array_unshift($value2, $key);
-                    yield $value2;
-                }
             }
         }
     }

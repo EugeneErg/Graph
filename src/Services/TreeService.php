@@ -35,8 +35,8 @@ class TreeService extends AbstractService
         }, false, $result);
         $connections = new IntegerMatrix();
 
-        foreach ($result->listBy(2) as $key => $data) {
-            $connections->set([$data[1]->value, $key], (int) $data[1]->key);
+        foreach ($result->listBy(2) as $key => [$value1, $value2]) {
+            $connections->set([$value2->value, $key], (int) $value2->key);
         }
 
         return new Tree($graph, $branches, $connections);

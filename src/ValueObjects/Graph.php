@@ -45,11 +45,9 @@ class Graph extends AbstractValueObject
     {
         $connections = new IntegerMatrix();
 
-        foreach ($vertexes as $vertexA) {
-            foreach ($vertexes as $vertexB) {
-                if (isset($this->connections[$vertexA][$vertexB])) {
-                    $connections->set([$vertexA, $vertexB], $this->connections[$vertexA][$vertexB]);
-                }
+        foreach ($vertexes->listBy($vertexes, 1) as [$vertexA, $vertexB]) {
+            if (isset($this->connections[$vertexA->key][$vertexB->key])) {
+                $connections->set([(int) $vertexA->key, (int) $vertexB->key], $this->connections[$vertexA->key][$vertexB->key]);
             }
         }
 

@@ -10,14 +10,13 @@ class ClearGraph extends Graph
 {
     public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes = null)
     {
-        foreach ($connections->listBy(2) as $data) {
-            [$vertexA, $vertexB] = $data->allKeys();
+        foreach ($connections->listBy(2) as [$vertexA, $vertexB]) {
             AssertService::instance()->equals(
-                new Argument($data[1]->value, 1, "connections[{$vertexA}][{$vertexB}]"),
+                new Argument($vertexB->value, 1, "connections[{$vertexA->key}][{$vertexB->key}]"),
                 new Argument(
-                    $connections[$vertexB][$vertexA] ?? null,
+                    $connections[$vertexB->key][$vertexA->key] ?? null,
                     1,
-                    "connections[{$vertexB}][{$vertexA}]"
+                    "connections[{$vertexB->key}][{$vertexA->key}]"
                 ),
                 null,
                 [ClearGraph::class, '__construct']
