@@ -23,7 +23,7 @@ class IntersectionService extends AbstractService
 
         foreach ($path as $vertexA) {
             foreach ($branch->connections[$vertexA] ?? [] as $vertexB => $value) {
-                $oldColor = $canvas->getColor($vertexB);
+                $oldColor = $canvas[$vertexB];
 
                 if ($oldColor !== 1) {
                     $intersections[$oldColor === 0 ? $color + 1 : $oldColor][$vertexA] = true;
@@ -40,7 +40,7 @@ class IntersectionService extends AbstractService
         $outerColors = [];
 
         foreach ($outerVertexes as $outerVertex => $v) {
-            $outerColors[$canvas->getColor($outerVertex)] = true;
+            $outerColors[$canvas[$outerVertex]] = true;
         }
 
         $result = new IntersectionCollection();

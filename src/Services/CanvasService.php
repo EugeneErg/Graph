@@ -9,14 +9,14 @@ class CanvasService extends AbstractService
 {
     public function fill(Canvas $canvas, int $vertex, int $color): IntegerCollection
     {
-        $oldColor = $canvas->getColor($vertex);
-        $canvas->addVertex($vertex, $color);
+        $oldColor = $canvas[$vertex];
+        $canvas[$vertex] = $color;
         $result = new IntegerCollection([$vertex => $vertex]);
 
         foreach ($result->getUpdatingIterator() as $vertex) {
             foreach ($canvas->graph->connections[$vertex] ?? [] as $connectionVertex => $value) {
-                if ($canvas->getColor($connectionVertex) === $oldColor) {
-                    $canvas->addVertex($connectionVertex, $color);
+                if ($canvas[$connectionVertex] === $oldColor) {
+                    $canvas[$connectionVertex] = $color;
                     $result[$connectionVertex] = $connectionVertex;
                 }
             }
@@ -39,26 +39,26 @@ class CanvasService extends AbstractService
     public function pixels(Canvas $canvas, IntegerCollection $vertexes, int $color): void
     {
         foreach ($vertexes as $vertex) {
-            $canvas->addVertex($vertex, $color);
+            $canvas[$vertex] = $color;
             $operations[$vertex] = $vertex;
         }
     }
 
     public function incFill(Canvas $canvas, int $vertex, int $color): IntegerCollection
     {
-        $oldColor = $canvas->getColor($vertex);
-        $canvas->addVertex($vertex, $color);
+        $oldColor = $canvas[$vertex];
+        $canvas[$vertex] = $color;
         $result = new IntegerCollection([$vertex => $vertex]);
         $connect = new BoolCollection();
 
         foreach ($result->getUpdatingIterator() as $vertex) {
             if (!isset($connect[$vertex])) {
                 foreach ($canvas->graph->connections[$vertex] ?? [] as $connectionVertex => $value) {
-                    if ($canvas->getColor($connectionVertex) === $oldColor) {
-                        $canvas->addVertex($connectionVertex, $color);
+                    if ($canvas[$connectionVertex] === $oldColor) {
+                        $canvas[$connectionVertex] = $color;
                         $result[$connectionVertex] = $connectionVertex;
                     } elseif (
-                        $canvas->getColor($connectionVertex) === $color
+                        $canvas[$connectionVertex] === $color
                         && !isset($result[$connectionVertex])
                     ) {
                         $result[$connectionVertex] = $connectionVertex;

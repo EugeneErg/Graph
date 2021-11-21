@@ -1,32 +1,29 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
+use EugeneErg\Graph\Collections\IntegerCollection;
+
 /**
- * @property-read  Graph $graph
- * @see Canvas::setVertexesAttribute()
- * @property int[] $vertexes
- * @see Canvas::addVertexAttribute()
- * @method int addVertex(int $vertex, int $color)
+ * @see Canvas::getGraph()
+ * @property-read Graph $graph
  */
-class Canvas extends AbstractValueObjectMutable
+class Canvas extends IntegerCollection
 {
-    public function __construct(Graph $graph, array $vertexes = [])
+    private $graph;
+
+    public function __construct(Graph $graph)
     {
-        parent::__construct($graph, $vertexes);
+        $this->graph = $graph;
+        parent::__construct();
     }
 
-    public function setVertexesAttribute(Object $attributes, array $vertexes): void
+    public function offsetGet($offset): int
     {
-        $attributes->vertexes = $vertexes;
+        return $this->offsetExists($offset) ? parent::offsetGet($offset) : 0;
     }
 
-    public function getColor(int $vertex): int
+    public function getGraph(): Graph
     {
-        return $this->vertexes[$vertex] ?? 0;
-    }
-
-    public function addVertexAttribute(Object $attributes, int $vertex, int $color): void
-    {
-        $attributes->vertexes[$vertex] = $color;
+        return $this->graph;
     }
 }

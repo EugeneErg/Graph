@@ -41,6 +41,8 @@ abstract class AbstractValueObject implements JsonSerializable
         if (method_exists($this, $method)) {
             return $this->$method() !== null;
         }
+
+        return false;
     }
 
     public function toArray(): array

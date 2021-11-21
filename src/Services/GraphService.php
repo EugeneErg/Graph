@@ -67,7 +67,7 @@ class GraphService extends AbstractService
         $operations = new IntegerMatrix();
 
         foreach ($graph->vertexes as $vertex) {
-            if ($canvas->getColor($vertex) === 0) {
+            if ($canvas[$vertex] === 0) {
                 $operations[] = CanvasService::instance()->fill($canvas, $vertex, 1);
             }
         }
@@ -235,7 +235,7 @@ class GraphService extends AbstractService
 
                 foreach ($graph->connections[$currentVertex] ?? [] as $nextVertex => $value) {
                     if (
-                        $canvas->getColor($nextVertex) === 0
+                        $canvas[$nextVertex] === 0
                         && (
                             (!$currentValue && $value !== 3)
                             || ($currentValue && $value === 2)
@@ -252,7 +252,7 @@ class GraphService extends AbstractService
             }
         }
 
-        if ($canvas->getColor($vertexA) === 0) {
+        if ($canvas[$vertexA] === 0) {
             return null;
         }
 
