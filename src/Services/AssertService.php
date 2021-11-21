@@ -21,6 +21,10 @@ class AssertService extends AbstractService
         ?string $message = null,
         $methodName = null
     ): void {
+        if (!$expectedTypes instanceof Argument) {
+            $expectedTypes = (array) $expectedTypes;
+        }
+
         [$expectedTypesName, $expectedTypes] = $this->getNameAndValue($expectedTypes, function ($value): string {
             return implode('|', (array) $value);
         });

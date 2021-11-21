@@ -2,7 +2,6 @@
 namespace EugeneErg\Graph\Collections;
 
 use ArrayAccess;
-use ArrayIterator;
 use Countable;
 use Error;
 use EugeneErg\Graph\Collections\Iterator\Iterator;
@@ -92,43 +91,6 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         return new static(
             $filtered ? array_filter($items, [static::class, 'isValid'], ARRAY_FILTER_USE_BOTH) : $items
         );
-    }
-
-    public function current()
-    {
-        return $this->valid() ? current($this->items) : null;
-    }
-
-    public function next()
-    {
-        $value = next($this->items);
-
-        return $this->valid() ? $value : null;
-    }
-
-    /** @return int|string|null */
-    public function key()
-    {
-        return key($this->items);
-    }
-
-    public function valid(): bool
-    {
-        return $this->key() !== null;
-    }
-
-    public function rewind()
-    {
-        $value = reset($this->items);
-
-        return $this->valid() ? $value : null;
-    }
-
-    public function end()
-    {
-        $value = end($this->items);
-
-        return $this->valid() ? $value : null;
     }
 
     /** @param int|string $offset */
@@ -689,6 +651,10 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
 
     public function getKeyValueByPosition(int $position): ?array
     {
+        if ($position < 0) {
+            $position = $this->count() + $position;
+        }
+
         $result = array_slice($this->items, $position, 1, true);
         $value = reset($result);
         $key = key($result);
@@ -708,7 +674,20 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
 
     public function getIterator(): Traversable
     {
-        return new ArrayIterator($this->items);
+        foreach ($this->items as $key => $value) {
+            yield $key => $value;
+        }
+    }
+
+    public function getUpdatingIterator(): Traversable
+    {
+        for (
+            $value = reset($this->items);
+            ($key = key($this->items)) !== null;
+            $value = next($this->items)
+        ) {
+            yield $key => $value;
+        }
     }
 
     public static function fromReduce(AbstractCollection $collection, callable $callback, $initial = null)

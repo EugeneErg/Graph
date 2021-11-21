@@ -5,9 +5,6 @@ use EugeneErg\Graph\Services\AssertService;
 
 /**
  * @method IntegerCollection offsetGet(int $offset)
- * @method IntegerCollection|null current()
- * @method IntegerCollection|null next()
- * @method IntegerCollection|null rewind()
  * @method __construct(IntegerCollection[] $items)
  * @method IntegerCollection[] getIterator()
  * @method IntegerCollection[] toArray()

@@ -10,8 +10,8 @@ class TreeServiceTest extends TestCase
     /** @dataProvider createFromGraphData */
     public function testCreateFromGraph(array $graph, array $expected): void
     {
-        $trees = TreeService::instance()->createFromGraph(Helper::instance()
-            ->createClearGraph($graph));
+        $trees = TreeService::instance()
+            ->createFromGraph(Helper::instance()->createClearGraph($graph));
         $this->assertEquals($expected, $trees->toArrayRecursive());
     }
 

@@ -28,17 +28,18 @@ class ClearGraph extends Graph
 
     public function setOuterEdge(IntegerCollection $path): void
     {
-        $prev = $path->end();
+        $prev = $path->getValueByPosition(-1);
 
         foreach ($path as $vertex) {
-            $this->connections[$prev][$vertex] = $this->connections[$vertex][$prev] = 2;
+            $this->connections[$prev][$vertex] = 2;
+            $this->connections[$vertex][$prev] = 2;
             $prev = $vertex;
         }
     }
 
     public function joinOuterEdge(IntegerCollection $path): void
     {
-        $prevVertex = $path->end();
+        $prevVertex = $path->getValueByPosition(-1);
 
         foreach ($path as $currentVertex) {
             $value = $this->connections[$currentVertex][$prevVertex];
@@ -49,8 +50,8 @@ class ClearGraph extends Graph
                     $this->connections[$prevVertex][$currentVertex]
                 );
             } else {
-                $this->connections[$currentVertex][$prevVertex]
-                    = $this->connections[$prevVertex][$currentVertex] = $value + 1;
+                $this->connections[$currentVertex][$prevVertex] = $value + 1;
+                $this->connections[$prevVertex][$currentVertex] = $value + 1;
             }
 
             $prevVertex = $currentVertex;

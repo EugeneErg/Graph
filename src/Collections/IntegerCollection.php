@@ -3,11 +3,8 @@ namespace EugeneErg\Graph\Collections;
 
 /**
  * @method int offsetGet(int|string $offset)
- * @method int|null current()
- * @method int|null next()
- * @method int|null rewind()
  * @method __construct(int[] $items)
- * @method int[] getIterator()
+ * @method ArrayIterator<int> getIterator()
  * @method int[] toArray()
  */
 class IntegerCollection extends AbstractCollection

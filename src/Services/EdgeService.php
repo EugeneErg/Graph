@@ -106,18 +106,18 @@ class EdgeService extends AbstractService
          */
         $connections = $graph->connections[$root] ?? new IntegerCollection();
 
-        while (null !== $vertex = $connections->rewind()) {
-            $branch = $connections->key();
+        while (null !== $keyValue = $connections->getKeyValueByPosition(0)) {
+            [$branch, $vertex] = $keyValue;
             unset($connections[$branch]);
-            $connections = array_replace($connections, $graph->connections[$branch] ?? []);
+            $connections = $connections->replace($graph->connections[$branch] ?? []);
             $edgeNumberA = $steps[$step++] ?? $edgeMap[$root][$vertex]->getRandomKey();
             var_dump('edgeNumberA', $edgeNumberA);
             $edgeA = $edgeMap[$root][$vertex][$edgeNumberA];
             $edgeNumberB = $steps[$step++] ?? $edgeMap[$branch][$vertex]->getRandomKey();
             var_dump('edgeNumberB', $edgeNumberB);
             $edgeB = $edgeMap[$branch][$vertex][$edgeNumberB];
-            $countAIsW = count($edgeA->vertexes) === 2;
-            $countBIsW = count($edgeB->vertexes) === 2;
+            $countAIsW = $edgeA->vertexes->count() === 2;
+            $countBIsW = $edgeB->vertexes->count() === 2;
 
             if ($countAIsW && $countBIsW) {
                 $newEdge = $this->getEdgeFromWW($vertex, $edgeA, $edgeB);

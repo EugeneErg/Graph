@@ -12,18 +12,26 @@ class CanvasService extends AbstractService
         $oldColor = $canvas->getColor($vertex);
         $canvas->addVertex($vertex, $color);
         $result = new IntegerCollection([$vertex => $vertex]);
-        $result->rewind();
 
-        while ($vertex !== null) {
+        foreach ($result->getUpdatingIterator() as $vertex) {
             foreach ($canvas->graph->connections[$vertex] ?? [] as $connectionVertex => $value) {
                 if ($canvas->getColor($connectionVertex) === $oldColor) {
                     $canvas->addVertex($connectionVertex, $color);
                     $result[$connectionVertex] = $connectionVertex;
                 }
             }
-
-            $vertex = $result->next();
         }
+
+        /*
+        foreach (
+            $result->listBy(fn($vertex) => $canvas->graph->connections[$vertex] ?? [], 1)
+            as [$vertex, $value]
+        ) {
+            if ($canvas->getColor((int) $value->key) === $oldColor) {
+                $canvas->addVertex((int) $value->key, $color);
+                $result[(int) $value->key] = (int) $value->key;
+            }
+        }*/
 
         return $result;
     }
@@ -41,10 +49,9 @@ class CanvasService extends AbstractService
         $oldColor = $canvas->getColor($vertex);
         $canvas->addVertex($vertex, $color);
         $result = new IntegerCollection([$vertex => $vertex]);
-        $result->rewind();
         $connect = new BoolCollection();
 
-        while ($vertex !== null) {
+        foreach ($result->getUpdatingIterator() as $vertex) {
             if (!isset($connect[$vertex])) {
                 foreach ($canvas->graph->connections[$vertex] ?? [] as $connectionVertex => $value) {
                     if ($canvas->getColor($connectionVertex) === $oldColor) {
@@ -59,8 +66,6 @@ class CanvasService extends AbstractService
                     }
                 }
             }
-
-            $vertex = $result->next();
         }
 
         return $result;

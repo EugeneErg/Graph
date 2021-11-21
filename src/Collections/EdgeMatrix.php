@@ -3,9 +3,6 @@ namespace EugeneErg\Graph\Collections;
 
 /**
  * @method EdgeCollection offsetGet(int|string $offset)
- * @method EdgeCollection|null current()
- * @method EdgeCollection|null next()
- * @method EdgeCollection|null rewind()
  * @method __construct(EdgeCollection[] $items)
  * @method EdgeCollection[] getIterator()
  * @method EdgeCollection[] toArray()

@@ -5,9 +5,6 @@ use EugeneErg\Graph\ValueObjects\Graph;
 
 /**
  * @method Graph offsetGet(int|string $offset)
- * @method Graph|null current()
- * @method Graph|null next()
- * @method Graph|null rewind()
  * @method __construct(Graph[] $items)
  * @method Graph[] getIterator()
  * @method Graph[] toArray()
