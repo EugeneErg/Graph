@@ -32,7 +32,7 @@
             markerHeight="20">
         <polyline id="markerPoly1" points="0,0 20,10 0,20 2,10" fill="crimson"/>
     </marker-->
-<?php foreach ($graph->connections as $vertexA => $connections):
+<?php foreach ($graph as $vertexA => $connections):
           if (!isset($coordinates[$vertexA])) {
               continue;
           }

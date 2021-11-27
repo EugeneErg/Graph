@@ -103,7 +103,7 @@ class GraphService extends AbstractService
             foreach ($edgeVertexes as $vertexA => $v) {
                 unset($edgeVertexes[$vertexA]);
 
-                foreach ($branch->connections[$vertexA] ?? [] as $vertexB => $value) {
+                foreach ($branch[$vertexA] ?? [] as $vertexB => $value) {
                     if (
                         ($value !== 1 || $needOuter)
                         && ($value !== 2 || !$needOuter)
@@ -122,7 +122,7 @@ class GraphService extends AbstractService
                     }
 
                     foreach ($path as $pos => $vertex) {
-                        if (($branch->connections[$vertexA][$vertex] ?? null) === 1 && $pos > 1) {
+                        if (($branch[$vertexA][$vertex] ?? null) === 1 && $pos > 1) {
                             $path->splice($pos + 1);
 
                             break;
@@ -182,19 +182,19 @@ class GraphService extends AbstractService
     public function findShortEdge(ClearGraph $graph, int $vertexA, int $vertexB, bool $first = false): IntegerCollection
     {
         if ($first) {
-            unset($graph->connections[$vertexB][$vertexA]);
+            unset($graph[$vertexB][$vertexA]);
         } else {
-            foreach ($graph->connections[$vertexA] ?? [] as $vertex => $value) {
+            foreach ($graph[$vertexA] ?? [] as $vertex => $value) {
                 if ($value === 1) {
-                    unset($graph->connections[$vertex][$vertexA]);
+                    unset($graph[$vertex][$vertexA]);
                 }
             }
         }
 
         $result = $this->findShortPath($graph, $vertexA, $vertexB);
 
-        foreach ($graph->connections[$vertexA] ?? [] as $vertex => $value) {
-            $graph->connections[$vertex][$vertexA] = $value;
+        foreach ($graph[$vertexA] ?? [] as $vertex => $value) {
+            $graph[$vertex][$vertexA] = $value;
         }
 
         return $result;
@@ -226,14 +226,14 @@ class GraphService extends AbstractService
                 $currentValue = !empty($values[$currentVertex]);
                 unset($values[$currentVertex]);
 
-                if (isset($graph->connections[$currentVertex][$vertexA])) {
+                if (isset($graph[$currentVertex][$vertexA])) {
                     CanvasService::instance()->pixels($canvas, new IntegerCollection([$vertexA]), 1);
                     $steps[$step + 1][$vertexA] = $currentVertex;
 
                     break(2);
                 }
 
-                foreach ($graph->connections[$currentVertex] ?? [] as $nextVertex => $value) {
+                foreach ($graph[$currentVertex] ?? [] as $nextVertex => $value) {
                     if (
                         $canvas[$nextVertex] === 0
                         && (
@@ -307,7 +307,7 @@ class GraphService extends AbstractService
             $newKnowns = [];
 
             foreach ($knowns as $vertexA => $isOuter) {
-                foreach ($matrix->connections[$vertexA] ?? [] as $vertexB => $value) {
+                foreach ($matrix[$vertexA] ?? [] as $vertexB => $value) {
                     if (isset($unknowns[$vertexB])) {
                         $unknowns[$vertexB]->isOuter = !$isOuter;
                         $newKnowns[$vertexB] = !$isOuter;

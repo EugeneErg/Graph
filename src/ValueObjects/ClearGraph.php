@@ -31,8 +31,8 @@ class ClearGraph extends Graph
         $prev = $path->getValueByPosition(-1);
 
         foreach ($path as $vertex) {
-            $this->connections[$prev][$vertex] = 2;
-            $this->connections[$vertex][$prev] = 2;
+            $this[$prev][$vertex] = 2;
+            $this[$vertex][$prev] = 2;
             $prev = $vertex;
         }
     }
@@ -42,16 +42,16 @@ class ClearGraph extends Graph
         $prevVertex = $path->getValueByPosition(-1);
 
         foreach ($path as $currentVertex) {
-            $value = $this->connections[$currentVertex][$prevVertex];
+            $value = $this[$currentVertex][$prevVertex];
 
             if ($value === 2) {
                 unset(
-                    $this->connections[$currentVertex][$prevVertex],
-                    $this->connections[$prevVertex][$currentVertex]
+                    $this[$currentVertex][$prevVertex],
+                    $this[$prevVertex][$currentVertex]
                 );
             } else {
-                $this->connections[$currentVertex][$prevVertex] = $value + 1;
-                $this->connections[$prevVertex][$currentVertex] = $value + 1;
+                $this[$currentVertex][$prevVertex] = $value + 1;
+                $this[$prevVertex][$currentVertex] = $value + 1;
             }
 
             $prevVertex = $currentVertex;
@@ -61,8 +61,8 @@ class ClearGraph extends Graph
     public function deleteConnections(IntegerCollection $vertexes): void
     {
         foreach ($vertexes as $vertexA) {
-            foreach ($this->connections[$vertexA] ?? [] as $vertexB => $value) {
-                unset($this->connections[$vertexA][$vertexB], $this->connections[$vertexB][$vertexA]);
+            foreach ($this[$vertexA] ?? [] as $vertexB => $value) {
+                unset($this[$vertexA][$vertexB], $this[$vertexB][$vertexA]);
             }
         }
     }

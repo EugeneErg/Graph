@@ -10,21 +10,17 @@ use EugeneErg\Graph\Services\AssertService;
 /**
  * @see Graph::getVertexes()
  * @property-read IntegerCollection $vertexes
- * @see Graph::getConnections()
- * @property-read IntegerMatrix $connections
  */
-class Graph extends AbstractValueObject
+class Graph extends IntegerMatrix
 {
-    /** @var IntegerMatrix */
-    private $connections;
     /** @var IntegerCollection  */
     private $vertexes;
 
     public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes = null)
     {
-        $this->connections = $connections;
+        parent::__construct($connections->toArray());
         $realVertex = IntegerCollection::fromKeys(
-            Collection::fromReplace(false, $this->connections, ...$this->connections)
+            Collection::fromReplace(false, $this, ...$this)
         );
 
         if ($vertexes !== null) {
@@ -46,8 +42,8 @@ class Graph extends AbstractValueObject
         $connections = new IntegerMatrix();
 
         foreach ($vertexes->listBy($vertexes, 1) as [$vertexA, $vertexB]) {
-            if (isset($this->connections[$vertexA->key][$vertexB->key])) {
-                $connections->set([(int) $vertexA->key, (int) $vertexB->key], $this->connections[$vertexA->key][$vertexB->key]);
+            if (isset($this[$vertexA->key][$vertexB->key])) {
+                $connections->set([(int) $vertexA->key, (int) $vertexB->key], $this[$vertexA->key][$vertexB->key]);
             }
         }
 
@@ -57,12 +53,12 @@ class Graph extends AbstractValueObject
     public function direct(int $vertex): Graph
     {
         $parent = null;
-        $connections = $this->connections;
+        $new = clone $this;
 
         for ($vertexes = [$vertex => $parent]; $vertex !== null; $vertex = key($vertexes)) {
-            foreach ($this->connections[$vertex] ?? [] as $vertexB => $value) {
+            foreach ($this[$vertex] ?? [] as $vertexB => $value) {
                 if ($vertexB !== $parent) {
-                    unset($connections[$vertexB][$vertex]);
+                    unset($new[$vertexB][$vertex]);
                     $vertexes[$vertexB] = $vertex;
                 }
             }
@@ -70,12 +66,7 @@ class Graph extends AbstractValueObject
             $parent = next($vertexes);
         }
 
-        return new Graph($connections, $this->vertexes);
-    }
-
-    public function getConnections(): IntegerMatrix
-    {
-        return $this->connections;
+        return $new;
     }
 
     public function getVertexes(): IntegerCollection
@@ -86,7 +77,7 @@ class Graph extends AbstractValueObject
     public function toArray(): array
     {
         return [
-            'connections' => $this->connections,
+            'matrix' => parent::toArray(),
             'vertexes' => $this->vertexes,
         ];
     }

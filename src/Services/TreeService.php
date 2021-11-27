@@ -58,7 +58,7 @@ class TreeService extends AbstractService
 
             unset($articulationVertex[$vertexA]);
 
-            foreach($canvas->graph->connections[$vertexA] ?? [] as $vertexB => $value) {
+            foreach($canvas->graph[$vertexA] ?? [] as $vertexB => $value) {
                 if ($canvas[$vertexB] !== $maxColor) {
                     continue;
                 }

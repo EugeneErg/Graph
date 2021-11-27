@@ -41,7 +41,7 @@ class ArticulationVertexesFinderService extends AbstractService
             = $this->index[$vertexA]
             = $parentVertex === null ? 0 : $this->number[$parentVertex] + 1;
 
-        foreach ($this->graph->connections[$vertexA] ?? [] as $vertexB => $value) {
+        foreach ($this->graph[$vertexA] ?? [] as $vertexB => $value) {
             if ($vertexB === $parentVertex) {
                 continue;
             }

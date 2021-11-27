@@ -54,7 +54,7 @@ class EdgeService extends AbstractService
             $edgeMatrix[$branch] = $this->toList($edge);
             $edgeMap[$branch] = $this->addEdgeToMap(
                 $edgeMatrix[$branch],
-                new IntegerCollection($tree->connections->connections[$branch]),
+                new IntegerCollection($tree->connections[$branch]),
                 $lastNumber
             );
 
@@ -104,12 +104,12 @@ class EdgeService extends AbstractService
          * $edgeMap[У какой ветки][какая вершина][есть в каком ребре] = ребро
          * $edgeLists[] - все существующие ребра
          */
-        $connections = $graph->connections[$root] ?? new IntegerCollection();
+        $connections = $graph[$root] ?? new IntegerCollection();
 
         while (null !== $keyValue = $connections->getKeyValueByPosition(0)) {
             [$branch, $vertex] = $keyValue;
             unset($connections[$branch]);
-            $connections = $connections->replace($graph->connections[$branch] ?? []);
+            $connections = $connections->replace($graph[$branch] ?? []);
             $edgeNumberA = $steps[$step++] ?? $edgeMap[$root][$vertex]->getRandomKey();
             var_dump('edgeNumberA', $edgeNumberA);
             $edgeA = $edgeMap[$root][$vertex][$edgeNumberA];
