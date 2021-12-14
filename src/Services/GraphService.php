@@ -11,6 +11,7 @@ use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Collections\Interruptions\CBreak;
 use EugeneErg\Graph\Collections\IntersectionCollection;
 use EugeneErg\Graph\Collections\TreeCollection;
+use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 use EugeneErg\Graph\ValueObjects\Edge;
@@ -57,18 +58,19 @@ class GraphService extends AbstractService
         return count($result) ? IntegerCollection::fromReplace(...$result) : new IntegerCollection();
     }
 
-    public function splitGraphOnDisconnected(ClearGraph $graph): GraphCollection
+    public function splitGraphOnDisconnected(AbstractGraph $graph): GraphCollection
     {
-        if (!count($graph->vertexes)) {
+        if ($graph->vertexes->isEmpty()) {
             return new GraphCollection();
         }
 
+        $graph = ClearGraph::fromGraph($graph);
         $canvas = new Canvas($graph);
         $operations = new IntegerMatrix();
 
         foreach ($graph->vertexes as $vertex) {
             if ($canvas[$vertex] === 0) {
-                $operations[] = CanvasService::instance()->fill($canvas, $vertex, 1);
+                $operations->setColumn(null, CanvasService::instance()->fill($canvas, $vertex, 1));
             }
         }
 
@@ -76,7 +78,7 @@ class GraphService extends AbstractService
             return new GraphCollection([$graph]);
         }
 
-        return GraphCollection::fromMap(function(IntegerCollection $operation) use ($graph): Graph {
+        return GraphCollection::fromMap(function(IntegerCollection $operation) use ($graph): ClearGraph {
             return $graph->createSupGraph($operation);
         }, false, $operations);
     }

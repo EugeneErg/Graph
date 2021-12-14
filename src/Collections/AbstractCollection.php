@@ -12,6 +12,7 @@ use EugeneErg\Graph\Collections\Sort\SortFlagEnum;
 use EugeneErg\Graph\Collections\Sort\SortKeysStateEnum;
 use EugeneErg\Graph\Enums\CollectionFilterEnum;
 use EugeneErg\Graph\Services\AssertService;
+use EugeneErg\Graph\Services\EventService;
 use EugeneErg\Graph\ValueObjects\AbstractValueObject;
 use Generator;
 use IteratorAggregate;
@@ -47,7 +48,7 @@ use Traversable;
  * @see AbstractCollection::fromWalkRecursive()
  * @method $this walkRecursive(callable $callback, bool $filtered = false)
  */
-abstract class AbstractCollection extends AbstractValueObject implements JsonSerializable, IteratorAggregate, ArrayAccess, Countable
+class AbstractCollection extends AbstractValueObject implements JsonSerializable, IteratorAggregate, ArrayAccess, Countable
 {
     protected const ELEMENT_CLASS = null;
 
@@ -120,15 +121,20 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         $offset === null
             ? $this->items[] = $value
             : $this->items[$offset] = $value;
+
+        EventService::instance()->send(new OffsetCollectionEvent($offset, $value), spl_object_hash($this));
     }
 
     /**
+     * @param string|int $key
+     * @param string|int ...$keys [optional]
      * @param mixed $value
-     * @param int[]|string[]|null[] ...$keys
      * @return $this
      */
-    public function set(array $keys, $value): self
+    public function set($key, $keys, $value = null): self
     {
+        $keys = func_get_args();
+        $value = array_pop($keys);
         return static::staticSet($this, $value, ...$keys);
     }
 
@@ -662,7 +668,7 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
         return $key === null ? null : [$key, $value];
     }
 
-    public function getKeyByPosition(int $position)
+    public function getKeyByPosition(int $position = -1)
     {
         return $this->getKeyValueByPosition($position)[0] ?? null;
     }
@@ -851,7 +857,7 @@ abstract class AbstractCollection extends AbstractValueObject implements JsonSer
      * @param SortDirectionEnum|null $direction
      */
     public function sort(
-        callable $flag = null,
+        ?callable $flag = null,
         ?SortKeysStateEnum $keysState = null,
         ?SortDirectionEnum $direction = null
     ): void {

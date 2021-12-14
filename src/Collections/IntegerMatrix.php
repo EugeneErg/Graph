@@ -4,12 +4,11 @@ namespace EugeneErg\Graph\Collections;
 use EugeneErg\Graph\Services\AssertService;
 
 /**
- * @method IntegerCollection offsetGet(int $offset)
  * @method __construct(IntegerCollection[] $items)
  * @method IntegerCollection[] getIterator()
  * @method IntegerCollection[] toArray()
  */
-class IntegerMatrix extends AbstractMatrix
+class IntegerMatrix extends AbstractMatrix2
 {
     protected const ELEMENT_CLASS = IntegerCollection::class;
 
@@ -18,4 +17,3 @@ class IntegerMatrix extends AbstractMatrix
         AssertService::instance()->type(['integer', 'NULL'], $key);
     }
 }
-

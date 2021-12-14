@@ -7,7 +7,7 @@ namespace EugeneErg\Graph\Collections;
  * @method ArrayIterator<int> getIterator()
  * @method int[] toArray()
  */
-class IntegerCollection extends AbstractCollection
+class IntegerCollection extends AbstractLineCollection
 {
     protected const ELEMENT_CLASS = 'integer';
 }

@@ -4,7 +4,13 @@ namespace EugeneErg\Graph\Services;
 abstract class AbstractService
 {
     private static $instances;
-    final private function __construct() {}
+
+    final private function __construct()
+    {
+        $this->created();
+    }
+
+    protected function created() {}
 
     /** @return $this */
     final public static function instance(): self

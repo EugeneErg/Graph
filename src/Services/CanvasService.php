@@ -14,7 +14,7 @@ class CanvasService extends AbstractService
         $result = new IntegerCollection([$vertex => $vertex]);
 
         foreach ($result->getUpdatingIterator() as $vertex) {
-            foreach ($canvas->graph[$vertex] ?? [] as $connectionVertex => $value) {
+            foreach ($canvas->graph->getColumn($vertex, true) ?? [] as $connectionVertex => $value) {
                 if ($canvas[$connectionVertex] === $oldColor) {
                     $canvas[$connectionVertex] = $color;
                     $result[$connectionVertex] = $connectionVertex;

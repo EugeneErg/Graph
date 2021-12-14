@@ -10,7 +10,7 @@ use EugeneErg\Graph\ValueObjects\Tree;
  * @method Tree[] getIterator()
  * @method Tree[] toArray()
  */
-class TreeCollection extends AbstractCollection
+class TreeCollection extends AbstractCollection2
 {
     protected const ELEMENT_CLASS = Tree::class;
 }

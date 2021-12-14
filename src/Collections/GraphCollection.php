@@ -9,7 +9,7 @@ use EugeneErg\Graph\ValueObjects\Graph;
  * @method Graph[] getIterator()
  * @method Graph[] toArray()
  */
-class GraphCollection extends AbstractCollection
+class GraphCollection extends AbstractCollection2
 {
     protected const ELEMENT_CLASS = Graph::class;
 }

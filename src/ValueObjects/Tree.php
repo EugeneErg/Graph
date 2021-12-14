@@ -7,7 +7,7 @@ use EugeneErg\Graph\Collections\IntegerMatrix;
 
 /**
  * @see Tree::getGraph()
- * @property-read Graph $graph
+ * @property-read AbstractGraph $graph
  * @see Tree::getBranches()
  * @property-read GraphCollection $branches
  * @see Tree::getConnections()
@@ -19,7 +19,7 @@ class Tree extends AbstractValueObject
     private $branches;
     private $connections;
 
-    public function __construct(Graph $graph, ?GraphCollection $branches = null, ?IntegerMatrix $connections = null)
+    public function __construct(AbstractGraph $graph, ?GraphCollection $branches = null, ?IntegerMatrix $connections = null)
     {
         $this->graph = $graph;
         $this->branches = $branches ?? new GraphCollection();
@@ -28,7 +28,7 @@ class Tree extends AbstractValueObject
         foreach ($connections ?? [] as $vertex => $subBranches) {
             foreach ($subBranches as $branchA) {
                 foreach ($subBranches as $branchB) {
-                    $this->connections->set([$branchA, $branchB], $vertex);
+                    $this->connections->setCell($branchA, $branchB, $vertex);
                 }
             }
         }
@@ -44,7 +44,7 @@ class Tree extends AbstractValueObject
         return $this->connections;
     }
 
-    public function getGraph(): Graph
+    public function getGraph(): AbstractGraph
     {
         return $this->graph;
     }

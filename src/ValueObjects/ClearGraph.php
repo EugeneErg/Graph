@@ -1,20 +1,36 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
+use EugeneErg\Graph\Collections\BoolMatrix;
+use EugeneErg\Graph\Collections\Collection;
 use EugeneErg\Graph\Collections\IntegerCollection;
-use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Services\Assert\Argument;
 use EugeneErg\Graph\Services\AssertService;
 
-class ClearGraph extends Graph
+class ClearGraph extends AbstractGraph
 {
-    public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes = null)
+    public function __construct(BoolMatrix $connections, ?IntegerCollection $vertexes = null)
     {
+        $realVertex = IntegerCollection::fromKeys(
+            Collection::fromReplace(false, $connections, ...$connections)
+        );
+
+        if ($vertexes !== null) {
+            $difference = $realVertex->difference($vertexes);
+            AssertService::instance()->equals(
+                true,
+                new Argument($difference->isEmpty(), 2, 'vertexes'),
+                'Does not contain vertices ' . $difference->implode(',')
+                . ' present in ' . new Argument($connections, 1, 'connections'),
+                [Graph::class, '__construct']
+            );
+        }
+
         foreach ($connections->listBy(2) as [$vertexA, $vertexB]) {
             AssertService::instance()->equals(
                 new Argument($vertexB->value, 1, "connections[{$vertexA->key}][{$vertexB->key}]"),
                 new Argument(
-                    $connections[$vertexB->key][$vertexA->key] ?? null,
+                    $connections->getCell($vertexB->key, $vertexA->key, true),
                     1,
                     "connections[{$vertexB->key}][{$vertexA->key}]"
                 ),
@@ -23,7 +39,27 @@ class ClearGraph extends Graph
             );
         }
 
-        parent::__construct($connections, $vertexes);
+        $this->setConnections($connections);
+        $this->setVertexes($vertexes ?? $realVertex);
+    }
+
+    public static function fromGraph(AbstractGraph $graph): self
+    {
+        if ($graph instanceof self) {
+            return $graph;
+        }
+
+        $result = new self(new BoolMatrix(), $graph->vertexes);
+
+        foreach ($graph->vertexes as $vertexA) {
+            foreach ($graph->vertexes as $vertexB) {
+                if ($graph->issetCell($vertexA, $vertexB) && !empty($graph->getCell($vertexA, $vertexB))) {
+                    $result->setCell($vertexA, $vertexB, true);
+                }
+            }
+        }
+
+        return $result;
     }
 
     public function setOuterEdge(IntegerCollection $path): void
@@ -31,8 +67,7 @@ class ClearGraph extends Graph
         $prev = $path->getValueByPosition(-1);
 
         foreach ($path as $vertex) {
-            $this[$prev][$vertex] = 2;
-            $this[$vertex][$prev] = 2;
+            $this->setCell($prev, $vertex, 2);
             $prev = $vertex;
         }
     }
@@ -42,18 +77,9 @@ class ClearGraph extends Graph
         $prevVertex = $path->getValueByPosition(-1);
 
         foreach ($path as $currentVertex) {
-            $value = $this[$currentVertex][$prevVertex];
-
-            if ($value === 2) {
-                unset(
-                    $this[$currentVertex][$prevVertex],
-                    $this[$prevVertex][$currentVertex]
-                );
-            } else {
-                $this[$currentVertex][$prevVertex] = $value + 1;
-                $this[$prevVertex][$currentVertex] = $value + 1;
-            }
-
+            $this->getCell($currentVertex, $prevVertex) === 2
+                ? $this->unsetCell($currentVertex, $prevVertex)
+                : $this->setCell($currentVertex, $prevVertex, 1);
             $prevVertex = $currentVertex;
         }
     }
@@ -61,9 +87,24 @@ class ClearGraph extends Graph
     public function deleteConnections(IntegerCollection $vertexes): void
     {
         foreach ($vertexes as $vertexA) {
-            foreach ($this[$vertexA] ?? [] as $vertexB => $value) {
-                unset($this[$vertexA][$vertexB], $this[$vertexB][$vertexA]);
+            if ($this->issetColumn($vertexA)) {
+                foreach ($this->getColumn($vertexA) as $vertexB => $value) {
+                    $this->unsetCell($vertexA, $vertexB);
+                }
             }
         }
+    }
+
+    public function setCell($column, $row, $value): int
+    {
+        parent::setCell($column, $row, $value);
+
+        return parent::setCell($row, $column, $value);
+    }
+
+    public function unsetCell($column, $row): void
+    {
+        parent::unsetCell($column, $row);
+        parent::unsetCell($row, $column);
     }
 }

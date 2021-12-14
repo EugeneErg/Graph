@@ -1,27 +1,19 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
-use EugeneErg\Graph\Collections\Collection;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Services\Assert\Argument;
 use EugeneErg\Graph\Services\AssertService;
+use EugeneErg\Graph\Traits\AttributeTrait;
 
-/**
- * @see Graph::getVertexes()
- * @property-read IntegerCollection $vertexes
- */
-class Graph extends IntegerMatrix
+class Graph extends AbstractGraph
 {
-    /** @var IntegerCollection  */
-    private $vertexes;
+    use AttributeTrait;
 
     public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes = null)
     {
-        parent::__construct($connections->toArray());
-        $realVertex = IntegerCollection::fromKeys(
-            Collection::fromReplace(false, $this, ...$this)
-        );
+        $realVertex = IntegerCollection::fromRecursive($connections, fn ($value) => $value, true)->keys();
 
         if ($vertexes !== null) {
             $difference = $realVertex->difference($vertexes);
@@ -34,7 +26,8 @@ class Graph extends IntegerMatrix
             );
         }
 
-        $this->vertexes = $vertexes ?? $realVertex;
+        $this->setConnections($connections);
+        $this->setVertexes($vertexes ?? $realVertex);
     }
 
     public function createSupGraph(IntegerCollection $vertexes): Graph
@@ -42,8 +35,8 @@ class Graph extends IntegerMatrix
         $connections = new IntegerMatrix();
 
         foreach ($vertexes->listBy($vertexes, 1) as [$vertexA, $vertexB]) {
-            if (isset($this[$vertexA->key][$vertexB->key])) {
-                $connections->set([(int) $vertexA->key, (int) $vertexB->key], $this[$vertexA->key][$vertexB->key]);
+            if ($this->issetCell($vertexA->key, $vertexB->key)) {
+                $connections->setCell($vertexA->key, $vertexB->key, $this->getCell($vertexA->key, $vertexB->key));
             }
         }
 
@@ -56,10 +49,12 @@ class Graph extends IntegerMatrix
         $new = clone $this;
 
         for ($vertexes = [$vertex => $parent]; $vertex !== null; $vertex = key($vertexes)) {
-            foreach ($this[$vertex] ?? [] as $vertexB => $value) {
-                if ($vertexB !== $parent) {
-                    unset($new[$vertexB][$vertex]);
-                    $vertexes[$vertexB] = $vertex;
+            if ($this->issetColumn($vertex)) {
+                foreach ($this->getColumn($vertex) as $vertexB => $value) {
+                    if ($vertexB !== $parent) {
+                        $new->unsetCell($vertexB, $vertex);
+                        $vertexes[$vertexB] = $vertex;
+                    }
                 }
             }
 
@@ -67,18 +62,5 @@ class Graph extends IntegerMatrix
         }
 
         return $new;
-    }
-
-    public function getVertexes(): IntegerCollection
-    {
-        return $this->vertexes;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'matrix' => parent::toArray(),
-            'vertexes' => $this->vertexes,
-        ];
     }
 }

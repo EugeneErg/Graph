@@ -5,6 +5,7 @@ use EugeneErg\Graph\Collections\GraphCollection;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Collections\TreeCollection;
+use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 use EugeneErg\Graph\ValueObjects\Graph;
@@ -30,13 +31,13 @@ class TreeService extends AbstractService
 
         $result = new IntegerMatrix();
         $this->split($articulationVertex, new Canvas($graph), $result);
-        $branches = GraphCollection::fromMap(function (IntegerCollection $vertexes) use ($graph): Graph {
+        $branches = GraphCollection::fromMap(function (IntegerCollection $vertexes) use ($graph): AbstractGraph {
             return $graph->createSupGraph($vertexes);
         }, false, $result);
         $connections = new IntegerMatrix();
 
         foreach ($result->listBy(2) as $key => [$value1, $value2]) {
-            $connections->set([$value2->value, $key], (int) $value2->key);
+            $connections->setCell($value2->value, $key, (int) $value2->key);
         }
 
         return new Tree($graph, $branches, $connections);
@@ -58,7 +59,7 @@ class TreeService extends AbstractService
 
             unset($articulationVertex[$vertexA]);
 
-            foreach($canvas->graph[$vertexA] ?? [] as $vertexB => $value) {
+            foreach($canvas->graph->getColumn($vertexA, true) ?? [] as $vertexB => $value) {
                 if ($canvas[$vertexB] !== $maxColor) {
                     continue;
                 }
@@ -69,7 +70,7 @@ class TreeService extends AbstractService
                 $vertexes[$vertexA] = $vertexA;
 
                 if (!$this->split($articulationVertex, $canvas, $result, $color)) {
-                    $result[] = $vertexes;
+                    $result->setColumn(null, $vertexes);
                 }
             }
         }

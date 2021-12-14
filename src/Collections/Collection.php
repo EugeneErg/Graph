@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Collections;
 
-class Collection extends AbstractMatrix
+class Collection extends AbstractLineCollection
 {
     protected const ELEMENT_CLASS = Collection::class;
 
