@@ -2,12 +2,20 @@
 namespace EugeneErg\Graph\Services;
 
 use EugeneErg\Graph\Collections\AbstractCollection;
+use EugeneErg\Graph\Collections\BoolCollection;
 use EugeneErg\Graph\Collections\Collection;
 use EugeneErg\Graph\Collections\EdgeCollection;
 use EugeneErg\Graph\Collections\EdgeCube;
 use EugeneErg\Graph\Collections\EdgeMatrix;
 use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntegerMatrix;
+use EugeneErg\Graph\Collections\IntersectionCollection;
+use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Arc;
+use EugeneErg\Graph\ValueObjects\Canvas;
+use EugeneErg\Graph\ValueObjects\ClearGraph;
+use EugeneErg\Graph\ValueObjects\Graph;
+use EugeneErg\Graph\ValueObjects\Intersection;
 use EugeneErg\Graph\ValueObjects\Solution;
 use EugeneErg\Graph\ValueObjects\Edge;
 use EugeneErg\Graph\ValueObjects\Gravity;
@@ -26,22 +34,262 @@ use EugeneErg\Graph\ValueObjects\Trouble;
 
 class EdgeService extends AbstractService
 {
+    public function createEdgesFromGraph(AbstractGraph $graph): EdgeCube
+    {
+        return EdgeCube::fromMap(function (Tree $tree): EdgeMatrix {
+            return EdgeMatrix::fromMap(function (ClearGraph $branch): EdgeCollection {
+                return $this->toList($this->splitOnTreeEdges($branch));
+            }, false, $tree->branches);
+        }, false, TreeService::instance()->createFromGraph($graph));
+    }
+
+    private function splitOnTreeEdges(ClearGraph $branch, ?IntegerCollection $outerEdge = null, int $level = 0): Edge
+    {
+        if ($branch->vertexes->count() < 4) {
+            return new Edge($branch->vertexes);
+        }
+
+        $hasOuter = $outerEdge !== null;
+        $outerEdge = $outerEdge ?? new IntegerCollection();
+        $edgeVertexesKey = 0;//$branch->vertexes->getRandomKey();
+        $edgeVertexes = $hasOuter
+            ? $outerEdge->flip()
+            : new IntegerCollection([$branch->vertexes[$edgeVertexesKey] => 0]);
+        $outerVertexes = BoolCollection::fromFillKeys(
+            $hasOuter ? $outerEdge : new IntegerCollection([$branch->vertexes[$edgeVertexesKey]]),
+            true
+        );
+        $resultChildren = new EdgeCollection();
+        $first = !$hasOuter;
+        $needOuter = false;
+        $finish = false;
+        $step = 0;
+
+        do {
+            foreach ($edgeVertexes as $vertexA => $v) {
+                unset($edgeVertexes[$vertexA]);
+
+                foreach ($branch->getColumn($vertexA, true) ?? [] as $vertexB => $value) {
+                    if (
+                        ($value !== 1 || $needOuter)
+                        && ($value !== 2 || !$needOuter)
+                    ) {
+                        continue;
+                    }
+
+                    $step++;
+
+                    if ($hasOuter && $step === 1 && $level === 100) {
+                        die;
+                    }
+
+                    if ($needOuter) {
+                        $finish = true;
+                    }
+
+                    $path = $this->findShortEdge($branch, $vertexA, $vertexB, $first || $finish);
+
+                    if ($path === null) {
+                        throw new \Exception('Graph is not planar');
+                    }
+
+                    foreach ($path as $pos => $vertex) {
+                        if (($branch->getCell($vertexA, $vertex, true) ?? null) === 1 && $pos > 1) {
+                            $path->splice($pos + 1);
+
+                            break;
+                        }
+                    }
+
+                    //echo $this->viewerService->vertexesToSvg('path', $path);
+                    if ($step === 2) {
+                        //var_dump($path);die;
+                    }
+                    $innerVertexes = $this->getInnerVertexes($branch, $path, $outerVertexes);
+                    if ($step === 2) {
+                        //var_dump('innerVertexes', $innerVertexes);die;
+                    }
+
+                    if (
+                        $first && !$hasOuter
+                        && $innerVertexes->count() + $path->count() === $branch->vertexes->count()
+                    ) {
+                        $innerVertexes = new IntegerCollection();
+                    }
+
+                    $first = false;
+                    $flipPath = $path->flip();
+                    //var_dump(!$needOuter || $hasOuter, $innerVertexes->count() === 0);die;
+
+                    if (!$needOuter || $hasOuter) {
+                        if ($innerVertexes->isEmpty()) {
+                            $resultChildren[] = new Edge($path);
+                            //var_dump($resultChildren);die;
+                        } else {
+                            if ($level === 0 && $step === 4) {
+                                //var_dump($branch, $path, $innerVertexes);die;
+                            }
+
+                            /** @var ClearGraph $graph */
+                            $graph = $branch->createSupGraph(
+                                IntegerCollection::fromMerge(false, $path, $innerVertexes)
+                            );
+                            //var_dump($path, $innerVertexes, $branch, $graph);die;
+
+                            $graph->setOuterEdge($path);
+                            //var_dump($graph, $path);die;
+
+                            //var_dump($graph, $path);die;
+
+                            $resultChildren[] = $this->splitOnTreeEdges($graph, $path, $level + 1);
+
+                            //if ($step === 2) {
+                                //die;
+                            //}
+                        }
+                    } elseif ($outerEdge->isEmpty()) {
+                        $outerEdge = $path;
+                        $hasOuter = true;
+                    } else {
+                        throw new \Exception('Is not planar graph');
+                    }
+
+                    foreach ($path as $vertex) {
+                        $outerVertexes[$vertex] = true;
+                    }
+
+                    $branch->joinOuterEdge($path);
+                    $branch->deleteConnections($innerVertexes);
+                    $edgeVertexes = $edgeVertexes->replace($flipPath);
+                    //var_dump($edgeVertexes, $branch);die;
+                    //var_dump($path, $innerVertexes, $branch);die;
+
+                    continue 3;
+                }
+            }
+
+            $edgeVertexes = $branch->vertexes->flip();
+            $needOuter = true;
+        } while (!$finish);
+
+        if ($outerEdge->isEmpty()) {
+            throw new \Exception('Is not planar graph');
+        }
+
+        return new Edge($outerEdge, $resultChildren);
+    }
+
+    public function findShortEdge(ClearGraph $graph, int $vertexA, int $vertexB, bool $first = false): IntegerCollection
+    {
+        static $q = 0;
+        $q++;
+        //var_dump($vertexA, $vertexB, $graph);
+
+        if ($first) {
+            $graph->unsetCell($vertexB, $vertexA, true);
+        } else {
+            foreach ($graph->getColumn($vertexA, true) ?? [] as $vertex => $value) {
+                if ($value === 1) {
+                    $graph->unsetCell($vertex, $vertexA, true);
+                }
+            }
+        }
+
+        $result = $this->findShortPath($graph, $vertexA, $vertexB);
+
+        foreach ($graph->getColumn($vertexA, true) ?? [] as $vertex => $value) {
+            $graph->setCell($vertex, $vertexA, $value, true);
+        }
+
+        //var_dump($result);
+
+        return $result;
+    }
+
+    private function findShortPath(AbstractGraph $graph, int $vertexA, int $vertexB): ?IntegerCollection
+    {
+        $steps = [[$vertexB => null]];
+        $values = new BoolCollection();
+        $canvas = new Canvas($graph);
+
+        for ($step = 0; $step < count($steps); $step++) {
+            foreach ($steps[$step] as $currentVertex => $prevVertex) {
+                $currentValue = !empty($values[$currentVertex]);
+                unset($values[$currentVertex]);
+
+                if ($graph->issetCell($currentVertex, $vertexA)) {
+                    CanvasService::instance()->pixels($canvas, new IntegerCollection([$vertexA]), 1);
+                    $steps[$step + 1][$vertexA] = $currentVertex;
+
+                    break(2);
+                }
+
+                foreach ($graph->getColumn($currentVertex, true) ?? [] as $nextVertex => $value) {
+                    if (
+                        $canvas[$nextVertex] === 0
+                        && (
+                            (!$currentValue && $value !== 3)
+                            || ($currentValue && $value === 2)
+                        )
+                    ) {
+                        CanvasService::instance()->pixels($canvas, new IntegerCollection([$vertexA]), 1);
+                        $steps[$step + 1][$nextVertex] = $currentVertex;
+
+                        if ($currentValue) {
+                            $values[$currentVertex] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if ($canvas[$vertexA] === 0) {
+            return null;
+        }
+
+        $currentVertex = $vertexA;
+        $result = new IntegerCollection([$currentVertex]);
+
+        for ($step = count($steps) - 1; $step > 0; $step--) {
+            $currentVertex = $steps[$step][$currentVertex];
+            $result[] = $currentVertex;
+        }
+
+        return $result;
+    }
+
+    public function createListFromGraph(AbstractGraph $graph): EdgeCollection
+    {
+        $result = EdgeMatrix::fromMap(function (Tree $tree): EdgeCollection {
+            return $this->mergeTree(EdgeCollection::fromMap(function (ClearGraph $branch): Edge {
+                return $this->splitOnTreeEdges($branch);
+            }, false, $tree->branches), $tree);
+        }, false, TreeService::instance()->createFromGraph($graph));
+
+        /*foreach ($trees as $tree) {
+            /** @var ClearGraph $branch * /
+            foreach ($tree->branches as $number => $branch) {
+                $result[] = $this->edgeService->toList($this->splitOnTreeEdges($branch));
+            }
+        }*/
+
+        return EdgeCollection::fromMerge(...$result);
+    }
+
     public function toList(Edge $edge): EdgeCollection
     {
-        //$result = $parents = [];
-        //count($edge->children) ? $parents[] = $edge: $result[] = $edge;
         $result = clone ($parents = new EdgeCollection([$edge]));
 
-        for ($i = 0; $i < count($parents); $i++) {
-            foreach ($parents[$i]->children as $child) {
-                count($child->children) ? $parents[] = $child : $result[] = $child;
+        foreach ($parents->getUpdatingIterator() as $parent) {
+            foreach ($parent->children as $child) {
+                $child->children->isEmpty() ? $result[] = $child : $parents[] = $child;
             }
         }
 
         return $result;
     }
 
-    public function mergeTree(EdgeCollection $edges, Tree $tree): EdgeCollection
+    private function mergeTree(EdgeCollection $edges, Tree $tree): EdgeCollection
     {
         $step = 0;
         //$steps = [15,13,13,0,12,11,11,1,1,7,7,8,7,9,7,10];
@@ -59,7 +307,7 @@ class EdgeService extends AbstractService
             );
 
             if (
-                count($edgeMatrix[$branch]) === 1
+                $edgeMatrix[$branch]->count() === 1
                 && count($edgeMatrix[$branch][0]->vertexes) > 2
             ) {
                 $addToEdgeList[] = $edgeMatrix[$branch][0];
@@ -740,6 +988,114 @@ class EdgeService extends AbstractService
         }
 
         return $graphs;
+    }
+
+    private function getInnerVertexes(
+        ClearGraph $branch,
+        IntegerCollection $path,
+        BoolCollection $outerVertexes
+    ): IntegerCollection {
+        static $step = 0;
+        $step++;
+
+        $innerIntersections = $this->getInnerIntersections($branch, $path, $outerVertexes);
+
+        if ($step === 2) {
+            //var_dump($innerIntersections);die;
+        }
+
+        $innerVertexes = IntegerMatrix::fromMap(function (Intersection  $intersection): IntegerCollection {
+            return $intersection->vertexes;
+        }, false, $innerIntersections);
+
+        return IntegerCollection::fromMerge(false, ...$innerVertexes);
+    }
+
+    private function getInnerIntersections(
+        ClearGraph $branch,
+        IntegerCollection $path,
+        BoolCollection $outerVertexes
+    ): IntersectionCollection {
+        $steps = [];
+        static $step = 0;
+
+        $intersections = IntersectionService::instance()->getIntersections($branch, $path, $outerVertexes);
+        $matrix = $this->getIntersectionMatrix($path, $intersections);
+
+        /*foreach ($intersections as $number => $intersection) {
+            //echo $this->viewerService->vertexesToSvg(
+                ($intersection->isOuter ? 'outer ' : '') . 'intersection ' . $number,
+                array_keys(array_replace(
+                    $intersection->vertexes,
+                    $intersection->connections
+                )),
+                $branch->connections
+            );
+        }
+
+        //echo $this->viewerService->toSvg('intersection matrix', $matrix);*/
+
+        $knowns = new BoolCollection();
+        $unknowns = new IntersectionCollection();
+        $result = new IntersectionCollection();
+
+        foreach ($intersections as $number => $intersection) {
+            if ($intersection->isOuter) {
+                $knowns[$number] = true;
+            } else {
+                $unknowns[$number] = $intersection;
+            }
+        }
+
+        while (!$unknowns->isEmpty() || !$knowns->isEmpty()) {
+            $newKnowns = new BoolCollection();
+
+            foreach ($knowns as $vertexA => $isOuter) {
+                foreach ($matrix->getColumn($vertexA, true) ?? [] as $vertexB => $value) {
+                    if (isset($unknowns[$vertexB])) {
+                        $unknowns[$vertexB]->isOuter = !$isOuter;
+                        $newKnowns[$vertexB] = !$isOuter;
+
+                        if ($isOuter) {
+                            $result[] = $unknowns[$vertexB];
+                        }
+
+                        unset($unknowns[$vertexB]);
+                    } elseif ($intersections[$vertexB]->isOuter === $isOuter) {
+                        throw new \Exception('graph is not planar');
+                    }
+                }
+            }
+
+            $knowns = $newKnowns;
+
+            if ($newKnowns->isEmpty() && !$unknowns->isEmpty()) {
+                $vertexB = $unknowns->getRandomKey();
+                $result[] = $unknowns[$vertexB];
+                $knowns[$vertexB] = false;
+                $unknowns[$vertexB]->isOuter = false;
+                unset($unknowns[$vertexB]);
+            }
+        }
+
+        return $result;
+    }
+
+    private function getIntersectionMatrix(IntegerCollection $path, IntersectionCollection $intersections): ClearGraph
+    {
+        $matrix = new IntegerMatrix();
+
+        foreach ($intersections as $number => $intersectionA) {
+            for ($i = $number + 1; $i < $intersections->count(); $i++) {
+                $intersectionB = $intersections[$i];
+
+                if (IntersectionService::instance()->isConflicted($intersectionA, $intersectionB, $path)) {
+                    $matrix->setCell($number, $i, 1);
+                }
+            }
+        }
+
+        return new ClearGraph($matrix, IntegerCollection::fromKeys($intersections));
     }
 
     /**

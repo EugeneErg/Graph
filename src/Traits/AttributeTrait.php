@@ -22,6 +22,8 @@ trait AttributeTrait
 
         if (method_exists($this, $method)) {
             $this->$method($value);
+
+            return;
         }
 
         throw new InvalidArgumentException('Cannot set property ' . $name);

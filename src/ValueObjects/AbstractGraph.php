@@ -5,8 +5,6 @@ namespace EugeneErg\Graph\ValueObjects;
 use EugeneErg\Graph\Collections\AbstractCollection2;
 use EugeneErg\Graph\Collections\AbstractMatrix2;
 use EugeneErg\Graph\Collections\IntegerCollection;
-use EugeneErg\Graph\Collections\IntegerMatrix;
-use EugeneErg\Graph\Traits\AttributeTrait;
 use Generator;
 use JsonSerializable;
 
@@ -37,8 +35,12 @@ abstract class AbstractGraph extends AbstractValueObject implements JsonSerializ
         $connections = $class::fromArray();
 
         foreach ($vertexes->listBy($vertexes, 1) as [$vertexA, $vertexB]) {
-            if ($this->issetCell($vertexA->key, $vertexB->key)) {
-                $connections->setCell($vertexA->key, $vertexB->key, $this->getCell($vertexA->key, $vertexB->key));
+            if ($this->issetCell($vertexA->value, $vertexB->value)) {
+                $connections->setCell(
+                    $vertexA->value,
+                    $vertexB->value,
+                    $this->getCell($vertexA->value, $vertexB->value)
+                );
             }
         }
 

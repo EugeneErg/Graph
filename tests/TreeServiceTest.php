@@ -33,7 +33,16 @@ class TreeServiceTest extends TestCase
                             ],
                             'vertexes' => [0, 1, 2],
                         ],
-                        'branches' => [],
+                        'branches' => [
+                            [
+                                'connections' => [
+                                    0 => [1 => 1, 2 => 1],
+                                    1 => [0 => 1, 2 => 1],
+                                    2 => [0 => 1, 1 => 1],
+                                ],
+                                'vertexes' => [0, 1, 2],
+                            ],
+                        ],
                         'connections' => [
                             'connections' => [],
                             'vertexes' => [],
@@ -99,7 +108,15 @@ class TreeServiceTest extends TestCase
                             ],
                             'vertexes' => [0, 1],
                         ],
-                        'branches' => [],
+                        'branches' => [
+                            [
+                                'connections' => [
+                                    0 => [1 => 1],
+                                    1 => [0 => 1],
+                                ],
+                                'vertexes' => [0, 1],
+                            ],
+                        ],
                         'connections' => [
                             'connections' => [
                             ],
@@ -111,7 +128,12 @@ class TreeServiceTest extends TestCase
                             'connections' => [],
                             'vertexes' => [2],
                         ],
-                        'branches' => [],
+                        'branches' => [
+                            [
+                                'connections' => [],
+                                'vertexes' => [2],
+                            ]
+                        ],
                         'connections' => [
                             'connections' => [
                             ],

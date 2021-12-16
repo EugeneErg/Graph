@@ -40,4 +40,9 @@ class AbstractMatrix2 extends AbstractCollection2
     {
         return $this->set($column, $value);
     }
+
+    public function getChild($offset)
+    {
+        return $this->toArray()[$offset];
+    }
 }

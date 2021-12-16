@@ -24,6 +24,12 @@ use Traversable;
  * @method $this unique(callable|null $callback = null)
  * @see AbstractCollection2::fromKeys()
  * @method $this keys(mixed|null $searchValue = null, bool $strict = false)
+ * @see AbstractCollection2::fromFlip()
+ * @method $this flip()
+ * @see AbstractCollection2::fromSlice()
+ * @method $this slice(int $offset, ?int $length = null, bool $preserveKeys = false, bool $filtered = false)
+ * @see AbstractCollection2::fromFillKeys()
+ * @method $this fillKeys($value)
  */
 class AbstractCollection2 implements IteratorAggregate, JsonSerializable
 {
@@ -175,6 +181,12 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     {
         if (is_object($root)) {
             $root = clone $root;
+        }
+
+        if ($root instanceof self) {
+            $root->set($lastKey, $value);
+
+            return $root;
         }
 
         $branch = &$root;
@@ -652,5 +664,85 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         ) {
             yield $key => $value;
         }
+    }
+
+    /** @return int|string */
+    public function getRandomKey()
+    {
+        return array_rand($this->items);
+    }
+
+    /** @return $this */
+    public static function fromFlip(AbstractCollection2 $collection, bool $filtered = false): self
+    {
+        return static::fromArray(array_flip($collection->items), $filtered);
+    }
+
+    public static function fromSlice(
+        AbstractCollection2 $collection,
+        int $offset,
+        ?int $length = null,
+        bool $preserveKeys = false,
+        bool $filtered = false
+    ): self {
+        return static::fromArray(array_slice($collection->items, $offset, $length, $preserveKeys), $filtered);
+    }
+
+    /** @return $this */
+    public function replace(self ...$replacements): self
+    {
+        return static::fromReplace(false, $this, ...$replacements);
+    }
+
+    /** @return $this */
+    public static function fromFillKeys(AbstractCollection2 $keys, $value, bool $filtered = false): self
+    {
+        return static::fromArray(array_fill_keys($keys->items, $value), $filtered);
+    }
+
+    /** @return $this */
+    public static function fromWalk(
+        AbstractCollection2 $collection,
+        callable $callback,
+        bool $filtered = false
+    ): self {
+        $array = $collection->toArray();
+        array_walk($array, function (&$item, $key) use ($callback) {
+            $item = $callback($item, $key);
+        });
+
+        return static::fromArray($array, $filtered);
+    }
+
+    public function splice(
+        int $offset,
+        ?int $length = null,
+        ?AbstractCollection2 $replacement = null,
+        bool $filtered = false
+    ): self {
+        $this->validateItems($replacement->items ?? []);
+
+        return static::fromArray(array_splice(
+            $this->items,
+            $offset,
+            $length ?? $this->count(),
+            $replacement->items ?? []
+        ), $filtered);
+    }
+
+    private function validateItems(array $items): void
+    {
+        array_walk($items, [$this, 'validate']);
+    }
+
+    /** @return $this */
+    public static function fromMerge(bool $filtered = false, self ...$replacements): self
+    {
+        return static::fromArray(
+            count($replacements) > 0
+                ? array_merge(...self::collectionsToArrays(...$replacements))
+                : [],
+            $filtered
+        );
     }
 }

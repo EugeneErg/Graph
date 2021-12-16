@@ -1,15 +1,15 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
-use EugeneErg\Graph\Collections\BoolMatrix;
 use EugeneErg\Graph\Collections\Collection;
 use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Services\Assert\Argument;
 use EugeneErg\Graph\Services\AssertService;
 
 class ClearGraph extends AbstractGraph
 {
-    public function __construct(BoolMatrix $connections, ?IntegerCollection $vertexes = null)
+    public function __construct(IntegerMatrix $connections, ?IntegerCollection $vertexes = null)
     {
         $realVertex = IntegerCollection::fromKeys(
             Collection::fromReplace(false, $connections, ...$connections)
@@ -22,7 +22,7 @@ class ClearGraph extends AbstractGraph
                 new Argument($difference->isEmpty(), 2, 'vertexes'),
                 'Does not contain vertices ' . $difference->implode(',')
                 . ' present in ' . new Argument($connections, 1, 'connections'),
-                [Graph::class, '__construct']
+                [ClearGraph::class, '__construct']
             );
         }
 
@@ -49,12 +49,12 @@ class ClearGraph extends AbstractGraph
             return $graph;
         }
 
-        $result = new self(new BoolMatrix(), $graph->vertexes);
+        $result = new self(new IntegerMatrix(), $graph->vertexes);
 
         foreach ($graph->vertexes as $vertexA) {
             foreach ($graph->vertexes as $vertexB) {
                 if ($graph->issetCell($vertexA, $vertexB) && !empty($graph->getCell($vertexA, $vertexB))) {
-                    $result->setCell($vertexA, $vertexB, true);
+                    $result->setCell($vertexA, $vertexB, 1);
                 }
             }
         }
@@ -77,9 +77,11 @@ class ClearGraph extends AbstractGraph
         $prevVertex = $path->getValueByPosition(-1);
 
         foreach ($path as $currentVertex) {
-            $this->getCell($currentVertex, $prevVertex) === 2
+            $value = $this->getCell($currentVertex, $prevVertex);
+            $value === 2
                 ? $this->unsetCell($currentVertex, $prevVertex)
-                : $this->setCell($currentVertex, $prevVertex, 1);
+                : $this->setCell($currentVertex, $prevVertex, $value + 1);
+
             $prevVertex = $currentVertex;
         }
     }
@@ -87,24 +89,29 @@ class ClearGraph extends AbstractGraph
     public function deleteConnections(IntegerCollection $vertexes): void
     {
         foreach ($vertexes as $vertexA) {
-            if ($this->issetColumn($vertexA)) {
-                foreach ($this->getColumn($vertexA) as $vertexB => $value) {
-                    $this->unsetCell($vertexA, $vertexB);
-                }
+            foreach ($this->getColumn($vertexA, true) ?? [] as $vertexB => $value) {
+                $this->unsetCell($vertexA, $vertexB);
             }
         }
     }
 
-    public function setCell($column, $row, $value): int
+    public function setCell($column, $row, $value, bool $direction = false): int
     {
-        parent::setCell($column, $row, $value);
+        $result = parent::setCell($column, $row, $value);
 
-        return parent::setCell($row, $column, $value);
+        if (!$direction) {
+            parent::setCell($row, $column, $value);
+        }
+
+        return $result;
     }
 
-    public function unsetCell($column, $row): void
+    public function unsetCell($column, $row, bool $direction = false): void
     {
         parent::unsetCell($column, $row);
-        parent::unsetCell($row, $column);
+
+        if (!$direction) {
+            parent::unsetCell($row, $column);
+        }
     }
 }

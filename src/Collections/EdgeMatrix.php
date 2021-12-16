@@ -7,7 +7,7 @@ namespace EugeneErg\Graph\Collections;
  * @method EdgeCollection[] getIterator()
  * @method EdgeCollection[] toArray()
  */
-class EdgeMatrix extends AbstractMatrix
+class EdgeMatrix extends AbstractMatrix2
 {
     protected const ELEMENT_CLASS = EdgeCollection::class;
 }

@@ -2,8 +2,12 @@
 namespace EugeneErg\Graph\Collections;
 
 use EugeneErg\Graph\ValueObjects\Intersection;
+use Generator;
 
-class IntersectionCollection extends AbstractCollection
+/**
+ * @method Intersection[]|Generator getIterator()
+ */
+class IntersectionCollection extends AbstractLineCollection
 {
     protected const ELEMENT_CLASS = Intersection::class;
 }

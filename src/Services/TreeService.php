@@ -13,7 +13,7 @@ use EugeneErg\Graph\ValueObjects\Tree;
 
 class TreeService extends AbstractService
 {
-    public function createFromGraph(ClearGraph $graph): TreeCollection
+    public function createFromGraph(AbstractGraph $graph): TreeCollection
     {
         return TreeCollection::fromMap(function (ClearGraph $graph): Tree {
             return TreeService::instance()->fromConnectionGraph($graph);
@@ -26,7 +26,7 @@ class TreeService extends AbstractService
             ->getArticulationVertexesInConnectedGraph($graph);
 
         if ($articulationVertex->isEmpty()) {
-            return new Tree($graph);
+            return new Tree($graph, new GraphCollection([$graph]));
         }
 
         $result = new IntegerMatrix();

@@ -21,8 +21,8 @@ class Edge extends AbstractValueObject
     public function __construct(IntegerCollection $vertexes, ?EdgeCollection $children = null)
     {
         $this->vertexes = $vertexes;
-        $this->children = $children;
-        ($children ?? new EdgeCollection())->foreach(function (Edge $child) {
+        $this->children = $children ?? new EdgeCollection();
+        $this->children->map(function (Edge $child) {
             $child->parent = $this;
         });
     }

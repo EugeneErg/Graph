@@ -11,9 +11,9 @@ class Helper extends AssertService
 {
     public function createClearGraph(array $graph): ClearGraph
     {
-        return new ClearGraph(BoolMatrix::fromWalkRecursive(
+        return new ClearGraph(IntegerMatrix::fromWalkRecursive(
             IntegerMatrix::fromRecursiveArray($graph),
-            fn (int $value): ?bool => $value === 0 ? null : (bool) $value,
+            fn (int $value): ?int => $value === 0 ? null : $value,
             true
         ));
     }

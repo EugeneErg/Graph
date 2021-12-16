@@ -2,14 +2,16 @@
 namespace EugeneErg\Graph\Collections;
 
 use EugeneErg\Graph\ValueObjects\Edge;
+use Traversable;
 
 /**
  * @method Edge offsetGet(int|string $offset)
  * @method __construct(Edge[] $items)
  * @method Edge[] getIterator()
  * @method Edge[] toArray()
+ * @method Edge[] getUpdatingIterator()
  */
-class EdgeCollection extends AbstractCollection
+class EdgeCollection extends AbstractLineCollection
 {
     protected const ELEMENT_CLASS = Edge::class;
 }

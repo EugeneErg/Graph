@@ -7,7 +7,7 @@ namespace EugeneErg\Graph\Collections;
  * @method bool[] getIterator()
  * @method bool[] toArray()
  */
-class BoolCollection extends AbstractCollection2
+class BoolCollection extends AbstractLineCollection
 {
     protected const ELEMENT_CLASS = 'boolean';
 }
