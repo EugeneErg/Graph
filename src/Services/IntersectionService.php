@@ -53,16 +53,17 @@ class IntersectionService extends AbstractService
             //var_dump($intersections, $colors, $canvas);die;
         }
 
-        return IntersectionCollection::fromWalk(
-            $colors,
-            function (IntegerCollection $vertexes, int $color) use ($intersections, $outerColors): Intersection {
-                return new Intersection(
-                    $vertexes,
-                    $intersections->getChild($color),
-                    isset($outerColors[$color]) ?: null
-                );
-            }
-        );
+        $result = new IntersectionCollection();
+
+        foreach ($colors as $color => $vertexes) {
+            $result[] = new Intersection(
+                $vertexes,
+                $intersections->getChild($color),
+                isset($outerColors[$color]) ?: null
+            );
+        }
+
+        return $result;
     }
 
     public function isConflicted(

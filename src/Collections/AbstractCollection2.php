@@ -427,6 +427,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         return $this->items;
     }
 
+    /** @return $this */
     public static function fromKeys(
         AbstractCollection2 $collection,
         $searchValue = null,

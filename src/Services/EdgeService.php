@@ -79,10 +79,6 @@ class EdgeService extends AbstractService
 
                     $step++;
 
-                    if ($hasOuter && $step === 1 && $level === 100) {
-                        die;
-                    }
-
                     if ($needOuter) {
                         $finish = true;
                     }
@@ -106,6 +102,7 @@ class EdgeService extends AbstractService
                         //var_dump($path);die;
                     }
                     $innerVertexes = $this->getInnerVertexes($branch, $path, $outerVertexes);
+
                     if ($step === 2) {
                         //var_dump('innerVertexes', $innerVertexes);die;
                     }
@@ -163,6 +160,10 @@ class EdgeService extends AbstractService
                     $edgeVertexes = $edgeVertexes->replace($flipPath);
                     //var_dump($edgeVertexes, $branch);die;
                     //var_dump($path, $innerVertexes, $branch);die;
+
+                    if ($step === 3 && $level === 2) {
+                        //var_dump($finish, $needOuter, $edgeVertexes, $branch); die;
+                    }
 
                     continue 3;
                 }
@@ -1022,6 +1023,7 @@ class EdgeService extends AbstractService
         $intersections = IntersectionService::instance()->getIntersections($branch, $path, $outerVertexes);
         $matrix = $this->getIntersectionMatrix($path, $intersections);
 
+
         /*foreach ($intersections as $number => $intersection) {
             //echo $this->viewerService->vertexesToSvg(
                 ($intersection->isOuter ? 'outer ' : '') . 'intersection ' . $number,
@@ -1070,8 +1072,10 @@ class EdgeService extends AbstractService
             $knowns = $newKnowns;
 
             if ($newKnowns->isEmpty() && !$unknowns->isEmpty()) {
-                $vertexB = $unknowns->getRandomKey();
+                $vertexB = $unknowns->getKeyByPosition(0);//$unknowns->getRandomKey();
+
                 $result[] = $unknowns[$vertexB];
+
                 $knowns[$vertexB] = false;
                 $unknowns[$vertexB]->isOuter = false;
                 unset($unknowns[$vertexB]);
@@ -1083,7 +1087,7 @@ class EdgeService extends AbstractService
 
     private function getIntersectionMatrix(IntegerCollection $path, IntersectionCollection $intersections): ClearGraph
     {
-        $matrix = new IntegerMatrix();
+        $matrix = new ClearGraph(new IntegerMatrix(), IntegerCollection::fromKeys($intersections));
 
         foreach ($intersections as $number => $intersectionA) {
             for ($i = $number + 1; $i < $intersections->count(); $i++) {
@@ -1095,7 +1099,7 @@ class EdgeService extends AbstractService
             }
         }
 
-        return new ClearGraph($matrix, IntegerCollection::fromKeys($intersections));
+        return $matrix;
     }
 
     /**
