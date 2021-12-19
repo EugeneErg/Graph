@@ -1,9 +1,7 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graph\Collections\AbstractCollection;
 use EugeneErg\Graph\Collections\BoolCollection;
-use EugeneErg\Graph\Collections\Collection;
 use EugeneErg\Graph\Collections\EdgeCollection;
 use EugeneErg\Graph\Collections\EdgeCube;
 use EugeneErg\Graph\Collections\EdgeMatrix;
@@ -11,52 +9,43 @@ use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Collections\IntersectionCollection;
 use EugeneErg\Graph\ValueObjects\AbstractGraph;
-use EugeneErg\Graph\ValueObjects\Arc;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
-use EugeneErg\Graph\ValueObjects\Graph;
 use EugeneErg\Graph\ValueObjects\Intersection;
-use EugeneErg\Graph\ValueObjects\Solution;
 use EugeneErg\Graph\ValueObjects\Edge;
-use EugeneErg\Graph\ValueObjects\Gravity;
-use EugeneErg\Graph\ValueObjects\GravityInterface;
-use EugeneErg\Graph\ValueObjects\GravityVertex;
-use EugeneErg\Graph\ValueObjects\Replacement;
-use EugeneErg\Graph\ValueObjects\Temp\Combine;
-use EugeneErg\Graph\ValueObjects\Temp\Path;
-use EugeneErg\Graph\ValueObjects\Temp\Problem;
-use EugeneErg\Graph\ValueObjects\Temp\Replace;
-use EugeneErg\Graph\ValueObjects\Temp\Step;
-use EugeneErg\Graph\ValueObjects\Temp\SubGraph;
-use EugeneErg\Graph\ValueObjects\Topology;
+use EugeneErg\Graph\ValueObjects\Slices\AbstractSlice;
+use EugeneErg\Graph\ValueObjects\Slices\ZeroSlice;
 use EugeneErg\Graph\ValueObjects\Tree;
-use EugeneErg\Graph\ValueObjects\Trouble;
 
 class EdgeService extends AbstractService
 {
-    public function createEdgesFromGraph(AbstractGraph $graph): EdgeCube
+    public function createEdgesFromGraph(AbstractGraph $graph, ?AbstractSlice $slice = null): EdgeCube
     {
-        return EdgeCube::fromMap(function (Tree $tree): EdgeMatrix {
-            return EdgeMatrix::fromMap(function (ClearGraph $branch): EdgeCollection {
-                return $this->toList($this->splitOnTreeEdges($branch));
+        $slice = $slice ?? new ZeroSlice();
+
+        return EdgeCube::fromMap(function (Tree $tree) use ($slice): EdgeMatrix {
+            return EdgeMatrix::fromMap(function (ClearGraph $branch) use ($slice): EdgeCollection {
+                return $this->toList($this->splitOnTreeEdges($branch, $slice));
             }, false, $tree->branches);
         }, false, TreeService::instance()->createFromGraph($graph));
     }
 
-    public function createConnectedEdgesFromGraph(AbstractGraph $graph): EdgeMatrix
+    public function createConnectedEdgesFromGraph(AbstractGraph $graph, ?AbstractSlice $slice = null): EdgeMatrix
     {
-        return EdgeMatrix::fromMap(function (Tree $tree): EdgeCollection {
+        $slice = $slice ?? new ZeroSlice();
+
+        return EdgeMatrix::fromMap(function (Tree $tree) use ($slice): EdgeCollection {
             return $this->mergeTree(EdgeMatrix::fromWalk(
                 $tree->branches,
-                function (ClearGraph $branch): EdgeCollection {
-                    return $this->toList($this->splitOnTreeEdges($branch));
+                function (ClearGraph $branch) use ($slice): EdgeCollection {
+                    return $this->toList($this->splitOnTreeEdges($branch, $slice));
                 },
                 false
-            ), $tree);
+            ), $tree, $slice);
         }, false, TreeService::instance()->createFromGraph($graph));
     }
 
-    private function splitOnTreeEdges(ClearGraph $branch, ?IntegerCollection $outerEdge = null, int $level = 0): Edge
+    private function splitOnTreeEdges(ClearGraph $branch, AbstractSlice $slice, ?IntegerCollection $outerEdge = null, int $level = 0): Edge
     {
         if ($branch->vertexes->count() < 4) {
             return new Edge($branch->vertexes);
@@ -64,7 +53,7 @@ class EdgeService extends AbstractService
 
         $hasOuter = $outerEdge !== null;
         $outerEdge = $outerEdge ?? new IntegerCollection();
-        $edgeVertexesKey = 0;//$branch->vertexes->getRandomKey();
+        $edgeVertexesKey = $slice->nextKey($branch->vertexes);
         $edgeVertexes = $hasOuter
             ? $outerEdge->flip()
             : new IntegerCollection([$branch->vertexes[$edgeVertexesKey] => 0]);
@@ -76,7 +65,6 @@ class EdgeService extends AbstractService
         $first = !$hasOuter;
         $needOuter = false;
         $finish = false;
-        $step = 0;
 
         do {
             foreach ($edgeVertexes as $vertexA => $v) {
@@ -89,8 +77,6 @@ class EdgeService extends AbstractService
                     ) {
                         continue;
                     }
-
-                    $step++;
 
                     if ($needOuter) {
                         $finish = true;
@@ -110,15 +96,7 @@ class EdgeService extends AbstractService
                         }
                     }
 
-                    //echo $this->viewerService->vertexesToSvg('path', $path);
-                    if ($step === 2) {
-                        //var_dump($path);die;
-                    }
-                    $innerVertexes = $this->getInnerVertexes($branch, $path, $outerVertexes);
-
-                    if ($step === 2) {
-                        //var_dump('innerVertexes', $innerVertexes);die;
-                    }
+                    $innerVertexes = $this->getInnerVertexes($branch, $path, $outerVertexes, $slice);
 
                     if (
                         $first && !$hasOuter
@@ -129,33 +107,17 @@ class EdgeService extends AbstractService
 
                     $first = false;
                     $flipPath = $path->flip();
-                    //var_dump(!$needOuter || $hasOuter, $innerVertexes->count() === 0);die;
 
                     if (!$needOuter || $hasOuter) {
                         if ($innerVertexes->isEmpty()) {
                             $resultChildren[] = new Edge($path);
-                            //var_dump($resultChildren);die;
                         } else {
-                            if ($level === 0 && $step === 4) {
-                                //var_dump($branch, $path, $innerVertexes);die;
-                            }
-
                             /** @var ClearGraph $graph */
                             $graph = $branch->createSupGraph(
                                 IntegerCollection::fromMerge(false, $path, $innerVertexes)
                             );
-                            //var_dump($path, $innerVertexes, $branch, $graph);die;
-
                             $graph->setOuterEdge($path);
-                            //var_dump($graph, $path);die;
-
-                            //var_dump($graph, $path);die;
-
-                            $resultChildren[] = $this->splitOnTreeEdges($graph, $path, $level + 1);
-
-                            //if ($step === 2) {
-                                //die;
-                            //}
+                            $resultChildren[] = $this->splitOnTreeEdges($graph, $slice, $path, $level + 1);
                         }
                     } elseif ($outerEdge->isEmpty()) {
                         $outerEdge = $path;
@@ -171,12 +133,6 @@ class EdgeService extends AbstractService
                     $branch->joinOuterEdge($path);
                     $branch->deleteConnections($innerVertexes);
                     $edgeVertexes = $edgeVertexes->replace($flipPath);
-                    //var_dump($edgeVertexes, $branch);die;
-                    //var_dump($path, $innerVertexes, $branch);die;
-
-                    if ($step === 3 && $level === 2) {
-                        //var_dump($finish, $needOuter, $edgeVertexes, $branch); die;
-                    }
 
                     continue 3;
                 }
@@ -195,10 +151,6 @@ class EdgeService extends AbstractService
 
     public function findShortEdge(ClearGraph $graph, int $vertexA, int $vertexB, bool $first = false): IntegerCollection
     {
-        static $q = 0;
-        $q++;
-        //var_dump($vertexA, $vertexB, $graph);
-
         if ($first) {
             $graph->unsetCell($vertexB, $vertexA, true);
         } else {
@@ -214,8 +166,6 @@ class EdgeService extends AbstractService
         foreach ($graph->getColumn($vertexA, true) ?? [] as $vertex => $value) {
             $graph->setCell($vertex, $vertexA, $value, true);
         }
-
-        //var_dump($result);
 
         return $result;
     }
@@ -272,24 +222,6 @@ class EdgeService extends AbstractService
         return $result;
     }
 
-    public function createListFromGraph(AbstractGraph $graph): EdgeCollection
-    {
-        $result = EdgeMatrix::fromMap(function (Tree $tree): EdgeCollection {
-            return $this->mergeTree(EdgeCollection::fromMap(function (ClearGraph $branch): Edge {
-                return $this->splitOnTreeEdges($branch);
-            }, false, $tree->branches), $tree);
-        }, false, TreeService::instance()->createFromGraph($graph));
-
-        /*foreach ($trees as $tree) {
-            /** @var ClearGraph $branch * /
-            foreach ($tree->branches as $number => $branch) {
-                $result[] = $this->edgeService->toList($this->splitOnTreeEdges($branch));
-            }
-        }*/
-
-        return EdgeCollection::fromMerge(...$result);
-    }
-
     public function toList(Edge $edge): EdgeCollection
     {
         $result = clone ($parents = new EdgeCollection([$edge]));
@@ -303,14 +235,12 @@ class EdgeService extends AbstractService
         return $result;
     }
 
-    private function mergeTree(EdgeMatrix $edgeMatrix, Tree $tree): EdgeCollection
+    private function mergeTree(EdgeMatrix $edgeMatrix, Tree $tree, AbstractSlice $slice): EdgeCollection
     {
         if ($tree->connections->vertexes->isEmpty()) {
             return $edgeMatrix->getCollection(0);
         }
 
-        $step = 0;
-        //$steps = [15,13,13,0,12,11,11,1,1,7,7,8,7,9,7,10];
         $edgeMap = new EdgeCube();
         $lastNumber = 0;
         $addToEdgeList = new EdgeCollection();
@@ -338,54 +268,23 @@ class EdgeService extends AbstractService
             $edgeLists->push(...$addToEdgeList);
         }
 
-        $root = $edgeMatrix->getKeyByPosition(0);//  rand(0, $edgeMatrix->count() - 1);
-        var_dump('root', $root);
+        $root = $slice->nextKey($edgeMatrix);
         $graph = $tree->connections->direct($root);
-        /**
-         *
-         * GRAPH:
-         *       1
-         *      / \
-         *    2    6
-         *  / | \  |
-         * 3  4  5 7
-         *        / \
-         *       0   8
-         *
-         *      1,6
-         *      / \
-         *    2    7
-         *  / | \  |\
-         * 3  4  5 0 8
-         *
-         *    1,6,2
-         *   / / | \
-         * 3  4  5  7
-         *          |\
-         *          0 8
-         *
-         *
-         * $edgeMap[У какой ветки][какая вершина][есть в каком ребре] = ребро
-         * $edgeLists[] - все существующие ребра
-         */
         $connections = $graph->getConnections()->getCollection($root) ?? new IntegerCollection();
 
         while (null !== $keyValue = $connections->getKeyValueByPosition(0)) {
             [$branch, $vertex] = $keyValue;
             unset($connections[$branch]);
             $connections = $connections->replace($graph->getConnections()->getCollection($branch) ?? []);
-            $edgeNumberA = $steps[$step++] ?? $edgeMap->getMatrix($root)->getCollection($vertex)->getKeyByPosition(0);//->getRandomKey();
-            var_dump('edgeNumberA', $edgeNumberA);
+            $edgeNumberA = $slice->nextKey($edgeMap->getMatrix($root)->getCollection($vertex));
             $edgeA = $edgeMap->getItem($root, $vertex, $edgeNumberA);
-            $edgeNumberB = $steps[$step++] ?? $edgeMap->getMatrix($branch)->getCollection($vertex)->getKeyByPosition(0);//->getRandomKey();
-            var_dump('edgeNumberB', $edgeNumberB);
+            $edgeNumberB = $slice->nextKey($edgeMap->getMatrix($branch)->getCollection($vertex));
             $edgeB = $edgeMap->getItem($branch, $vertex, $edgeNumberB);
             $countAIsW = $edgeA->vertexes->count() === 2;
             $countBIsW = $edgeB->vertexes->count() === 2;
 
             if ($countAIsW && $countBIsW) {
                 $newEdge = $this->getEdgeFromWW($vertex, $edgeA, $edgeB);
-
                 $edgeMap->unsetMatrix($branch);
                 $edgeMap->unsetMatrix($root);
                 unset($edgeLists[$edgeNumberB]);
@@ -486,8 +385,6 @@ class EdgeService extends AbstractService
         $partB2 = $this->getPartEdge($edgeB, $posB, $partB->count() - $edgeB->vertexes->count() - 2);
         $partA2 = $this->getPartEdge($edgeA, $posA - 1, $partA->count() - $edgeA->vertexes->count());
 
-        //var_dump($vertex, $edgeA->vertexes, $edgeB->vertexes, $partB, $partB2, $partA, $partA2);die;
-
         for ($i = $partA->count() - 1; $i >= 0; $i--) {
             $partB[] = $partA[$i];
         }
@@ -516,7 +413,6 @@ class EdgeService extends AbstractService
 
     private function getEdgeFromWW(int $vertex, Edge $edgeA, Edge $edgeB): Edge
     {
-
         $posA = $edgeA->vertexes->search($vertex, true);
         $posB = $edgeB->vertexes->search($vertex, true);
         $partA = $this->getPartEdge($edgeA, $posA + 1, $edgeA->vertexes->count() >> 1);
@@ -549,483 +445,13 @@ class EdgeService extends AbstractService
         }
     }
 
-    private function getAdjacencyMatrix()
-    {
-
-    }
-
-    public function getTopology(EdgeCollection $edges): Topology
-    {
-        $outerEdgeNumber = $edges->getRandomKey();
-        var_dump('outerEdgeNumber', $outerEdgeNumber);
-        $outerEdge = $edges[$outerEdgeNumber];
-        unset($edges[$outerEdgeNumber]);
-        $arcs = [];
-        /** @var Trouble[] $troubleVertexes */
-        $troubleVertexes = [];
-        /** @var Trouble[][] $troubles */
-        $troubles = [];
-        $graphs = [new SubGraph($outerEdge, $edges)];
-
-        while (count($graphs)) {
-            $graph = array_shift($graphs);
-
-            do {
-                $found = 0;
-                $nextEdges = [];
-
-                while (count($graph->edges)) {
-                    $edge = array_shift($graph->edges);
-                    $replacement = $this->getReplacement($graph->counter, $edge);
-
-                    if ($replacement === null) {
-                        $nextEdges[] = $edge;
-
-                        continue;
-                    }
-
-                    $found++;
-                    $replaced = $graph->counter->getVertexes($replacement->start, $replacement->length);
-                    $fromVertex = $replacement->firstVertex;
-                    $toVertex = $replacement->lastVertex;
-                    $prevCounter = $graph->counter;
-                    $graph->counter = $graph->counter->replace(
-                        $replacement->vertexes,
-                        $replacement->start,
-                        $replacement->length
-                    );
-
-                    if (count($troubles)) {
-                        $selectTroubles = [];
-
-                        foreach ($replaced as $vertex) {
-                            if (isset($troubleVertexes[$vertex])) {
-                                $selectTroubles[$troubleVertexes[$vertex]->fromVertex] = $troubleVertexes[$vertex];
-                            }
-                        }
-
-                        /** @var Solution[][] $decisions */
-                        $decisions = [];
-
-                        foreach ($selectTroubles as $trouble) {
-                            $decisionObject = new Solution($trouble, $fromVertex, $toVertex);
-                            $decisions[$decisionObject->type][] = $decisionObject;
-                        }
-
-                        if ($this->isCircle($decisions)) {
-                            $graph->counter = $prevCounter;
-                            $found--;
-                            $nextEdges[] = $edge;
-
-                            continue;
-                        } elseif (isset($decisions[Solution::TYPE_EMBEDDING])) {
-                            $trouble = $decisions[Solution::TYPE_EMBEDDING][0]->trouble;
-
-                            for ($i = 1; $i < count($replaced) - 1; $i++) {
-                                unset($troubleVertexes[$replaced[$i]]);
-                            }
-
-                            for ($i = 1; $i < count($replacement->vertexes) - 1; $i++) {
-                                $troubleVertexes[$replacement->vertexes[$i]] = $trouble;
-                            }
-
-                            $trouble->embedded($edge, $replacement);
-
-                            continue;
-                        } elseif (isset($decisions[Solution::TYPE_ABSORPTION])) {
-                            foreach ($decisions[Solution::TYPE_ABSORPTION] as $decision) {
-                                foreach ($decision->trouble->vertexes as $vertex) {
-                                    unset($troubleVertexes[$vertex]);
-                                }
-
-                                unset($troubles[$decision->trouble->fromVertex][$decision->trouble->toVertex]);
-
-                                if (!count($troubles[$decision->trouble->fromVertex])) {
-                                    unset($troubles[$decision->trouble->fromVertex]);
-                                }
-                            }
-
-                            $graphs = array_merge($graphs, $this->applySolution(
-                                $decisions[Solution::TYPE_ABSORPTION],
-                                $replacement->vertexes,
-                                $arcs,
-                                $graph
-                            ));
-
-                            continue;
-                        }
-                    }
-
-                    if ($replacement->length === 2 || isset($troubles[$fromVertex][$toVertex])) {
-                        if (isset($troubles[$fromVertex][$toVertex])) {
-                            for ($i = 1; $i < count($replaced) - 1; $i++) {
-                                unset($troubleVertexes[$replaced[$i]]);
-                            }
-                        } else {
-                            $troubles[$fromVertex][$toVertex] = new Trouble(
-                                $replaced,
-                                $fromVertex,
-                                $toVertex
-                            );
-                        }
-
-                        $troubles[$fromVertex][$toVertex]->embedded(
-                            $edge,
-                            $replacement
-                        );
-
-                        for ($i = 1; $i < count($replacement->vertexes) - 1; $i++) {
-                            $troubleVertexes[$replacement->vertexes[$i]] = $troubles[$fromVertex][$toVertex];
-                        }
-                    } else {
-                        $arcs[] = new Arc(new GravityVertex($replaced[count($replaced) >> 1]), $replacement->vertexes);
-                    }
-                }
-
-                if ($found === 0) {
-                    $decisions = [];
-
-                    foreach ($graph->counter->vertexes as $vertex) {
-                        if (
-                            isset($troubleVertexes[$vertex])
-                            && !isset($decisions[$troubleVertexes[$vertex]->fromVertex])
-                        ) {
-                            $trouble = $troubleVertexes[$vertex];
-                            $decisions[$trouble->fromVertex] = $trouble;
-                            unset($troubles[$trouble->fromVertex][$trouble->toVertex]);
-
-                            if (!count($troubles[$trouble->fromVertex])) {
-                                unset($troubles[$trouble->fromVertex]);
-                            }
-                        }
-                    }
-
-                    if (count($decisions)) {
-                        $mainGravityVertexes = [];
-
-                        foreach ($graph->counter->vertexes as $vertex) {
-                            if (isset($troubleVertexes[$vertex])) {
-                                unset($troubleVertexes[$vertex]);
-                            } else {
-                                $mainGravityVertexes[] = $vertex;
-                            }
-                        }
-
-                        $graphs = array_merge($graphs, $this->solutionTroubles(
-                            $decisions,
-                            $arcs,
-                            $mainGravityVertexes
-                        ));
-                    } elseif (count($nextEdges) > 2) {
-                        throw new \Exception();
-                    }
-                }
-
-                $graph->edges = array_merge($graph->edges, $nextEdges);
-            } while ($found !== 0);
-        }
-
-        return new Topology($outerEdge, $arcs);
-    }
-
-    private function getReplacement(Edge $edgeA, Edge $edgeB): ?Replacement
-    {
-        $intersectA = array_intersect($edgeA->vertexes, $edgeB->vertexes);
-        $intersectCount = count($intersectA);
-
-        if ($intersectCount < 2) {
-            return null;
-        }
-
-        $edgeCountA = count($edgeA->vertexes);
-        $edgeCountB = count($edgeB->vertexes);
-
-        if (
-            $edgeCountA === $intersectCount
-            && $edgeCountB === $intersectCount
-        ) {
-            return null;
-        }
-
-        if ($edgeCountA === $intersectCount) {
-            $intersectB = array_intersect($edgeB->vertexes, $intersectA);
-            $shiftsAndDirection = $this->getShiftsAndDirection($intersectB, $edgeCountB, $edgeA, $edgeB);
-
-            if ($shiftsAndDirection === null) {
-                return null;
-            }
-
-            list($shiftA, $shiftB, $isRightDirection) = $shiftsAndDirection;
-
-            if (!$isRightDirection) {
-                $shiftA++;
-                $shiftB = $edgeB->findVertex($edgeA->getVertex($shiftA));
-
-                if ($shiftB === null) {
-                    return null;
-                }
-            }
-        } else {
-            $shiftsAndDirection = $this->getShiftsAndDirection($intersectA, $edgeCountA, $edgeB, $edgeA);
-
-            if ($shiftsAndDirection === null) {
-                return null;
-            }
-
-            list($shiftB, $shiftA, $isRightDirection) = $shiftsAndDirection;
-        }
-
-        for ($i = 0; $i < $intersectCount; $i++) {
-            $vertex = $edgeA->getVertex($shiftA + $i);
-
-            if ($vertex !== $edgeB->getVertex($shiftB + ($isRightDirection ? $i : -$i))) {
-                return null;
-            }
-        }
-
-        return new Replacement(
-            $edgeB->getVertexes(
-                $shiftB,
-                $isRightDirection ? $intersectCount - $edgeCountB - 2 : $edgeCountB - $intersectCount + 2
-            ),
-            $shiftA,
-            $intersectCount
-        );
-    }
-
-    private function getShift(array $vertexes, int $maxCount): ?int
-    {
-        /*$shift = reset($vertexes) === 0
-            && end($vertexes) !== $maxCount;
-        $prevValue = -1;
-        $result = reset($vertexes);
-
-        foreach ($vertexes as $value) {
-            if ($value !== $prevValue + 1) {
-                $result = $value;
-                $shift++;
-            }
-            $prevValue = $value;
-        }
-        return $shift > 1 ? null : $result;*/
-        $shift = isset($vertexes[0]) && !isset($vertexes[$maxCount - 1]);
-        $prevKey = 0;
-        reset($vertexes);
-        $result = key($vertexes);
-
-        foreach ($vertexes as $key => $value) {
-            if ($key !== $prevKey) {
-                $result = $key;
-
-                if ($shift) {
-                    return null;
-                }
-
-                $shift = true;
-            }
-
-            $prevKey = $key + 1;
-        }
-
-        return $result;
-    }
-
-    private function getShiftsAndDirection(array $intersect, int $edgeCount, Edge $edgeA, Edge $edgeB): ?array
-    {
-        $shiftB = $this->getShift($intersect, $edgeCount);
-
-        if ($shiftB === null) {
-            return null;
-        }
-
-        $shiftA = $edgeA->findVertex($edgeB->vertexes[$shiftB]);
-
-        if ($shiftA === null) {
-            return null;
-        }
-
-        $isRightDirection = $edgeA->getVertex($shiftA + 1) === $edgeB->getVertex($shiftB + 1);
-
-        return [$shiftA, $shiftB, $isRightDirection];
-    }
-
-    private function unique(array $array): array
-    {
-        $result = [];
-
-        while (count($array)) {
-            $item = array_shift($array);
-
-            if (!in_array($item, $result, true)) {
-                $result[] = $item;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param int|array $center
-     * @return GravityInterface
-     */
-    private function centerToGravity($center): GravityInterface
-    {
-        if (is_int($center)) {
-            return new GravityVertex($center);
-        }
-
-        $subGravity = [];
-
-        foreach ($center as $subCenter) {
-            $subGravity[] = $this->centerToGravity($subCenter);
-        }
-
-        return new Gravity(...$subGravity);
-    }
-
-    /**
-     * @param Solution[] $solutions
-     * @param int[] $vertexes
-     * @param Arc[] $arcs
-     * @param SubGraph $subGraph
-     * @return SubGraph[]
-     */
-    private function applySolution(array $solutions, array $vertexes, array &$arcs, SubGraph $subGraph): array
-    {
-        $doubleSolution = count($solutions) === 2;
-        $mainVertexes = $vertexes;
-        $count = 0;
-        $mainGravityVertexes = [];
-        $graphs = [];
-        $newArcs = [&$mainVertexes];
-
-        foreach ($solutions as $solution) {
-            $mainGravityVertexes[$solution->trouble->fromVertex] = $solution->trouble->fromVertex;
-            $mainGravityVertexes[$solution->trouble->toVertex] = $solution->trouble->toVertex;
-
-            if ($solution->fromPosition !== null && $solution->fromVertex !== $solution->trouble->fromVertex) {
-                $tree = $solution->trouble->trees[$solution->fromVertex];
-                $leftPart = $tree->findPath($solution->fromVertex, false);
-                $innerEdges = $solution->trouble->getInnerEdges($solution->trouble->fromVertex, $solution->fromVertex);
-                $subGraph->edges = array_merge($subGraph->edges, $innerEdges);
-                $pos = $subGraph->counter->findVertex($solution->trouble->fromVertex);
-                $pos2 = $subGraph->counter->findVertex($solution->fromVertex);
-                $length = $subGraph->counter->getNormalVertexNumber($pos2 - $pos);
-                $subGraph->counter = $subGraph->counter->replace($leftPart, $pos, $length);
-                $pos = array_search($solution->fromVertex, $solution->trouble->vertexes, true);
-                $newArcs[] = $leftArc = array_slice($solution->trouble->vertexes, $pos);
-                $leftPart1 = $leftPart;
-
-                if ($count === 0) {
-                    $leftPart1[] = array_shift($mainVertexes);
-                    $mainVertexes = [$leftPart1, $mainVertexes];
-                } else {
-                    $leftPart1[] = array_shift($mainVertexes[0]);
-                    $mainVertexes = array_merge([$leftPart1], $mainVertexes);
-                }
-
-                $count++;
-                $innerEdges = array_diff($solution->trouble->edges, $innerEdges);
-                $graphs[] = new SubGraph(
-                    new Edge(array_merge($leftPart, $leftArc)),
-                    $innerEdges
-                );
-            } elseif ($solution->toPosition !== null && $solution->toVertex !== $solution->trouble->toVertex) {
-                $tree = $solution->trouble->trees[$solution->toVertex];
-                $rightPath = $tree->findPath($solution->toVertex, true);
-                $innerEdges = $solution->trouble->getInnerEdges($solution->toVertex, $solution->trouble->toVertex);
-                $subGraph->edges = array_merge($subGraph->edges, $innerEdges);
-                $pos = $subGraph->counter->findVertex($solution->toVertex);
-                $pos2 = $subGraph->counter->findVertex($solution->trouble->toVertex);
-                $length = $subGraph->counter->getNormalVertexNumber($pos2 - $pos);
-                $subGraph->counter = $subGraph->counter->replace($rightPath, $pos + 1, $length);
-                $pos = array_search($solution->toVertex, $solution->trouble->vertexes, true);
-                $newArcs[] = $rightArc = array_slice($solution->trouble->vertexes, 0, $pos + 1);
-                $rightPart1 = $rightPath;
-
-                if ($count === 0) {
-                    array_unshift($rightPart1, array_pop($mainVertexes));
-                    $mainVertexes = [$mainVertexes, $rightPart1];
-                } else {
-                    array_unshift($rightPart1, array_pop($mainVertexes[1]));
-                    $mainVertexes = array_merge($mainVertexes, [$rightPart1]);
-                }
-
-                $count++;
-                $innerEdges = array_diff($solution->trouble->edges, $innerEdges);
-                $graphs[] = new SubGraph(
-                    new Edge(array_merge($rightArc, $rightPath)),
-                    $innerEdges
-                );
-            } else {
-                $newArcs[] = $solution->trouble->vertexes;
-                $graphs[] = new SubGraph(new Edge($solution->trouble->vertexes), $solution->trouble->edges);
-            }
-        }
-
-        if (is_array($mainVertexes[0])) {
-            $mainGravityVertexes[$mainVertexes[0][0]] = $mainVertexes[0][0];
-        } else {
-            $mainGravityVertexes[$mainVertexes[0]] = $mainVertexes[0];
-        }
-
-        $last = end($mainVertexes);
-
-        if (is_array($last)) {
-            $last = end($last);
-        }
-
-        $mainGravityVertexes[$last] = $last;
-
-        foreach ($newArcs as $arc) {
-            if (count($arc) === 1) {
-                var_dump('arc', $arc);die;
-            }
-
-            $arcs[] = is_array($arc[0])
-                ? new Arc(new GravityVertex(...$mainGravityVertexes), ...$arc)
-                : new Arc(new GravityVertex(...$mainGravityVertexes), $arc);
-        }
-
-        if ($doubleSolution) {
-            //var_dump($arcs);die;
-        }
-
-        return $graphs;
-    }
-
-    /**
-     * @param Trouble[] $troubles
-     * @param Arc[] $arcs
-     * @param int[] $mainGravityVertexes
-     * @return SubGraph[]
-     */
-    private function solutionTroubles(array $troubles, array &$arcs, array $mainGravityVertexes): array
-    {
-        $graphs = [];
-
-        foreach ($troubles as $trouble) {
-            $arcs[] = new Arc(new GravityVertex(...$mainGravityVertexes), $trouble->vertexes);
-            $graphs[] = new SubGraph(new Edge($trouble->vertexes), $trouble->edges);
-        }
-
-        return $graphs;
-    }
-
     private function getInnerVertexes(
         ClearGraph $branch,
         IntegerCollection $path,
-        BoolCollection $outerVertexes
+        BoolCollection $outerVertexes,
+        AbstractSlice $slice
     ): IntegerCollection {
-        static $step = 0;
-        $step++;
-
-        $innerIntersections = $this->getInnerIntersections($branch, $path, $outerVertexes);
-
-        if ($step === 2) {
-            //var_dump($innerIntersections);die;
-        }
-
+        $innerIntersections = $this->getInnerIntersections($branch, $path, $outerVertexes, $slice);
         $innerVertexes = IntegerMatrix::fromMap(function (Intersection  $intersection): IntegerCollection {
             return $intersection->vertexes;
         }, false, $innerIntersections);
@@ -1036,38 +462,19 @@ class EdgeService extends AbstractService
     private function getInnerIntersections(
         ClearGraph $branch,
         IntegerCollection $path,
-        BoolCollection $outerVertexes
+        BoolCollection $outerVertexes,
+        AbstractSlice $slice
     ): IntersectionCollection {
-        $steps = [];
-        static $step = 0;
-
         $intersections = IntersectionService::instance()->getIntersections($branch, $path, $outerVertexes);
         $matrix = $this->getIntersectionMatrix($path, $intersections);
-
-
-        /*foreach ($intersections as $number => $intersection) {
-            //echo $this->viewerService->vertexesToSvg(
-                ($intersection->isOuter ? 'outer ' : '') . 'intersection ' . $number,
-                array_keys(array_replace(
-                    $intersection->vertexes,
-                    $intersection->connections
-                )),
-                $branch->connections
-            );
-        }
-
-        //echo $this->viewerService->toSvg('intersection matrix', $matrix);*/
-
         $knowns = new BoolCollection();
         $unknowns = new IntersectionCollection();
         $result = new IntersectionCollection();
 
         foreach ($intersections as $number => $intersection) {
-            if ($intersection->isOuter) {
-                $knowns[$number] = true;
-            } else {
-                $unknowns[$number] = $intersection;
-            }
+            $intersection->isOuter
+                ? $knowns[$number] = true
+                : $unknowns[$number] = $intersection;
         }
 
         while (!$unknowns->isEmpty() || !$knowns->isEmpty()) {
@@ -1093,10 +500,8 @@ class EdgeService extends AbstractService
             $knowns = $newKnowns;
 
             if ($newKnowns->isEmpty() && !$unknowns->isEmpty()) {
-                $vertexB = $unknowns->getKeyByPosition(0);//$unknowns->getRandomKey();
-
+                $vertexB = $slice->nextKey($unknowns);
                 $result[] = $unknowns[$vertexB];
-
                 $knowns[$vertexB] = false;
                 $unknowns[$vertexB]->isOuter = false;
                 unset($unknowns[$vertexB]);
@@ -1121,33 +526,5 @@ class EdgeService extends AbstractService
         }
 
         return $matrix;
-    }
-
-    /**
-     * @param Solution[][] $decisions
-     * @return bool
-     */
-    private function isCircle(array $decisions): bool
-    {
-        if (count($decisions) === 0) {
-            return false;
-        }
-
-        if (isset($decisions[Solution::TYPE_CIRCLE])) {
-            return true;
-        }
-
-        $from = null;
-        $to = null;
-
-        foreach ($decisions[Solution::TYPE_ABSORPTION] ?? [] as $decision) {
-            if ($decision->fromPosition !== null) {
-                $from = $decision;
-            } elseif ($decision->toPosition !== null) {
-                $to = $decision;
-            }
-        }
-
-        return $from !== null && $to !== null && $from->trouble->fromVertex === $to->trouble->toVertex;
     }
 }

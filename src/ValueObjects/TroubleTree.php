@@ -1,84 +1,88 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
-/**
- * @property-read Edge $edge
- * @property-read TroubleTree|null $leftChild
- * @property-read TroubleTree|null $rightChild
- * @property-read Edge[] $edges
- * @property-read int[] $vertexes
- * @see TroubleTree::getLevelAttribute()
- * @property-read int $level
- * @see TroubleTree::getLeftParentsAttribute()
- * @property-read TroubleTree[][] $leftParents
- */
-class TroubleTree extends AbstractValueObjectMutable
-{
-    private $leftParents;
-    private $rightParents;
-    private $level;
+use EugeneErg\Graph\Collections\EdgeCollection;
+use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntegerMatrix;
+use EugeneErg\Graphs\TroubleTreeMatrix;
 
-    /**
-     * @param Edge $edge
-     * @param TroubleTree|null $leftChild
-     * @param TroubleTree|null $rightChild
-     * @param Edge[] $edges
-     * @param int[] $vertexes
-     */
+/**
+ * @see TroubleTree::getEdge()
+ * @property-read Edge $edge
+ * @see TroubleTree::getLeftChild()
+ * @property-read TroubleTree|null $leftChild
+ * @see TroubleTree::getRightChild()
+ * @property-read TroubleTree|null $rightChild
+ * @see TroubleTree::getEdges()
+ * @property-read EdgeCollection $edges
+ * @see TroubleTree::getVertexes()
+ * @property-read IntegerCollection $vertexes
+ * @see TroubleTree::getLevel()
+ * @property-read int $level
+ * @see TroubleTree::getLeftParents()
+ * @property-read TroubleTreeMatrix $leftParents
+ */
+class TroubleTree extends AbstractValueObject
+{
+    private TroubleTreeMatrix $leftParents;
+    private TroubleTreeMatrix $rightParents;
+    private int $level;
+    private Edge $edge;
+    private ?TroubleTree $leftChild;
+    private ?TroubleTree $rightChild;
+    private EdgeCollection $edges;
+    private IntegerCollection $vertexes;
+
     public function __construct(
         Edge $edge,
         ?TroubleTree $leftChild,
         ?TroubleTree $rightChild,
-        array $edges,
-        array $vertexes
+        EdgeCollection $edges,
+        IntegerCollection $vertexes
     ) {
         if ($leftChild !== null) {
-            $leftChild->rightParents[$vertexes[0]][] = $this;
+            $leftChild->rightParents->setItem($vertexes->getValueByPosition(0), null, $this);
         }
 
         if ($rightChild !== null) {
-            $rightChild->leftParents[end($vertexes)][] = $this;
+            $rightChild->leftParents->setItem($vertexes->getValueByPosition(), null, $this);
         }
 
-        $this->leftParents = [];
-        $this->rightParents = [];
+        $this->leftParents = new TroubleTreeMatrix();
+        $this->rightParents = new TroubleTreeMatrix();
         $this->level = max($leftChild->level ?? -1, $rightChild->level ?? -1) + 1;
-
-        parent::__construct($edge, $leftChild, $rightChild, $edges, $vertexes);
+        $this->edge = $edge;
+        $this->leftChild = $leftChild;
+        $this->rightChild = $rightChild;
+        $this->edges = $edges;
+        $this->vertexes = $vertexes;
     }
 
-    /**
-     * @param int $vertex
-     * @param bool $onRight
-     * @return int[]|null
-     */
-    public function findPath(int $vertex, bool $onRight): ?array
+    public function findPath(int $vertex, bool $onRight): ?IntegerCollection
     {
         $tree = $this;
-        $result = [];
+        $result = new IntegerMatrix();
 
         while ($tree !== null) {
-            $pos = array_search($vertex, $tree->vertexes, true);
+            $pos = $tree->vertexes->search($vertex, true);
 
             if ($pos === false) {
                 return null;
             }
 
-            $item = array_slice(
-                $tree->vertexes,
+            $item = $tree->vertexes->slice(
                 $onRight ? $pos + 1 : 0,
                 $onRight ? null : $pos
             );
-            $onRight ? $result[] = $item : array_unshift($result, $item);
-            $vertex = $tree->vertexes[$onRight ? count($tree->vertexes) - 1 : 0];
+            $onRight ? $result->setCollection(null, $item) : $result->unshift($item);
+            $vertex = $tree->vertexes[$onRight ? $tree->vertexes->count() - 1 : 0];
             $tree = $onRight ? $tree->rightChild : $tree->leftChild;
         }
 
-        return array_merge(...$result);
+        return IntegerCollection::fromMerge(false, ...$result);
     }
 
-    /** @return Edge[] */
-    public function getAllEdges(): array
+    /*public function getAllEdges(): EdgeCollection
     {
         $result = [];
         $trees = [$this];
@@ -99,24 +103,23 @@ class TroubleTree extends AbstractValueObjectMutable
         }
 
         return $result;
-    }
+    }*/
 
-    public function getLevelAttribute(): int
+    public function getLevel(): int
     {
         return $this->level;
     }
 
-    public function getLeftParentsAttribute(): array
+    public function getLeftParents(): TroubleTreeMatrix
     {
         return $this->leftParents;
     }
 
     public function toArray(): array
     {
-        $result = parent::toArray();
-        unset($result['leftParents'], $result['rightParents']);
+        return [
 
-        return $result;
+        ];
     }
 
     public function removeLeftParent(self $parent): void
@@ -128,5 +131,30 @@ class TroubleTree extends AbstractValueObjectMutable
                 unset($this->leftParents[$pos1][$pos2]);
             }
         }
+    }
+
+    protected function getEdge(): Edge
+    {
+        return $this->edge;
+    }
+
+    protected function getVertexes(): IntegerCollection
+    {
+        return $this->vertexes;
+    }
+
+    protected function getEdges(): EdgeCollection
+    {
+        return $this->edges;
+    }
+
+    protected function getLeftChild(): ?TroubleTree
+    {
+        return $this->leftChild;
+    }
+
+    protected function getRightChild(): ?TroubleTree
+    {
+        return $this->rightChild;
     }
 }

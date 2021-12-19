@@ -64,7 +64,7 @@ class ClearGraph extends AbstractGraph
 
     public function setOuterEdge(IntegerCollection $path): void
     {
-        $prev = $path->getValueByPosition(-1);
+        $prev = $path->getValueByPosition();
 
         foreach ($path as $vertex) {
             $this->setCell($prev, $vertex, 2);
@@ -74,7 +74,7 @@ class ClearGraph extends AbstractGraph
 
     public function joinOuterEdge(IntegerCollection $path): void
     {
-        $prevVertex = $path->getValueByPosition(-1);
+        $prevVertex = $path->getValueByPosition();
 
         foreach ($path as $currentVertex) {
             $value = $this->getCell($currentVertex, $prevVertex);

@@ -10,6 +10,7 @@ use Traversable;
  * @method Edge[] getIterator()
  * @method Edge[] toArray()
  * @method Edge[] getUpdatingIterator()
+ * @method Edge shift()
  */
 class EdgeCollection extends AbstractLineCollection
 {

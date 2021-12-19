@@ -65,7 +65,7 @@ class Edge extends AbstractValueObject
     public function replace(IntegerCollection $vertexes, int $start, int $length): Edge
     {
         return new Edge(
-            $this->getVertexes($length + $start, count($this->vertexes) - $length)->merge($vertexes)
+            $this->getVertexes($length + $start, $this->vertexes->count() - $length)->merge($vertexes)
         );
     }
 

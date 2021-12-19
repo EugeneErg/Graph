@@ -6,6 +6,7 @@ namespace EugeneErg\Graph\Collections;
  * @method __construct(EdgeCollection[] $items)
  * @method EdgeCollection[] getIterator()
  * @method EdgeCollection[] toArray()
+ * @method EdgeCollection getCollection($collectionKey, bool $nullIfNotExists = false)
  */
 class EdgeMatrix extends AbstractMatrix2
 {

@@ -1,18 +1,15 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
-class Arc
-{
-    /** @var int[][] */
-    private $vertexes;
-    /** @var GravityInterface */
-    private $gravity;
+use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntegerMatrix;
 
-    /**
-     * @param int[] ...$vertexes
-     * @param GravityInterface $gravity
-     */
-    public function __construct(GravityInterface $gravity, array ...$vertexes)
+class Arc extends AbstractValueObject
+{
+    private IntegerMatrix $vertexes;
+    private GravityInterface $gravity;
+
+    public function __construct(GravityInterface $gravity, IntegerMatrix $vertexes)
     {
         $this->vertexes = $vertexes;
         $this->gravity = $gravity;
@@ -23,33 +20,30 @@ class Arc
         return $this->gravity;
     }
 
-    /** @return int[][] */
-    public function getVertexes(): array
+    public function getVertexes(): IntegerMatrix
     {
         return $this->vertexes;
     }
 
     public function firstVertex(): int
     {
-        return $this->vertexes[0][0];
+        return $this->vertexes->getItem(0, 0);
     }
 
     public function lastVertex(): int
     {
-        $end = end($this->vertexes);
-
-        return end($end);
+        return $this->vertexes->getValueByPosition()->getValueByPosition();
     }
 
     /** @return float[] */
     public function getIndexes(): array
     {
         $result = [];
-        $count = count($this->vertexes);
+        $count = $this->vertexes->count();
 
         foreach ($this->vertexes as $num1 => $vertexes) {
-            $step = 1 / (count($vertexes) * $count - 1);
-            $prevCount = $num1 * count($vertexes);
+            $step = 1 / ($vertexes->count() * $count - 1);
+            $prevCount = $num1 * $vertexes->count();
 
             foreach ($vertexes as $num2 => $vertex) {
                 $result[$vertex] = $step * ($num2 + $prevCount);
@@ -57,5 +51,13 @@ class Arc
         }
 
         return $result;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'vertexes' => $this->vertexes->toArray(),
+            'gravity' => $this->gravity->toArray(),
+        ];
     }
 }

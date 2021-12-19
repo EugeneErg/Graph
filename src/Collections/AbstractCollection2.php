@@ -58,7 +58,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     }
 
     /** @param string|int $key */
-    protected function isset($key): bool
+    public function isset($key): bool
     {
         return isset($this->items[$key]);
     }
@@ -183,7 +183,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         return $this->getKeyValueByPosition($position)[0] ?? null;
     }
 
-    public function getValueByPosition(int $position)
+    public function getValueByPosition(int $position = -1)
     {
         return $this->getKeyValueByPosition($position)[1] ?? null;
     }
@@ -622,6 +622,12 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     }
 
     /** @return $this */
+    public function merge(self ...$replacements): self
+    {
+        return static::fromMerge(false, $this, ...$replacements);
+    }
+
+    /** @return $this */
     public static function fromMerge(bool $filtered = false, self ...$replacements): self
     {
         return static::fromArray(
@@ -687,5 +693,21 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         $result = array_search($needle, $this->items, $strict);
 
         return $result === false ? null : $result;
+    }
+
+    public function shift()
+    {
+        return array_shift($this->items);
+    }
+
+    /** @return $this */
+    public static function fromCollection(self $collection): self
+    {
+        return static::fromArray($collection->items);
+    }
+
+    public function unshift($value): int
+    {
+        return array_unshift($this->items, $value);
     }
 }
