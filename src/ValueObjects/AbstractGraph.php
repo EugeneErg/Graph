@@ -5,20 +5,21 @@ namespace EugeneErg\Graph\ValueObjects;
 use EugeneErg\Graph\Collections\AbstractCollection2;
 use EugeneErg\Graph\Collections\AbstractMatrix2;
 use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntegerMatrix;
 use JsonSerializable;
 
 /**
  * @see AbstractGraph::getVertexes()
  * @property-read IntegerCollection $vertexes
  * @see AbstractGraph::getConnections()
- * @property-read AbstractMatrix2 $connections
+ * @property-read IntegerMatrix $connections
  */
 abstract class AbstractGraph extends AbstractValueObject implements JsonSerializable
 {
-    private AbstractMatrix2 $connections;
+    private IntegerMatrix $connections;
     private IntegerCollection $vertexes;
 
-    protected function setConnections(AbstractMatrix2 $connections): void
+    protected function setConnections(IntegerMatrix $connections): void
     {
         $this->connections = $connections;
     }
@@ -87,9 +88,9 @@ abstract class AbstractGraph extends AbstractValueObject implements JsonSerializ
         return $this->connections->getItem($column, $row, $nullIfNotExists);
     }
 
-    public function setCell($column, $row, int $value)
+    public function setCell($column, $row, int $value): void
     {
-        return $this->connections->setItem($column, $row, $value);
+        $this->connections->setItem($column, $row, $value);
     }
 
     public function issetCell($column, $row): bool
@@ -102,7 +103,7 @@ abstract class AbstractGraph extends AbstractValueObject implements JsonSerializ
         $this->connections->unsetItem($column, $row);
     }
 
-    public function getColumn($column, bool $nullIfNotExists = false): ?AbstractCollection2
+    public function getColumn($column, bool $nullIfNotExists = false): ?IntegerCollection
     {
         return $this->connections->getCollection($column, $nullIfNotExists);
     }
@@ -117,7 +118,7 @@ abstract class AbstractGraph extends AbstractValueObject implements JsonSerializ
         return $this->toArray();
     }
 
-    public function getConnections(): AbstractMatrix2
+    public function getConnections(): IntegerMatrix
     {
         return $this->connections;
     }

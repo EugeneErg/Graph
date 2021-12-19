@@ -7,6 +7,7 @@ use EugeneErg\Graph\Services\AssertService;
  * @method __construct(IntegerCollection[] $items)
  * @method IntegerCollection[] getIterator()
  * @method IntegerCollection[] toArray()
+ * @method IntegerCollection getCollection($collectionKey, bool $nullIfNotExists = false)
  */
 class IntegerMatrix extends AbstractMatrix2
 {
