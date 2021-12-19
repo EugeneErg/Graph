@@ -4,24 +4,77 @@ namespace EugeneErg\Graph\Collections;
 
 abstract class AbstractCube extends AbstractCollection2
 {
-    public function getCell($width, $height, $depth, bool $nullIfNotExists = false)
+    public function getItem($matrixKey, $collectionKey, $itemKey, bool $nullIfNotExists = false)
     {
-        return $nullIfNotExists === false || $this->isset($width, $height, $depth)
-            ? $this->get($width, $height, $depth) : null;
+        $matrix = $this->getMatrix($matrixKey, $nullIfNotExists);
+
+        if ($matrix === null) {
+            return null;
+        }
+
+        return $matrix->getItem($collectionKey, $itemKey, $nullIfNotExists);
     }
 
-    public function setCell($width, $height, $depth, $value)
+    public function unsetItem($matrixKey, $collectionKey, $itemKey): void
     {
-        return $this->set($width, $height, $depth, $value);
+        if ($this->issetMatrix($matrixKey)) {
+            $this->getMatrix($matrixKey)->unsetItem($collectionKey, $itemKey);
+        }
     }
 
-    public function issetCell($width, $height, $depth): bool
+    public function unsetMatrix($matrixKey): void
     {
-        return $this->isset($width, $height, $depth);
+        $this->unset($matrixKey);
     }
 
-    public function unsetCell($width, $height, $depth): void
+    public function setMatrix($matrixKey, AbstractMatrix2 $value): void
     {
-        $this->unset($width, $height, $depth);
+        $this->set($matrixKey, $value);
+    }
+
+    public function unsetCollection($matrixKey, $collectionKey): void
+    {
+        if ($this->issetMatrix($matrixKey)) {
+            $this->getMatrix($matrixKey)->unsetCollection($collectionKey);
+        }
+    }
+
+    public function issetCollection($matrixKey, $collectionKey): bool
+    {
+        return $this->issetMatrix($matrixKey)
+            && $this->getMatrix($matrixKey)->issetCollection($collectionKey);
+    }
+
+    public function getCollection($matrixKey, $collectionKey, bool $nullIfNotExists = false): ?AbstractLineCollection
+    {
+        $matrix = $this->getMatrix($matrixKey, $nullIfNotExists);
+
+        if ($matrix === null) {
+            return null;
+        }
+
+        return $matrix->getCollection($collectionKey, $nullIfNotExists);
+    }
+
+    public function getMatrix($matrixKey, bool $nullIfNotExists = false): ?AbstractMatrix2
+    {
+        return $nullIfNotExists === false || $this->isset($matrixKey)
+            ? $this->get($matrixKey) : null;
+    }
+
+    public function setItem($matrixKey, $collectionKey, $itemKey, $value): void
+    {
+        if (!$this->isset($matrixKey)) {
+            /** @var AbstractMatrix2 $class */
+            $class = static::ELEMENT_CLASS;
+            $this->setMatrix($matrixKey, $class::fromArray());
+        }
+
+        $this->getMatrix($matrixKey)->setItem($collectionKey, $itemKey, $value);
+    }
+
+    private function issetMatrix($matrixKey): bool
+    {
+        return $this->isset($matrixKey);
     }
 }

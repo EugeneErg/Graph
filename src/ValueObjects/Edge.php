@@ -42,7 +42,7 @@ class Edge extends AbstractValueObject
     public function getVertexes(int $offset = 0, int $count = null): IntegerCollection
     {
         $result = new IntegerCollection();
-        $count = $count ?? count($this->vertexes);
+        $count = $count ?? $this->vertexes->count();
 
         if ($count < 0) {
             for ($i = 0; $i > $count; $i--) {

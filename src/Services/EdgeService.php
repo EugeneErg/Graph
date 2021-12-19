@@ -43,6 +43,19 @@ class EdgeService extends AbstractService
         }, false, TreeService::instance()->createFromGraph($graph));
     }
 
+    public function createConnectedEdgesFromGraph(AbstractGraph $graph): EdgeMatrix
+    {
+        return EdgeMatrix::fromMap(function (Tree $tree): EdgeCollection {
+            return $this->mergeTree(EdgeMatrix::fromWalk(
+                $tree->branches,
+                function (ClearGraph $branch): EdgeCollection {
+                    return $this->toList($this->splitOnTreeEdges($branch));
+                },
+                false
+            ), $tree);
+        }, false, TreeService::instance()->createFromGraph($graph));
+    }
+
     private function splitOnTreeEdges(ClearGraph $branch, ?IntegerCollection $outerEdge = null, int $level = 0): Edge
     {
         if ($branch->vertexes->count() < 4) {
@@ -290,40 +303,42 @@ class EdgeService extends AbstractService
         return $result;
     }
 
-    private function mergeTree(EdgeCollection $edges, Tree $tree): EdgeCollection
+    private function mergeTree(EdgeMatrix $edgeMatrix, Tree $tree): EdgeCollection
     {
+        if ($tree->connections->vertexes->isEmpty()) {
+            return $edgeMatrix->getCollection(0);
+        }
+
         $step = 0;
         //$steps = [15,13,13,0,12,11,11,1,1,7,7,8,7,9,7,10];
-        $edgeMatrix = new EdgeMatrix();
         $edgeMap = new EdgeCube();
         $lastNumber = 0;
         $addToEdgeList = new EdgeCollection();
 
-        foreach ($edges as $branch => $edge) {
-            $edgeMatrix[$branch] = $this->toList($edge);
-            $edgeMap[$branch] = $this->addEdgeToMap(
-                $edgeMatrix[$branch],
-                new IntegerCollection($tree->connections[$branch]),
+        foreach ($edgeMatrix as $branch => $edges) {
+            $edgeMap->setMatrix($branch, $this->addEdgeToMap(
+                $edges,
+                $tree->connections->connections->getCollection($branch),
                 $lastNumber
-            );
+            ));
 
             if (
-                $edgeMatrix[$branch]->count() === 1
-                && count($edgeMatrix[$branch][0]->vertexes) > 2
+                $edges->count() === 1
+                && $edges[0]->vertexes->count() > 2
             ) {
-                $addToEdgeList[] = $edgeMatrix[$branch][0];
+                $addToEdgeList[] = $edges[0];
             }
 
-            $lastNumber += count($edgeMatrix[$branch]);
+            $lastNumber += $edges->count();
         }
 
-        $edgeLists = EdgeCollection::fromMerge(...$edgeMatrix);
+        $edgeLists = EdgeCollection::fromMerge(false, ...$edgeMatrix);
 
-        if (count($addToEdgeList)) {
+        if (!$addToEdgeList->isEmpty()) {
             $edgeLists->push(...$addToEdgeList);
         }
 
-        $root = rand(0, count($edges) - 1);
+        $root = $edgeMatrix->getKeyByPosition(0);//  rand(0, $edgeMatrix->count() - 1);
         var_dump('root', $root);
         $graph = $tree->connections->direct($root);
         /**
@@ -353,33 +368,32 @@ class EdgeService extends AbstractService
          * $edgeMap[У какой ветки][какая вершина][есть в каком ребре] = ребро
          * $edgeLists[] - все существующие ребра
          */
-        $connections = $graph[$root] ?? new IntegerCollection();
+        $connections = $graph->getConnections()->getCollection($root) ?? new IntegerCollection();
 
         while (null !== $keyValue = $connections->getKeyValueByPosition(0)) {
             [$branch, $vertex] = $keyValue;
             unset($connections[$branch]);
-            $connections = $connections->replace($graph[$branch] ?? []);
-            $edgeNumberA = $steps[$step++] ?? $edgeMap[$root][$vertex]->getRandomKey();
+            $connections = $connections->replace($graph->getConnections()->getCollection($branch) ?? []);
+            $edgeNumberA = $steps[$step++] ?? $edgeMap->getMatrix($root)->getCollection($vertex)->getKeyByPosition(0);//->getRandomKey();
             var_dump('edgeNumberA', $edgeNumberA);
-            $edgeA = $edgeMap[$root][$vertex][$edgeNumberA];
-            $edgeNumberB = $steps[$step++] ?? $edgeMap[$branch][$vertex]->getRandomKey();
+            $edgeA = $edgeMap->getItem($root, $vertex, $edgeNumberA);
+            $edgeNumberB = $steps[$step++] ?? $edgeMap->getMatrix($branch)->getCollection($vertex)->getKeyByPosition(0);//->getRandomKey();
             var_dump('edgeNumberB', $edgeNumberB);
-            $edgeB = $edgeMap[$branch][$vertex][$edgeNumberB];
+            $edgeB = $edgeMap->getItem($branch, $vertex, $edgeNumberB);
             $countAIsW = $edgeA->vertexes->count() === 2;
             $countBIsW = $edgeB->vertexes->count() === 2;
 
             if ($countAIsW && $countBIsW) {
                 $newEdge = $this->getEdgeFromWW($vertex, $edgeA, $edgeB);
-                unset(
-                    $edgeMap[$branch],
-                    $edgeMap[$root],
-                    $edgeLists[$edgeNumberB]
-                );
+
+                $edgeMap->unsetMatrix($branch);
+                $edgeMap->unsetMatrix($root);
+                unset($edgeLists[$edgeNumberB]);
                 $edgeLists[$edgeNumberA] = $newEdge;
                 $edgeLists[] = $newEdge;
-                $edgeMap[$root] = $this->addEdgeToMap(new EdgeCollection([
+                $edgeMap->setMatrix($root, $this->addEdgeToMap(new EdgeCollection([
                     $edgeNumberA => $newEdge,
-                ]), $connections);
+                ]), $connections));
             } else {
                 $newEdges = $countAIsW || $countBIsW
                     ? $this->getEdgesFromWV(
@@ -394,10 +408,13 @@ class EdgeService extends AbstractService
                 $this->moveEdgeInMap($branch, $root, $edgeNumberB, $edgeMap);
                 $edgeLists[$edgeNumberA] = $newEdges[0];
                 $edgeLists[$edgeNumberB] = $newEdges[1];
-                $edgeMap[$root] = array_replace($edgeMap[$root] ?? [], $this->addEdgeToMap(new EdgeCollection([
-                    $edgeNumberA => $newEdges[0],
-                    $edgeNumberB => $newEdges[1],
-                ]), $connections));
+
+                $edgeMap->setMatrix($root, ($edgeMap->getMatrix($root, true) ?? new EdgeMatrix())->replace(
+                    $this->addEdgeToMap(new EdgeCollection([
+                        $edgeNumberA => $newEdges[0],
+                        $edgeNumberB => $newEdges[1],
+                    ]), $connections)
+                ));
             }
         }
 
@@ -407,7 +424,7 @@ class EdgeService extends AbstractService
     private function getPartEdge(Edge $edge, int $offset, int $count = null): IntegerCollection
     {
         $result = new IntegerCollection();
-        $vertexCount = count($edge->vertexes);
+        $vertexCount = $edge->vertexes->count();
         $count = $count ?? $vertexCount;
 
         if ($count < 0) {
@@ -430,10 +447,10 @@ class EdgeService extends AbstractService
         $result = new EdgeMatrix();
 
         foreach ($edgeList as $edgeNumber => $subEdge) {
-            $intersect = $vertexes->intersect(new Collection($subEdge->vertexes));
+            $intersect = $vertexes->intersect($subEdge->vertexes);
 
             foreach ($intersect as $vertex) {
-                $result[$vertex][$edgeNumber + $offset] = $subEdge;
+                $result->setItem($vertex, $edgeNumber + $offset, $subEdge);
             }
         }
 
@@ -444,35 +461,38 @@ class EdgeService extends AbstractService
     {
         foreach ($edgeList as $edgeNumber => $subEdge) {
             foreach ($subEdge->vertexes as $vertex) {
-                unset($edgeMap[$branch][$vertex][$edgeNumber]);
+                $edgeMap->unsetItem($branch, $vertex, $edgeNumber);
 
-                if (empty($edgeMap[$branch][$vertex])) {
-                    unset($edgeMap[$branch][$vertex]);
+                if (
+                    $edgeMap->issetCollection($branch, $vertex)
+                    && $edgeMap->getCollection($branch, $vertex)->isEmpty()
+                ) {
+                    $edgeMap->unsetCollection($branch, $vertex);
                 }
             }
         }
 
-        if (!count($edgeMap[$branch])) {
-            unset($edgeMap[$branch]);
+        if ($edgeMap->getMatrix($branch)->isEmpty()) {
+            $edgeMap->unsetMatrix($branch);
         }
     }
 
     private function getEdgesFromVV(int $vertex, Edge $edgeA, Edge $edgeB): EdgeCollection
     {
-        $posA = array_search($vertex, $edgeA->vertexes, true);
-        $posB = array_search($vertex, $edgeB->vertexes, true);
-        $partA = $this->getPartEdge($edgeA, $posA + 1, count($edgeA->vertexes) >> 1);
-        $partB = $this->getPartEdge($edgeB, $posB, (count($edgeB->vertexes) >> 1) + 1);
-        $partB2 = $this->getPartEdge($edgeB, $posB, count($partB) - count($edgeB->vertexes) - 2);
-        $partA2 = $this->getPartEdge($edgeA, $posA - 1, count($partA) - count($edgeA->vertexes));
+        $posA = $edgeA->vertexes->search($vertex, true);
+        $posB = $edgeB->vertexes->search($vertex, true);
+        $partA = $this->getPartEdge($edgeA, $posA + 1, $edgeA->vertexes->count() >> 1);
+        $partB = $this->getPartEdge($edgeB, $posB, ($edgeB->vertexes->count() >> 1) + 1);
+        $partB2 = $this->getPartEdge($edgeB, $posB, $partB->count() - $edgeB->vertexes->count() - 2);
+        $partA2 = $this->getPartEdge($edgeA, $posA - 1, $partA->count() - $edgeA->vertexes->count());
 
         //var_dump($vertex, $edgeA->vertexes, $edgeB->vertexes, $partB, $partB2, $partA, $partA2);die;
 
-        for ($i = count($partA) - 1; $i >= 0; $i--) {
+        for ($i = $partA->count() - 1; $i >= 0; $i--) {
             $partB[] = $partA[$i];
         }
 
-        for ($i = count($partA2) - 1; $i >= 0; $i--) {
+        for ($i = $partA2->count() - 1; $i >= 0; $i--) {
             $partB2[] = $partA2[$i];
         }
 
@@ -481,13 +501,13 @@ class EdgeService extends AbstractService
 
     private function getEdgesFromWV(int $vertex, Edge $edgeA, Edge $edgeB): EdgeCollection
     {
-        $posA = array_search($vertex, $edgeA->vertexes, true);
-        $posB = array_search($vertex, $edgeB->vertexes, true);
-        $partA = $this->getPartEdge($edgeA, $posA + 1, count($edgeA->vertexes) >> 1);
-        $partB = $this->getPartEdge($edgeB, $posB, (count($edgeB->vertexes) >> 1) + 1);
-        $partB2 = $this->getPartEdge($edgeB, $posB, count($partB) - count($edgeB->vertexes) - 2);
+        $posA = $edgeA->vertexes->search($vertex, true);
+        $posB = $edgeB->vertexes->search($vertex, true);
+        $partA = $this->getPartEdge($edgeA, $posA + 1, $edgeA->vertexes->count() >> 1);
+        $partB = $this->getPartEdge($edgeB, $posB, ($edgeB->vertexes->count() >> 1) + 1);
+        $partB2 = $this->getPartEdge($edgeB, $posB, $partB->count() - $edgeB->vertexes->count() - 2);
 
-        for ($i = count($partA) - 1; $i >= 0; $i--) {
+        for ($i = $partA->count() - 1; $i >= 0; $i--) {
             $partB2[] = $partB[] = $partA[$i];
         }
 
@@ -496,12 +516,13 @@ class EdgeService extends AbstractService
 
     private function getEdgeFromWW(int $vertex, Edge $edgeA, Edge $edgeB): Edge
     {
-        $posA = array_search($vertex, $edgeA->vertexes, true);
-        $posB = array_search($vertex, $edgeB->vertexes, true);
-        $partA = $this->getPartEdge($edgeA, $posA + 1, count($edgeA->vertexes) >> 1);
-        $partB = $this->getPartEdge($edgeB, $posB, (count($edgeB->vertexes) >> 1) + 1);
 
-        for ($i = count($partA) - 1; $i >= 0; $i--) {
+        $posA = $edgeA->vertexes->search($vertex, true);
+        $posB = $edgeB->vertexes->search($vertex, true);
+        $partA = $this->getPartEdge($edgeA, $posA + 1, $edgeA->vertexes->count() >> 1);
+        $partB = $this->getPartEdge($edgeB, $posB, ($edgeB->vertexes->count() >> 1) + 1);
+
+        for ($i = $partA->count() - 1; $i >= 0; $i--) {
             $partB[] = $partA[$i];
         }
 
@@ -510,21 +531,21 @@ class EdgeService extends AbstractService
 
     private function moveEdgeInMap(int $branch, int $root, int $edgeException, EdgeCube $edgeMap): void
     {
-        foreach ($edgeMap[$branch] as $vertex => $edges) {
+        foreach ($edgeMap->getMatrix($branch) as $vertex => $edges) {
             foreach ($edges as $edgeNumber => $edge) {
                 if ($edgeNumber !== $edgeException) {
-                    $edgeMap[$root][$vertex][$edgeNumber] = $edge;
-                    unset($edgeMap[$branch][$vertex][$edgeNumber]);
+                    $edgeMap->setItem($root, $vertex, $edgeNumber, $edge);
+                    $edgeMap->unsetItem($branch, $vertex, $edgeNumber);
 
-                    if (!isset($edgeMap[$branch][$vertex])) {
-                        unset($edgeMap[$branch][$vertex]);
+                    if ($edgeMap->getCollection($branch, $vertex)->isEmpty()) {
+                        $edgeMap->unsetCollection($branch, $vertex);
                     }
                 }
             }
         }
 
-        if (!isset($edgeMap[$branch])) {
-            unset($edgeMap[$branch]);
+        if ($edgeMap->getMatrix($branch)->isEmpty()) {
+            $edgeMap->unsetMatrix($branch);
         }
     }
 

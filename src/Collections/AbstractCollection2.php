@@ -36,6 +36,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     use AttributeTrait;
 
     protected const ELEMENT_CLASS = null;
+    private static array $multiKeys = [];
     private array $items;
 
     public function __construct(array $items = [])
@@ -50,112 +51,34 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         }
     }
 
-    /**
-     * @param string|int $key
-     * @param string|int ...$keys
-     */
-    protected function get($key, ...$keys)
+    /** @param string|int $key */
+    protected function get($key, bool $nullIfNotExists = false)
     {
-        array_unshift($keys, $key);
-        $items = $this->items;
-
-        foreach ($keys as $number => $key) {
-            $items = $items[$key];
-
-            if ($items instanceof AbstractCollection2) {
-                return count($keys) - $number > 1
-                    ? $items->get(...array_slice($keys, $number + 1))
-                    : $items->getIterator();
-            }
-        }
-
-        return $items;
+        return $nullIfNotExists === false || isset($this->items[$key]) ? $this->items[$key] : null;
     }
 
-    /**
-     * @param string|int $key
-     * @param string|int ...$keys
-     */
-    protected function isset($key, ...$keys): bool
+    /** @param string|int $key */
+    protected function isset($key): bool
     {
-        array_unshift($keys, $key);
-        $items = $this->items;
-
-        foreach ($keys as $number => $key) {
-            if (!isset($items[$key])) {
-                return false;
-            }
-
-            $items = $items[$key];
-
-            if ($items instanceof AbstractCollection2 && count($keys) - $number > 1) {
-                return $items->isset(...array_slice($keys, $number + 1));
-            }
-        }
-
-        return true;
+        return isset($this->items[$key]);
     }
 
-    /**
-     * @param string|int $key
-     * @param string|int ...$keys
-     */
-    protected function unset($key, ...$keys): void
+    /** @param string|int $key */
+    protected function unset($key): void
     {
-        array_unshift($keys, $key);
-        $items = &$this->items;
-        $lastKey = array_pop($keys);
-
-        foreach ($keys as $number => $key) {
-            if (!isset($items[$key])) {
-                return;
-            }
-
-            $items = &$items[$key];
-
-            if ($items instanceof AbstractCollection2) {
-                $keys = array_slice($keys, $number + 1);
-                $keys[] = $lastKey;
-                $items->unset(...$keys);
-
-                return;
-            }
-        }
-
-        unset($items[$lastKey]);
+        unset($this->items[$key]);
     }
 
-    /**
-     * @param string|int|null $key
-     * @param string|int|null ...$keys
-     * @param mixed $value
-     */
-    protected function set($key, $keys, $value = null)
+    /** @param string|int|null $key */
+    protected function set($key, $value): void
     {
-        $keys = func_get_args();
-        $value = array_pop($keys);
-        $firstKey = array_shift($keys);
-
-        if ($firstKey === null) {
-            $firstKey = static::getNextKey($this->items);
+        if ($key === null) {
+            $key = static::getNextKey($this->items);
         }
 
-        if (!count($keys)) {
-            $firstKey === null
-                ? $this->items[] = static::createChildElement($value)
-                : $this->items[$firstKey] = static::createChildElement($value);
-        } else {
-            $lastKey = array_pop($keys);
-            $firstKey === null
-                ? $this->items[] = static::createChildElement(
-                    $this->createArrayValue($keys, $lastKey, $value)
-                )
-                : $this->items[$firstKey] = static::createChildElement(
-                    $this->createArrayValue($keys, $lastKey, $value, $this->items[$firstKey] ?? [])
-                );
-        }
-
-        return $value;
+        $key === null
+            ? $this->items[] = $value
+            : $this->items[$key] = $value;
     }
 
     public static function createChildElement($value, bool $filtered = false)
@@ -175,44 +98,6 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         }
 
         return null;
-    }
-
-    private function createArrayValue(array $keys, $lastKey, $value, $root = [])
-    {
-        if (is_object($root)) {
-            $root = clone $root;
-        }
-
-        if ($root instanceof self) {
-            $root->set($lastKey, $value);
-
-            return $root;
-        }
-
-        $branch = &$root;
-
-        foreach ($keys as $number => $key) {
-            if ($key === null) {
-                $key = static::getNextKey($branch);
-            }
-
-            if (!isset($branch[$key])) {
-                $branch[$key] = [];
-            } elseif ($branch[$key] instanceof self) {
-                $keys = array_slice($keys, $number + 1);
-                $keys[] = $lastKey;
-                $keys[] = $value;
-                $branch[$key]->set(...$keys);
-
-                return $root;
-            } elseif (!is_array($branch[$key]) || !$branch[$key] instanceof ArrayAccess) {
-                $branch[$key] = [];
-            }
-        }
-
-        $branch[$lastKey] = $value;
-
-        return $root;
     }
 
     public static function validateElement($value): void
@@ -745,5 +630,62 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
                 : [],
             $filtered
         );
+    }
+
+    /** @return $this */
+    public function intersect(self ...$collections): self
+    {
+        return static::fromIntersect(function ($value1, $value2): int {
+            return $value1 <=> $value2;
+        }, false, false, $this, ...$collections);
+    }
+
+    /** @return $this */
+    public static function fromIntersect(
+        $dataCompareFunc,
+        $keyCompareFunc,
+        bool $filtered = false,
+        self ...$collections
+    ): self {
+        return static::fromIntersectOrDifference(
+            [
+                'array_intersect_assoc',
+                'array_intersect_key',
+                'array_intersect',
+                'array_intersect_uassoc',
+                'array_intersect_ukey',
+                'array_uintersect_assoc',
+                'array_uintersect',
+                'array_uintersect_uassoc',
+            ],
+            $dataCompareFunc,
+            $keyCompareFunc,
+            $filtered,
+            ...$collections
+        );
+    }
+
+    public function push(...$items): int
+    {
+        $this->validateItems($items);
+
+        return array_push($this->items, ...$items);
+    }
+
+    public static function mk($key, ...$keys): string
+    {
+        array_unshift($keys,  $key);
+        self::$multiKeys[] = $keys;
+        end(self::$multiKeys);
+
+        return 'multikey-' . key(self::$multiKeys);
+    }
+
+    /** @return int|string|null */
+    public function search($needle, bool $strict = false)
+    {
+        $result = array_search($needle, $this->items, $strict);
+
+        return $result === false ? null : $result;
     }
 }

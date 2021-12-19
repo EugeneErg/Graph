@@ -31,7 +31,7 @@ class IntersectionService extends AbstractService
                 $oldColor = $canvas[$vertexB];
 
                 if ($oldColor !== 1) {
-                    $intersections->setCell($oldColor === 0 ? $color + 1 : $oldColor, $vertexA, true);
+                    $intersections->setItem($oldColor === 0 ? $color + 1 : $oldColor, $vertexA, true);
                 }
 
                 if ($oldColor !== 0) {
@@ -39,7 +39,7 @@ class IntersectionService extends AbstractService
                 }
 
                 $color++;
-                $colors->setColumn($color, CanvasService::instance()->fill($canvas, $vertexB, $color));
+                $colors->setCollection($color, CanvasService::instance()->fill($canvas, $vertexB, $color));
             }
         }
 
@@ -58,7 +58,7 @@ class IntersectionService extends AbstractService
         foreach ($colors as $color => $vertexes) {
             $result[] = new Intersection(
                 $vertexes,
-                $intersections->getChild($color),
+                $intersections->getCollection($color),
                 isset($outerColors[$color]) ?: null
             );
         }

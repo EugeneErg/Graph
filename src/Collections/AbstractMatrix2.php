@@ -2,47 +2,56 @@
 
 namespace EugeneErg\Graph\Collections;
 
-use Generator;
-
 class AbstractMatrix2 extends AbstractCollection2
 {
-    public function getCell($column, $row, bool $nullIfNotExists = false)
+    public function getItem($collectionKey, $itemKey, bool $nullIfNotExists = false)
     {
-        return $nullIfNotExists === false || $this->isset($column, $row) ? $this->get($column, $row) : null;
+        $collection = $this->getCollection($collectionKey, $nullIfNotExists);
+
+        return $collection === null ? null : $collection->get($itemKey, $nullIfNotExists);
     }
 
-    public function setCell($column, $row, $value)
+    public function setItem($collectionKey, $itemKey, $value): void
     {
-        return $this->set($column, $row, $value);
+        if (!$this->isset($collectionKey)) {
+            /** @var AbstractLineCollection $class */
+            $class = static::ELEMENT_CLASS;
+            $this->setCollection($collectionKey, $class::fromArray());
+        }
+
+        $this->getCollection($collectionKey)[$itemKey] = $value;
     }
 
-    public function issetCell($column, $row): bool
+    public function issetItem($collectionKey, $itemKey): bool
     {
-        return $this->isset($column, $row);
+        return $this->issetCollection($collectionKey)
+            && $this->getCollection($collectionKey)->isset($itemKey);
     }
 
-    public function unsetCell($column, $row): void
+    public function unsetItem($collectionKey, $itemKey): void
     {
-        $this->unset($column, $row);
+        if ($this->issetCollection($collectionKey)) {
+            $this->getCollection($collectionKey)->unset($itemKey);
+        }
     }
 
-    public function getColumn($column, bool $nullIfNotExists = false): ?Generator
+    public function getCollection($collectionKey, bool $nullIfNotExists = false): ?AbstractLineCollection
     {
-        return $nullIfNotExists === false || $this->isset($column) ? $this->get($column) : null;
+        return $this->get($collectionKey, $nullIfNotExists);
     }
 
-    public function issetColumn($column): bool
+    public function issetCollection($collectionKey): bool
     {
-        return $this->isset($column);
+        return $this->isset($collectionKey);
     }
 
-    public function setColumn($column, AbstractCollection2 $value): AbstractCollection2
+    public function setCollection($collectionKey, AbstractLineCollection $value): void
     {
-        return $this->set($column, $value);
+        $this->set($collectionKey, $value);
     }
 
-    public function getChild($offset)
+    public function unsetCollection($collectionKey): void
     {
-        return $this->toArray()[$offset];
+        $this->unset($collectionKey);
     }
 }

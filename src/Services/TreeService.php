@@ -36,8 +36,8 @@ class TreeService extends AbstractService
         }, false, $result);
         $connections = new IntegerMatrix();
 
-        foreach ($result->listBy(2) as $key => [$value1, $value2]) {
-            $connections->setCell($value2->value, $key, (int) $value2->key);
+        foreach ($result->listBy(2) as [$value1, $value2]) {
+            $connections->setItem($value2->value, null, (int) $value1->key);
         }
 
         return new Tree($graph, $branches, $connections);
@@ -70,7 +70,7 @@ class TreeService extends AbstractService
                 $vertexes[$vertexA] = $vertexA;
 
                 if (!$this->split($articulationVertex, $canvas, $result, $color)) {
-                    $result->setColumn(null, $vertexes);
+                    $result->setCollection(null, $vertexes);
                 }
             }
         }

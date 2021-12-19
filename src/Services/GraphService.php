@@ -47,7 +47,7 @@ class GraphService extends AbstractService
 
         foreach ($graph->vertexes as $vertex) {
             if ($canvas[$vertex] === 0) {
-                $operations->setColumn(null, CanvasService::instance()->fill($canvas, $vertex, 1));
+                $operations->setCollection(null, CanvasService::instance()->fill($canvas, $vertex, 1));
             }
         }
 

@@ -5,12 +5,13 @@ namespace EugeneErg\Graph\ValueObjects;
 use EugeneErg\Graph\Collections\AbstractCollection2;
 use EugeneErg\Graph\Collections\AbstractMatrix2;
 use EugeneErg\Graph\Collections\IntegerCollection;
-use Generator;
 use JsonSerializable;
 
 /**
- * @see Graph::getVertexes()
+ * @see AbstractGraph::getVertexes()
  * @property-read IntegerCollection $vertexes
+ * @see AbstractGraph::getConnections()
+ * @property-read AbstractMatrix2 $connections
  */
 abstract class AbstractGraph extends AbstractValueObject implements JsonSerializable
 {
@@ -36,7 +37,7 @@ abstract class AbstractGraph extends AbstractValueObject implements JsonSerializ
 
         foreach ($vertexes->listBy($vertexes, 1) as [$vertexA, $vertexB]) {
             if ($this->issetCell($vertexA->value, $vertexB->value)) {
-                $connections->setCell(
+                $connections->setItem(
                     $vertexA->value,
                     $vertexB->value,
                     $this->getCell($vertexA->value, $vertexB->value)
@@ -83,36 +84,41 @@ abstract class AbstractGraph extends AbstractValueObject implements JsonSerializ
 
     public function getCell($column, $row, bool $nullIfNotExists = false)
     {
-        return $this->connections->getCell($column, $row, $nullIfNotExists);
+        return $this->connections->getItem($column, $row, $nullIfNotExists);
     }
 
     public function setCell($column, $row, int $value)
     {
-        return $this->connections->setCell($column, $row, $value);
+        return $this->connections->setItem($column, $row, $value);
     }
 
     public function issetCell($column, $row): bool
     {
-        return $this->connections->issetCell($column, $row);
+        return $this->connections->issetItem($column, $row);
     }
 
     public function unsetCell($column, $row): void
     {
-        $this->connections->unsetCell($column, $row);
+        $this->connections->unsetItem($column, $row);
     }
 
-    public function getColumn($column, bool $nullIfNotExists = false): ?Generator
+    public function getColumn($column, bool $nullIfNotExists = false): ?AbstractCollection2
     {
-        return $this->connections->getColumn($column, $nullIfNotExists);
+        return $this->connections->getCollection($column, $nullIfNotExists);
     }
 
     public function issetColumn($column): bool
     {
-        return $this->connections->issetColumn($column);
+        return $this->connections->issetCollection($column);
     }
 
     public function jsonSerialize(): array
     {
         return $this->toArray();
+    }
+
+    public function getConnections(): AbstractMatrix2
+    {
+        return $this->connections;
     }
 }

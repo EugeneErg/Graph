@@ -30,7 +30,7 @@ class ClearGraph extends AbstractGraph
             AssertService::instance()->equals(
                 new Argument($vertexB->value, 1, "connections[{$vertexA->key}][{$vertexB->key}]"),
                 new Argument(
-                    $connections->getCell($vertexB->key, $vertexA->key, true),
+                    $connections->getItem($vertexB->key, $vertexA->key, true),
                     1,
                     "connections[{$vertexB->key}][{$vertexA->key}]"
                 ),
@@ -95,15 +95,13 @@ class ClearGraph extends AbstractGraph
         }
     }
 
-    public function setCell($column, $row, $value, bool $direction = false): int
+    public function setCell($column, $row, $value, bool $direction = false): void
     {
-        $result = parent::setCell($column, $row, $value);
+        parent::setCell($column, $row, $value);
 
         if (!$direction) {
             parent::setCell($row, $column, $value);
         }
-
-        return $result;
     }
 
     public function unsetCell($column, $row, bool $direction = false): void

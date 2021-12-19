@@ -2,7 +2,6 @@
 namespace EugeneErg\Graph\ValueObjects;
 
 use EugeneErg\Graph\Collections\GraphCollection;
-use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
 
 /**
@@ -17,21 +16,25 @@ class Tree extends AbstractValueObject
 {
     private $graph;
     private $branches;
-    private $connections;
+    private Graph $connections;
 
     public function __construct(AbstractGraph $graph, ?GraphCollection $branches = null, ?IntegerMatrix $connections = null)
     {
         $this->graph = $graph;
         $this->branches = $branches ?? new GraphCollection();
-        $this->connections = new Graph(new IntegerMatrix());
+        $matrix = new IntegerMatrix();
 
         foreach ($connections ?? [] as $vertex => $subBranches) {
             foreach ($subBranches as $branchA) {
                 foreach ($subBranches as $branchB) {
-                    $this->connections->setCell($branchA, $branchB, $vertex);
+                    if ($branchA !== $branchB) {
+                        $matrix->setItem($branchA, $branchB, $vertex);
+                    }
                 }
             }
         }
+
+        $this->connections = new Graph($matrix);
     }
 
     public function getBranches(): GraphCollection

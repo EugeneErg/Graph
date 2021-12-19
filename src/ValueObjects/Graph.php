@@ -36,7 +36,7 @@ class Graph extends AbstractGraph
 
         foreach ($vertexes->listBy($vertexes, 1) as [$vertexA, $vertexB]) {
             if ($this->issetCell($vertexA->key, $vertexB->key)) {
-                $connections->setCell($vertexA->key, $vertexB->key, $this->getCell($vertexA->key, $vertexB->key));
+                $connections->setItem($vertexA->key, $vertexB->key, $this->getCell($vertexA->key, $vertexB->key));
             }
         }
 
