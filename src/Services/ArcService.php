@@ -12,24 +12,17 @@ use EugeneErg\Graph\Collections\TroubleCollection;
 use EugeneErg\Graph\Collections\TroubleMatrix;
 use EugeneErg\Graph\ValueObjects\Arc;
 use EugeneErg\Graph\ValueObjects\Edge;
-use EugeneErg\Graph\ValueObjects\Gravity;
-use EugeneErg\Graph\ValueObjects\GravityInterface;
 use EugeneErg\Graph\ValueObjects\GravityVertex;
 use EugeneErg\Graph\ValueObjects\Replacement;
 use EugeneErg\Graph\ValueObjects\Solution;
 use EugeneErg\Graph\ValueObjects\Temp\SubGraph;
-use EugeneErg\Graph\ValueObjects\Topology;
 use EugeneErg\Graph\ValueObjects\Trouble;
+use LogicException;
 
-class TopologyService extends AbstractService
+class ArcService extends AbstractService
 {
-    public function createTopology(EdgeCollection $edges): Topology
+    public function createArcs(EdgeCollection $edges, Edge $outerEdge): ArcCollection
     {
-        $edges = clone $edges;
-        $outerEdgeNumber = $edges->getKeyByPosition(0);//->getRandomKey();
-        //var_dump('outerEdgeNumber', $outerEdgeNumber);
-        $outerEdge = $edges[$outerEdgeNumber];
-        unset($edges[$outerEdgeNumber]);
         $arcs = new ArcCollection();
         $troubleVertexes = new TroubleCollection();
         $troubles = new TroubleMatrix();
@@ -113,7 +106,7 @@ class TopologyService extends AbstractService
                             }
 
                             $graphs = $graphs->merge($this->applySolution(
-                                $decisions[Solution::TYPE_ABSORPTION],
+                                $decisions->getCollection(Solution::TYPE_ABSORPTION),
                                 $replacement->vertexes,
                                 $arcs,
                                 $graph
@@ -187,7 +180,7 @@ class TopologyService extends AbstractService
                             $mainGravityVertexes
                         ));
                     } elseif ($nextEdges->count() > 2) {
-                        throw new \Exception();
+                        throw new LogicException();
                     }
                 }
 
@@ -195,7 +188,7 @@ class TopologyService extends AbstractService
             } while ($found !== 0);
         }
 
-        return new Topology($outerEdge, $arcs);
+        return $arcs;
     }
 
     private function getReplacement(Edge $edgeA, Edge $edgeB): ?Replacement
@@ -280,8 +273,7 @@ class TopologyService extends AbstractService
         return $shift > 1 ? null : $result;*/
         $shift = isset($vertexes[0]) && !isset($vertexes[$maxCount - 1]);
         $prevKey = 0;
-        reset($vertexes);
-        $result = key($vertexes);
+        $result = $vertexes->getKeyByPosition(0);
 
         foreach ($vertexes as $key => $value) {
             if ($key !== $prevKey) {
@@ -319,48 +311,14 @@ class TopologyService extends AbstractService
         return [$shiftA, $shiftB, $isRightDirection];
     }
 
-    private function unique(array $array): array
-    {
-        $result = [];
-
-        while (count($array)) {
-            $item = array_shift($array);
-
-            if (!in_array($item, $result, true)) {
-                $result[] = $item;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param int|array $center
-     * @return GravityInterface
-     */
-    private function centerToGravity($center): GravityInterface
-    {
-        if (is_int($center)) {
-            return new GravityVertex($center);
-        }
-
-        $subGravity = [];
-
-        foreach ($center as $subCenter) {
-            $subGravity[] = $this->centerToGravity($subCenter);
-        }
-
-        return new Gravity(...$subGravity);
-    }
-
     private function applySolution(
         SolutionCollection $solutions,
         IntegerCollection $vertexes,
         ArcCollection $arcs,
         SubGraph $subGraph
     ): SubGraphCollection {
-        $doubleSolution = $solutions->count() === 2;
-        $mainVertexes = $vertexes->toArray();
+        //$doubleSolution = $solutions->count() === 2;
+        $mainVertexes = new IntegerMatrix([clone $vertexes]);
         $count = 0;
         $mainGravityVertexes = new IntegerCollection();
         $graphs = new SubGraphCollection();
@@ -374,7 +332,7 @@ class TopologyService extends AbstractService
                 $tree = $solution->trouble->trees[$solution->fromVertex];
                 $leftPart = $tree->findPath($solution->fromVertex, false);
                 $innerEdges = $solution->trouble->getInnerEdges($solution->trouble->fromVertex, $solution->fromVertex);
-                $subGraph->edges = array_merge($subGraph->edges, $innerEdges);
+                $subGraph->edges = $subGraph->edges->merge($innerEdges);
                 $pos = $subGraph->counter->findVertex($solution->trouble->fromVertex);
                 $pos2 = $subGraph->counter->findVertex($solution->fromVertex);
                 $length = $subGraph->counter->getNormalVertexNumber($pos2 - $pos);
@@ -383,13 +341,8 @@ class TopologyService extends AbstractService
                 $newArcs[] = $leftArc = $solution->trouble->vertexes->slice($pos);
                 $leftPart1 = $leftPart;
 
-                if ($count === 0) {
-                    $leftPart1[] = array_shift($mainVertexes);
-                    $mainVertexes = [$leftPart1, $mainVertexes];
-                } else {
-                    $leftPart1[] = array_shift($mainVertexes[0]);
-                    $mainVertexes = array_merge([$leftPart1], $mainVertexes);
-                }
+                $leftPart1[] = $mainVertexes->getCollection(0)->shift();
+                $mainVertexes = (new IntegerMatrix([$leftPart1]))->merge($mainVertexes);
 
                 $count++;
                 $innerEdges = $solution->trouble->edges->difference($innerEdges);
@@ -410,13 +363,8 @@ class TopologyService extends AbstractService
                 $newArcs[] = $rightArc = $solution->trouble->vertexes->slice(0, $pos + 1);
                 $rightPart1 = $rightPath;
 
-                if ($count === 0) {
-                    $rightPart1->unshift(array_pop($mainVertexes));
-                    $mainVertexes = [$mainVertexes, $rightPart1];
-                } else {
-                    $rightPart1->unshift(array_pop($mainVertexes[1]));
-                    $mainVertexes = array_merge($mainVertexes, [$rightPart1]);
-                }
+                $rightPart1->unshift($mainVertexes->getCollection($mainVertexes->count() - 1)->pop());
+                $mainVertexes = $mainVertexes->merge(new IntegerMatrix([$rightPart1]));
 
                 $count++;
                 $innerEdges = $solution->trouble->edges->difference($innerEdges);
@@ -430,32 +378,32 @@ class TopologyService extends AbstractService
             }
         }
 
-        if (is_array($mainVertexes[0])) {
-            $mainGravityVertexes[$mainVertexes[0][0]] = $mainVertexes[0][0];
-        } else {
+        //if (is_array($mainVertexes[0])) {
+            $mainGravityVertexes[$mainVertexes->getItem(0, 0)] = $mainVertexes->getItem(0, 0);
+        /*} else {
             $mainGravityVertexes[$mainVertexes[0]] = $mainVertexes[0];
-        }
+        }*/
 
-        $last = end($mainVertexes);
+
+        $last = $mainVertexes->getValueByPosition()->getValueByPosition();
+
+        /*$last = end($mainVertexes);
 
         if (is_array($last)) {
             $last = end($last);
-        }
+        }*/
 
         $mainGravityVertexes[$last] = $last;
 
         foreach ($newArcs as $arc) {
-            if (count($arc) === 1) {
-                var_dump('arc', $arc);die;
-            }
+            /*if ($arc->count() === 1) {
+//                var_dump('arc', $arc);die;
+            }*/
 
-            $arcs[] = is_array($arc[0])
-                ? new Arc(GravityVertex::fromCollection($mainGravityVertexes), ...$arc)
-                : new Arc(GravityVertex::fromCollection($mainGravityVertexes), $arc);
-        }
-
-        if ($doubleSolution) {
-            //var_dump($arcs);die;
+            $arcs[] = new Arc(
+                GravityVertex::fromCollection($mainGravityVertexes),
+                $arc instanceOf IntegerMatrix ? $arc : new IntegerMatrix([$arc])
+            );
         }
 
         return $graphs;
@@ -467,7 +415,10 @@ class TopologyService extends AbstractService
         IntegerCollection $mainGravityVertexes
     ): SubGraphCollection {
         return SubGraphCollection::fromMap(function (Trouble $trouble) use ($arcs, $mainGravityVertexes): SubGraph {
-            $arcs[] = new Arc(GravityVertex::fromCollection($mainGravityVertexes), $trouble->vertexes);
+            $arcs[] = new Arc(
+                GravityVertex::fromCollection($mainGravityVertexes),
+                new IntegerMatrix([$trouble->vertexes])
+            );
 
             return new SubGraph(new Edge($trouble->vertexes), $trouble->edges);
         }, false, $troubles);

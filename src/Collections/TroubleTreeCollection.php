@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace EugeneErg\Graphs;
+namespace EugeneErg\Graph\Collections;
 
 use EugeneErg\Graph\Collections\AbstractLineCollection;
 use EugeneErg\Graph\ValueObjects\TroubleTree;

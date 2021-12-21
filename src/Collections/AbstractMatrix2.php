@@ -2,6 +2,9 @@
 
 namespace EugeneErg\Graph\Collections;
 
+/**
+ * @method AbstractLineCollection getValueByPosition(int $position = -1)
+ */
 class AbstractMatrix2 extends AbstractCollection2
 {
     public function getItem($collectionKey, $itemKey, bool $nullIfNotExists = false)

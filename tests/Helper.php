@@ -23,8 +23,11 @@ class Helper extends AssertService
 
     public function createEdgeCollection(array $edges): EdgeCollection
     {
-        return EdgeCollection::fromMap(function (array $edge): Edge {
-            return new Edge(new IntegerCollection($edge));
-        }, false, new Collection($edges));
+        return EdgeCollection::fromMap([$this, 'createEdge'], false, new Collection($edges));
+    }
+
+    public function createEdge(array $edge): Edge
+    {
+        return new Edge(new IntegerCollection($edge));
     }
 }

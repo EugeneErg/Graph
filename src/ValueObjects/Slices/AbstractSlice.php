@@ -9,13 +9,12 @@ use EugeneErg\Graph\ValueObjects\AbstractValueObject;
 abstract class AbstractSlice extends AbstractValueObject
 {
     private IntegerCollection $steps;
-    private IntegerCollection $path;
     private IntegerMatrix $tree;
+    private int $position = 0;
 
     public function __construct(?IntegerCollection $steps = null)
     {
-        $this->steps = $steps ?? new IntegerCollection();
-        $this->path = clone $steps;
+        $this->steps = $steps === null ? new IntegerCollection() : $steps->values();
         $this->tree = new IntegerMatrix();
     }
 
@@ -23,14 +22,15 @@ abstract class AbstractSlice extends AbstractValueObject
     {
         $this->tree->setCollection(null, IntegerCollection::fromKeys($collection));
 
-        if ($this->steps->isEmpty()) {
+        if ($this->position >= $this->steps->count()) {
             $result = $this->getKeyByCollection($collection);
-            $this->path[] = $result;
+            $this->steps[] = $result;
+            $this->position++;
 
             return $result;
         }
 
-        $result = $this->steps->shift();
+        $result = $this->steps[$this->position++];
 
         if (!$collection->isset($result)) {
             throw new \Error();
@@ -46,7 +46,7 @@ abstract class AbstractSlice extends AbstractValueObject
 
     final public function getSteps(): IntegerCollection
     {
-        return $this->path;
+        return $this->steps;
     }
 
     abstract protected function getKeyByCollection(AbstractCollection2 $collection): int;

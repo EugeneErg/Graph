@@ -5,9 +5,9 @@ use Closure;
 use EugeneErg\Graph\Collections\EdgeCollection;
 use EugeneErg\Graph\Collections\EdgeMatrix;
 use EugeneErg\Graph\Collections\IntegerCollection;
-use EugeneErg\Graphs\TroubleTreeCollection;
-use EugeneErg\Graphs\TroubleTreeMatrix;
-use Exception;
+use EugeneErg\Graph\Collections\TroubleTreeCollection;
+use EugeneErg\Graph\Collections\TroubleTreeMatrix;
+use LogicException;
 
 /**
  * @see Trouble::getVertexes()
@@ -46,7 +46,6 @@ class Trouble extends AbstractValueObject
         $this->toVertex = $toVertex;
     }
 
-    /** @throws Exception */
     public function embedded(Edge $edge, Replacement $replacement): void
     {
         $this->edges[] = $edge;
@@ -76,7 +75,7 @@ class Trouble extends AbstractValueObject
             );
 
             if (!isset($this->trees[$replacement->firstVertex], $this->trees[$replacement->lastVertex])) {
-                throw new Exception();
+                throw new LogicException();
             }
 
             $parents = $this->getParentTrees($replacement->firstVertex, $replacement->lastVertex);
@@ -133,7 +132,6 @@ class Trouble extends AbstractValueObject
         return array_merge(...$leftResult, ...$rightResult);
     }*/
 
-    /** @throws Exception */
     public function getInnerEdges(int $leftVertex, int $rightVertex): EdgeCollection
     {
         return $this->getParentEdges($this->getParentTrees($leftVertex, $rightVertex));
@@ -179,7 +177,6 @@ class Trouble extends AbstractValueObject
         return TroubleTreeCollection::fromMerge(false, ...$parents);
     }
 
-    /** @throws Exception */
     private function getParentEdges(TroubleTreeCollection $parents): EdgeCollection
     {
         $result = new EdgeMatrix();
@@ -196,7 +193,7 @@ class Trouble extends AbstractValueObject
         $result = EdgeCollection::fromMerge(false, ...$result);
 
         if ($result->unique()->count() !== $result->count()) {
-            throw new Exception();
+            throw new LogicException();
         }
 
         return $result;

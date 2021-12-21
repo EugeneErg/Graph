@@ -33,7 +33,7 @@ class Solution extends AbstractValueObjectMutable
 
     private function getPosition(int $vertex, Trouble $trouble): ?int
     {
-        $result = array_search($vertex, $trouble->vertexes, true);
+        $result = $trouble->vertexes->search($vertex, true);
 
         return $result === false ? null : $result;
     }

@@ -4,7 +4,7 @@ namespace EugeneErg\Graph\ValueObjects;
 use EugeneErg\Graph\Collections\EdgeCollection;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
-use EugeneErg\Graphs\TroubleTreeMatrix;
+use EugeneErg\Graph\Collections\TroubleTreeMatrix;
 
 /**
  * @see TroubleTree::getEdge()

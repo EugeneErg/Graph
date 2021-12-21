@@ -9,6 +9,8 @@ use EugeneErg\Graph\Collections\Iterator\IteratorItem;
 use EugeneErg\Graph\Services\Assert\Argument;
 use EugeneErg\Graph\Services\AssertService;
 use EugeneErg\Graph\Traits\AttributeTrait;
+use EugeneErg\Graph\Collections\TroubleTreeCollection;
+use EugeneErg\Graph\Collections\TroubleTreeMatrix;
 use Generator;
 use IteratorAggregate;
 use JsonSerializable;
@@ -74,6 +76,10 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     {
         if ($key === null) {
             $key = static::getNextKey($this->items);
+        }
+
+        if (!is_scalar($key) && $key !== null) {
+            //var_dump($key);die;
         }
 
         $key === null
@@ -709,5 +715,10 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     public function unshift($value): int
     {
         return array_unshift($this->items, $value);
+    }
+
+    public function pop()
+    {
+        return array_pop($this->items);
     }
 }
