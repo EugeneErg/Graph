@@ -117,8 +117,7 @@ class ArcService extends AbstractService
                                 $decisions->getCollection(Solution::TYPE_ABSORPTION),
                                 $replacement->vertexes,
                                 $arcs,
-                                $graph,
-                                $step === 3
+                                $graph
                             ));
 
 
@@ -418,8 +417,10 @@ class ArcService extends AbstractService
             }*/
 
             $arcs[] = new Arc(
-                GravityVertex::fromCollection($mainGravityVertexes),
-                $arc instanceOf IntegerMatrix ? $arc : new IntegerMatrix([$arc])
+                GravityVertex::fromValues($mainGravityVertexes),
+                $arc instanceOf IntegerMatrix
+                    ? $arc->filter(fn (IntegerCollection $value): bool => !$value->isEmpty())->values()
+                    : new IntegerMatrix([$arc])
             );
         }
 

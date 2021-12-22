@@ -2,15 +2,12 @@
 
 namespace EugeneErg\Graph\Collections;
 
-use ArrayAccess;
 use Error;
 use EugeneErg\Graph\Collections\Iterator\Iterator;
 use EugeneErg\Graph\Collections\Iterator\IteratorItem;
 use EugeneErg\Graph\Services\Assert\Argument;
 use EugeneErg\Graph\Services\AssertService;
 use EugeneErg\Graph\Traits\AttributeTrait;
-use EugeneErg\Graph\Collections\TroubleTreeCollection;
-use EugeneErg\Graph\Collections\TroubleTreeMatrix;
 use Generator;
 use IteratorAggregate;
 use JsonSerializable;
@@ -32,6 +29,8 @@ use Traversable;
  * @method $this slice(int $offset, ?int $length = null, bool $preserveKeys = false, bool $filtered = false)
  * @see AbstractCollection2::fromFillKeys()
  * @method $this fillKeys($value)
+ * @see AbstractCollection2::fromFilter()
+ * @method $this filter(Callable $callBack = null)
  */
 class AbstractCollection2 implements IteratorAggregate, JsonSerializable
 {
@@ -720,5 +719,15 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     public function pop()
     {
         return array_pop($this->items);
+    }
+
+    /** @return $this */
+    public static function fromFilter(
+        self $collection,
+        ?callable $callBack = null
+    ): self {
+        return static::fromArray(
+            array_filter($collection->items, $callBack, ARRAY_FILTER_USE_BOTH)
+        );
     }
 }
