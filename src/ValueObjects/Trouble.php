@@ -37,11 +37,11 @@ class Trouble extends AbstractValueObject
 
     public function __construct(IntegerCollection $vertexes, int $fromVertex, int $toVertex)
     {
-        $this->firstVertexes = $vertexes;
+        $this->firstVertexes = clone $vertexes;
         $this->trees = new TroubleTreeCollection();
         $this->mainTree = null;
         $this->edges = new EdgeCollection();
-        $this->vertexes = $vertexes;
+        $this->vertexes = clone $vertexes;
         $this->fromVertex = $fromVertex;
         $this->toVertex = $toVertex;
     }
@@ -248,5 +248,16 @@ class Trouble extends AbstractValueObject
     public function getToVertex(): int
     {
         return $this->toVertex;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'vertexes' => $this->vertexes,
+            'fromVertex' => $this->fromVertex,
+            'toVertex' => $this->toVertex,
+            'firstVertexes' => $this->firstVertexes,
+            'trees' => $this->trees,
+        ];
     }
 }

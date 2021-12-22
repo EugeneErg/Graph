@@ -55,7 +55,7 @@ class TroubleTree extends AbstractValueObject
         $this->leftChild = $leftChild;
         $this->rightChild = $rightChild;
         $this->edges = $edges;
-        $this->vertexes = $vertexes;
+        $this->vertexes = clone $vertexes;
     }
 
     public function findPath(int $vertex, bool $onRight): ?IntegerCollection
@@ -118,11 +118,15 @@ class TroubleTree extends AbstractValueObject
     public function toArray(): array
     {
         return [
-
+            'edge' => $this->edge,
+            'leftChild' => $this->leftChild,
+            'rightChild' => $this->rightChild,
+            'edges' => $this->edges,
+            'vertexes' => $this->vertexes,
         ];
     }
 
-    public function removeLeftParent(self $parent): void
+    /*public function removeLeftParent(self $parent): void
     {
         foreach ($this->leftParents as $pos1 => $parents) {
             $pos2 = array_search($parent, $parents, true);
@@ -131,7 +135,7 @@ class TroubleTree extends AbstractValueObject
                 unset($this->leftParents[$pos1][$pos2]);
             }
         }
-    }
+    }*/
 
     protected function getEdge(): Edge
     {

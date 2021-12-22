@@ -13,9 +13,6 @@ class ArcServiceTest extends TestCase
             Helper::instance()->createEdgeCollection($edges),
             Helper::instance()->createEdge($outerEdge)
         );
-
-        var_dump($actual->toArrayRecursive());die;
-
         $this->assertEquals($expected, $actual->toArrayRecursive());
     }
 
@@ -59,96 +56,89 @@ class ArcServiceTest extends TestCase
                 [
                     [
                         'vertexes' => [
-                            [],
-                            [],
+                            [8,10,0,12,13],
+                            [6],
                         ],
-                        'gravity' => [],
+                        'gravity' => [8,4,6],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [13,4],
                         ],
-                        'gravity' => [],
+                        'gravity' => [8,4,6],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [10,16,7,12],
                         ],
-                        'gravity' => [],
+                        'gravity' => [0],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [10,15,7],
                         ],
-                        'gravity' => [],
+                        'gravity' => [16],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [13,8],
                         ],
-                        'gravity' => [],
+                        'gravity' => [6],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [12,8],
                         ],
-                        'gravity' => [],
+                        'gravity' => [13],
                     ],
                     [
                         'vertexes' => [
-                            [],
-                            [],
-                            [],
+                            [15,1],
+                            [14,12],
                         ],
-                        'gravity' => [],
+                        'gravity' => [15,7,12],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [1,7],
                         ],
-                        'gravity' => [],
+                        'gravity' => [15,7,12],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [7,5,14],
                         ],
-                        'gravity' => [],
+                        'gravity' => [15,7,12],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [1,10],
                         ],
-                        'gravity' => [],
+                        'gravity' => [12],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [10,3,15],
                         ],
-                        'gravity' => [],
+                        'gravity' => [15,1,10],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [1,9,10],
                         ],
-                        'gravity' => [],
+                        'gravity' => [15,1,10],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [4,0],
                         ],
-                        'gravity' => [],
+                        'gravity' => [10],
                     ],
                     [
                         'vertexes' => [
-                            [],
+                            [15,2,3],
                         ],
-                        'gravity' => [],
-                    ],
-                    [
-                        'vertexes' => [
-                            [],
-                        ],
-                        'gravity' => [],
+                        'gravity' => [10],
                     ],
                 ],
             ],

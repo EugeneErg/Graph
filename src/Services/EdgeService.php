@@ -16,6 +16,7 @@ use EugeneErg\Graph\ValueObjects\Edge;
 use EugeneErg\Graph\ValueObjects\Slices\AbstractSlice;
 use EugeneErg\Graph\ValueObjects\Slices\ZeroSlice;
 use EugeneErg\Graph\ValueObjects\Tree;
+use LogicException;
 
 class EdgeService extends AbstractService
 {
@@ -85,7 +86,7 @@ class EdgeService extends AbstractService
                     $path = $this->findShortEdge($branch, $vertexA, $vertexB, $first || $finish);
 
                     if ($path === null) {
-                        throw new \Exception('Graph is not planar');
+                        throw new LogicException('Graph is not planar');
                     }
 
                     foreach ($path as $pos => $vertex) {
@@ -123,7 +124,7 @@ class EdgeService extends AbstractService
                         $outerEdge = $path;
                         $hasOuter = true;
                     } else {
-                        throw new \Exception('Is not planar graph');
+                        throw new LogicException('Is not planar graph');
                     }
 
                     foreach ($path as $vertex) {
@@ -143,7 +144,7 @@ class EdgeService extends AbstractService
         } while (!$finish);
 
         if ($outerEdge->isEmpty()) {
-            throw new \Exception('Is not planar graph');
+            throw new LogicException('Is not planar graph');
         }
 
         return new Edge($outerEdge, $resultChildren);
@@ -492,7 +493,7 @@ class EdgeService extends AbstractService
 
                         unset($unknowns[$vertexB]);
                     } elseif ($intersections[$vertexB]->isOuter === $isOuter) {
-                        throw new \Exception('graph is not planar');
+                        throw new LogicException('graph is not planar');
                     }
                 }
             }

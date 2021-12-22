@@ -27,6 +27,7 @@ class ArcService extends AbstractService
         $troubleVertexes = new TroubleCollection();
         $troubles = new TroubleMatrix();
         $graphs = new SubGraphCollection([new SubGraph($outerEdge, $edges)]);
+        $step = 0;
 
         while (!$graphs->isEmpty()) {
             $graph = $graphs->shift();
@@ -43,6 +44,11 @@ class ArcService extends AbstractService
                         $nextEdges[] = $edge;
 
                         continue;
+                    }
+                    $step++;
+
+                    if ($step === 3) {
+                        //var_dump('$troubles', 3, $decisions);die;
                     }
 
                     $found++;
@@ -91,6 +97,8 @@ class ArcService extends AbstractService
 
                             $trouble->embedded($edge, $replacement);
 
+                            //var_dump('$trouble', $step, $trouble);die;
+
                             continue;
                         } elseif ($decisions->issetCollection(Solution::TYPE_ABSORPTION)) {
                             foreach ($decisions->getCollection(Solution::TYPE_ABSORPTION) as $decision) {
@@ -109,11 +117,26 @@ class ArcService extends AbstractService
                                 $decisions->getCollection(Solution::TYPE_ABSORPTION),
                                 $replacement->vertexes,
                                 $arcs,
-                                $graph
+                                $graph,
+                                $step === 3
                             ));
+
 
                             continue;
                         }
+                    }
+
+                    if ($arcs->count() === 13) {
+                        /*var_dump(
+                            $troubles,
+                            $graphs,
+                            $replaced,
+                            $replacement,
+                            new Arc(
+                                GravityVertex::fromCollection($replaced->slice($replaced->count() >> 1, 1)),
+                                new IntegerMatrix([$replacement->vertexes])
+                            )
+                        );die;*/
                     }
 
                     if ($replacement->length === 2 || $troubles->issetItem($fromVertex, $toVertex)) {
@@ -129,14 +152,13 @@ class ArcService extends AbstractService
                             ));
                         }
 
-                        $troubles->getItem($fromVertex, $toVertex)->embedded(
-                            $edge,
-                            $replacement
-                        );
+                        $troubles->getItem($fromVertex, $toVertex)->embedded($edge, $replacement);
 
                         for ($i = 1; $i < $replacement->vertexes->count() - 1; $i++) {
                             $troubleVertexes[$replacement->vertexes[$i]] = $troubles->getItem($fromVertex, $toVertex);
                         }
+
+                        //var_dump('$troubles', $step, $troubles);die;
                     } else {
                         $arcs[] = new Arc(
                             GravityVertex::fromCollection($replaced->slice($replaced->count() >> 1, 1)),
@@ -317,7 +339,6 @@ class ArcService extends AbstractService
         ArcCollection $arcs,
         SubGraph $subGraph
     ): SubGraphCollection {
-        //$doubleSolution = $solutions->count() === 2;
         $mainVertexes = new IntegerMatrix([clone $vertexes]);
         $count = 0;
         $mainGravityVertexes = new IntegerCollection();
@@ -339,11 +360,9 @@ class ArcService extends AbstractService
                 $subGraph->counter = $subGraph->counter->replace($leftPart, $pos, $length);
                 $pos = $solution->trouble->vertexes->search($solution->fromVertex, true);
                 $newArcs[] = $leftArc = $solution->trouble->vertexes->slice($pos);
-                $leftPart1 = $leftPart;
-
+                $leftPart1 = clone $leftPart;
                 $leftPart1[] = $mainVertexes->getCollection(0)->shift();
                 $mainVertexes = (new IntegerMatrix([$leftPart1]))->merge($mainVertexes);
-
                 $count++;
                 $innerEdges = $solution->trouble->edges->difference($innerEdges);
                 $graphs[] = new SubGraph(
@@ -361,8 +380,7 @@ class ArcService extends AbstractService
                 $subGraph->counter = $subGraph->counter->replace($rightPath, $pos + 1, $length);
                 $pos = $solution->trouble->vertexes->search($solution->toVertex, true);
                 $newArcs[] = $rightArc = $solution->trouble->vertexes->slice(0, $pos + 1);
-                $rightPart1 = $rightPath;
-
+                $rightPart1 = clone $rightPath;
                 $rightPart1->unshift($mainVertexes->getCollection($mainVertexes->count() - 1)->pop());
                 $mainVertexes = $mainVertexes->merge(new IntegerMatrix([$rightPart1]));
 
@@ -377,7 +395,6 @@ class ArcService extends AbstractService
                 $graphs[] = new SubGraph(new Edge($solution->trouble->vertexes), $solution->trouble->edges);
             }
         }
-
         //if (is_array($mainVertexes[0])) {
             $mainGravityVertexes[$mainVertexes->getItem(0, 0)] = $mainVertexes->getItem(0, 0);
         /*} else {

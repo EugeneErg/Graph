@@ -8,7 +8,6 @@ use EugeneErg\Graph\Collections\TreeCollection;
 use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
-use EugeneErg\Graph\ValueObjects\Graph;
 use EugeneErg\Graph\ValueObjects\Tree;
 
 class TreeService extends AbstractService
