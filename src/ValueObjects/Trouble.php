@@ -81,6 +81,7 @@ class Trouble extends AbstractValueObject
             $parents = $this->getParentTrees($replacement->firstVertex, $replacement->lastVertex);
 
             foreach ($parents as $parent) {
+                //V 4 throw new \Exception('new test keys!');
                 $parent->rightChild->removeLeftParent($parent);
             }
 
@@ -94,6 +95,7 @@ class Trouble extends AbstractValueObject
 
             for ($i = 1; $i < $replacement->vertexes->count() - 1; $i++) {
                 $this->trees[$replacement->vertexes[$i]] = $tree;
+                //V 0 throw new \Exception('new test keys!');
             }
         }
     }
@@ -151,11 +153,9 @@ class Trouble extends AbstractValueObject
             ) use ($leftVertex, $parents): void {
                 $parentVertex = $leftParentTree === null ? null
                     : $leftParentTree->vertexes[$leftParentTree->vertexes->count() - 1];
-                $parentPosition = $leftParentTree === null ? null : array_search(
-                    $leftParentTree,
-                    $tree->leftParents[$parentVertex],
-                    true
-                );
+                $parentPosition = $leftParentTree === null
+                    ? null
+                    : $tree->leftParents->getCollection($parentVertex)->search($leftParentTree, true);
 
                 foreach ($vertexes as $vertex) {
                     if ($vertex === $leftVertex) {
@@ -163,11 +163,13 @@ class Trouble extends AbstractValueObject
                     }
 
                     if ($vertex === $parentVertex) {
+                        //V 4 throw new \Exception('new test keys!');
                         $parents->setCollection(
                             null,
                             $tree->leftParents->getCollection($vertex)->slice($parentPosition + 1)
                         );
                     } elseif ($tree->leftParents->issetCollection($vertex)) {
+                        //V 4 throw new \Exception('new test keys!');
                         $parents->setCollection(null, $tree->leftParents->getCollection($vertex));
                     }
                 }
@@ -182,10 +184,11 @@ class Trouble extends AbstractValueObject
         $result = new EdgeMatrix();
 
         while ($parent = $parents->shift()) {
+            //V 4 throw new \Exception('new test keys!');
             $result->setCollection(null, $parent->edges);
             $result->setItem(null, null, $parent->edge);
 
-            if ($parent->leftParents->count()) {
+            if (!$parent->leftParents->isEmpty()) {
                 $parents->push(...TroubleTreeMatrix::fromMerge(false, ...$parent->leftParents));
             }
         }
@@ -206,7 +209,9 @@ class Trouble extends AbstractValueObject
         $parentLeftTree = null;
 
         while ($leftTree !== $rightTree) {
+            //V 0 throw new \Exception('new test keys!');
             if ($leftTree->level > $rightTree->level) {
+                //V 4 throw new \Exception('new test keys!');
                 $pos = $leftTree->vertexes->search($leftVertex, true);
                 $closure($leftTree->vertexes->slice($pos, -1), $leftTree, false, $parentLeftTree);
                 $leftVertex = $leftTree->vertexes[$leftTree->vertexes->count() - 1];

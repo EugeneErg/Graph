@@ -52,4 +52,13 @@ class Replacement extends AbstractValueObject
     {
         return $this->start;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'vertexes' => $this->vertexes,
+            'start' => $this->start,
+            'length' => $this->length,
+        ];
+    }
 }

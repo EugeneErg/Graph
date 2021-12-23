@@ -71,7 +71,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     }
 
     /** @param string|int|null $key */
-    protected function set($key, $value): void
+    protected function set($key, $value)
     {
         if ($key === null) {
             $key = static::getNextKey($this->items);
@@ -84,6 +84,14 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         $key === null
             ? $this->items[] = $value
             : $this->items[$key] = $value;
+
+        if ($key !== null) {
+            return $key;
+        }
+
+        end($this->items);
+
+        return key($this->items);
     }
 
     public static function createChildElement($value, bool $filtered = false)

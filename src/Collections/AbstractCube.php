@@ -27,9 +27,9 @@ abstract class AbstractCube extends AbstractCollection2
         $this->unset($matrixKey);
     }
 
-    public function setMatrix($matrixKey, AbstractMatrix2 $value): void
+    public function setMatrix($matrixKey, AbstractMatrix2 $value)
     {
-        $this->set($matrixKey, $value);
+        return $this->set($matrixKey, $value);
     }
 
     public function unsetCollection($matrixKey, $collectionKey): void
@@ -64,10 +64,10 @@ abstract class AbstractCube extends AbstractCollection2
 
     public function setItem($matrixKey, $collectionKey, $itemKey, $value): void
     {
-        if (!$this->isset($matrixKey)) {
+        if ($matrixKey === null || !$this->isset($matrixKey)) {
             /** @var AbstractMatrix2 $class */
             $class = static::ELEMENT_CLASS;
-            $this->setMatrix($matrixKey, $class::fromArray());
+            $matrixKey = $this->setMatrix($matrixKey, $class::fromArray());
         }
 
         $this->getMatrix($matrixKey)->setItem($collectionKey, $itemKey, $value);

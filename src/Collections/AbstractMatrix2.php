@@ -16,13 +16,13 @@ class AbstractMatrix2 extends AbstractCollection2
 
     public function setItem($collectionKey, $itemKey, $value): void
     {
-        if (!$this->isset($collectionKey)) {
+        if ($collectionKey === null || !$this->isset($collectionKey)) {
             /** @var AbstractLineCollection $class */
             $class = static::ELEMENT_CLASS;
-            $this->setCollection($collectionKey, $class::fromArray());
+            $collectionKey = $this->setCollection($collectionKey, $class::fromArray());
         }
 
-        $this->getCollection($collectionKey)[$itemKey] = $value;
+        $this->getCollection($collectionKey)->set($itemKey, $value);
     }
 
     public function issetItem($collectionKey, $itemKey): bool
@@ -48,9 +48,9 @@ class AbstractMatrix2 extends AbstractCollection2
         return $this->isset($collectionKey);
     }
 
-    public function setCollection($collectionKey, AbstractLineCollection $value): void
+    public function setCollection($collectionKey, AbstractLineCollection $value)
     {
-        $this->set($collectionKey, $value);
+        return $this->set($collectionKey, $value);
     }
 
     public function unsetCollection($collectionKey): void

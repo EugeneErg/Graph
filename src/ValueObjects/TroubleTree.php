@@ -67,6 +67,7 @@ class TroubleTree extends AbstractValueObject
             $pos = $tree->vertexes->search($vertex, true);
 
             if ($pos === false) {
+                throw new \Exceiption('new test keys!');
                 return null;
             }
 
@@ -126,16 +127,16 @@ class TroubleTree extends AbstractValueObject
         ];
     }
 
-    /*public function removeLeftParent(self $parent): void
+    public function removeLeftParent(self $parent): void
     {
         foreach ($this->leftParents as $pos1 => $parents) {
-            $pos2 = array_search($parent, $parents, true);
+            $pos2 = $parents->search($parent, true);
 
             if ($pos2 !== false) {
-                unset($this->leftParents[$pos1][$pos2]);
+                $this->leftParents->unsetItem($pos1, $pos2);
             }
         }
-    }*/
+    }
 
     protected function getEdge(): Edge
     {
