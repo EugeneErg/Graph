@@ -81,8 +81,6 @@ class Trouble extends AbstractValueObject
             $parents = $this->getParentTrees($replacement->firstVertex, $replacement->lastVertex);
 
             foreach ($parents as $parent) {
-                //V 4 throw new \Exception('new test keys!');
-                throw new \Exception('new test key!');
                 $parent->rightChild->removeLeftParent($parent);
             }
 

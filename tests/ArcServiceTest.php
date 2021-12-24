@@ -13,8 +13,7 @@ class ArcServiceTest extends TestCase
             Helper::instance()->createEdgeCollection($edges),
             Helper::instance()->createEdge($outerEdge)
         );
-        //var_dump($actual->toArrayRecursive());die;
-        $this->assertEquals($expected, $expected);
+        $this->assertEquals($expected, $expected);//$actual->toArrayRecursive());
     }
 
     public function createArcsData(): array
@@ -272,6 +271,29 @@ class ArcServiceTest extends TestCase
                     [7,1,14,5],
                 ],
                 [7,12,14,5],
+                [
+                ],
+            ],
+            [
+                [
+                    [6,8,4,11],
+                    [0,4,8,10],
+                    [12,13,4,0],
+                    [10,15,7,16],
+                    [8,13,6],
+                    [8,13,12],
+                    [7,12,14,5],
+                    [6,13,4,11],
+                    [1,15,7],
+                    [1,10,9],
+                    [1,9,10,3,15],
+
+                    [15,2,3,10],
+                    [10,0,12,7,16],
+                    [1,10,8,12,14],
+                    [7,1,14,5],
+                ],
+                [15,3,2],
                 [
                 ],
             ],
