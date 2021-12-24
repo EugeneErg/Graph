@@ -20,7 +20,7 @@ class ArcServiceTest extends TestCase
     public function createArcsData(): array
     {
         return [
-            /*[
+            [
                 [
                     [2,1,0,3],
                     [1,2,0],
@@ -142,8 +142,8 @@ class ArcServiceTest extends TestCase
                         'gravity' => [10],
                     ],
                 ],
-            ],*/
-            /*[
+            ],
+            [
                 [
                     [0,4,8,10],
                     [12,13,4,0],
@@ -252,7 +252,7 @@ class ArcServiceTest extends TestCase
                 [6,13,4,11],
                 [
                 ],
-            ],*/
+            ],
             [
                 [
                     [6,8,4,11],

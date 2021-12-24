@@ -82,6 +82,7 @@ class Trouble extends AbstractValueObject
 
             foreach ($parents as $parent) {
                 //V 4 throw new \Exception('new test keys!');
+                throw new \Exception('new test key!');
                 $parent->rightChild->removeLeftParent($parent);
             }
 

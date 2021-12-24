@@ -75,8 +75,6 @@ class ArcService extends AbstractService
                         }
 
                         if ($this->isCircle($decisions)) {
-                            //var_dump($step, $decisions);die;
-                            throw new \Exception('new test keys!');
                             $graph->counter = $prevCounter;
                             $found--;
                             $nextEdges[] = $edge;
@@ -95,8 +93,6 @@ class ArcService extends AbstractService
                             }
 
                             $trouble->embedded($edge, $replacement);
-
-                            //var_dump('$trouble', $step, $trouble);die;
 
                             continue;
                         } elseif ($decisions->issetCollection(Solution::TYPE_ABSORPTION)) {
@@ -126,7 +122,7 @@ class ArcService extends AbstractService
 
                     if ($replacement->length === 2 || $troubles->issetItem($fromVertex, $toVertex)) {
                         if ($troubles->issetItem($fromVertex, $toVertex)) {
-                            throw new \Exceiption('new test keys!');
+                            throw new \Exception('new test keys!');
                             for ($i = 1; $i < $replaced->count() - 1; $i++) {
                                 unset($troubleVertexes[$replaced[$i]]);
                             }
@@ -188,7 +184,6 @@ class ArcService extends AbstractService
                             $mainGravityVertexes
                         ));
                     } elseif ($nextEdges->count() > 2) {
-                        var_dump($step);
                         throw new LogicException();
                     }
                 }
@@ -224,7 +219,7 @@ class ArcService extends AbstractService
             $shiftsAndDirection = $this->getShiftsAndDirection($intersectB, $edgeCountB, $edgeA, $edgeB);
 
             if ($shiftsAndDirection === null) {
-                throw new \Exceiption('new test keys!');
+                throw new \Exception('new test keys!');
                 return null;
             }
 
@@ -313,7 +308,7 @@ class ArcService extends AbstractService
         $shiftA = $edgeA->findVertex($edgeB->vertexes[$shiftB]);
 
         if ($shiftA === null) {
-            throw new \Exceiption('new test keys!');
+            throw new \Exception('new test keys!');
             return null;
         }
 
@@ -442,7 +437,6 @@ class ArcService extends AbstractService
         }
 
         if ($decisions->issetCollection(Solution::TYPE_CIRCLE)) {
-            throw new \Exception('new test keys!');
             return true;
         }
 

@@ -133,6 +133,7 @@ class TroubleTree extends AbstractValueObject
             $pos2 = $parents->search($parent, true);
 
             if ($pos2 !== false) {
+                throw new \Exception('new test key!');
                 $this->leftParents->unsetItem($pos1, $pos2);
             }
         }

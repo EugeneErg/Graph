@@ -52,7 +52,6 @@ class Solution extends AbstractValueObject
         }
 
         if ($this->fromPosition > $this->toPosition) {
-            throw new \Exception('new test keys!');
             return self::TYPE_CIRCLE;
         }
 

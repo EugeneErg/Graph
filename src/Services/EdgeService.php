@@ -201,6 +201,7 @@ class EdgeService extends AbstractService
                         $steps[$step + 1][$nextVertex] = $currentVertex;
 
                         if ($currentValue) {
+                            throw new \Exception('new test key!');
                             $values[$currentVertex] = true;
                         }
                     }
@@ -209,6 +210,7 @@ class EdgeService extends AbstractService
         }
 
         if ($canvas[$vertexA] === 0) {
+            throw new \Exception('new test key!');
             return null;
         }
 
@@ -435,6 +437,7 @@ class EdgeService extends AbstractService
                     $edgeMap->unsetItem($branch, $vertex, $edgeNumber);
 
                     if ($edgeMap->getCollection($branch, $vertex)->isEmpty()) {
+                        throw new \Exception('new test key!');
                         $edgeMap->unsetCollection($branch, $vertex);
                     }
                 }
@@ -442,6 +445,7 @@ class EdgeService extends AbstractService
         }
 
         if ($edgeMap->getMatrix($branch)->isEmpty()) {
+            throw new \Exception('new test key!');
             $edgeMap->unsetMatrix($branch);
         }
     }
@@ -488,6 +492,7 @@ class EdgeService extends AbstractService
                         $newKnowns[$vertexB] = !$isOuter;
 
                         if ($isOuter) {
+                            throw new \Exception('new test key!');
                             $result[] = $unknowns[$vertexB];
                         }
 
