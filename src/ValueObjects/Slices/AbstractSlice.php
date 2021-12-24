@@ -3,43 +3,40 @@ namespace EugeneErg\Graph\ValueObjects\Slices;
 
 use EugeneErg\Graph\Collections\AbstractCollection2;
 use EugeneErg\Graph\Collections\IntegerCollection;
-use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\ValueObjects\AbstractValueObject;
 
 abstract class AbstractSlice extends AbstractValueObject
 {
     private IntegerCollection $steps;
-    private IntegerMatrix $tree;
+    private IntegerCollection $tree;
     private int $position = 0;
 
     public function __construct(?IntegerCollection $steps = null)
     {
         $this->steps = $steps === null ? new IntegerCollection() : $steps->values();
-        $this->tree = new IntegerMatrix();
+        $this->tree = new IntegerCollection();
     }
 
     final public function nextKey(AbstractCollection2 $collection): int
     {
-        $this->tree->setCollection(null, IntegerCollection::fromKeys($collection));
+        $this->tree[] = $collection->count();
 
         if ($this->position >= $this->steps->count()) {
-            $result = $this->getKeyByCollection($collection);
-            $this->steps[] = $result;
-            $this->position++;
-
-            return $result;
+            $this->steps[] = $result = $this->getKeyPositionByCollection($collection);
+        } else {
+            $result = $this->steps[$this->position];
         }
 
-        $result = $this->steps[$this->position++];
+        $this->position++;
 
-        if (!$collection->isset($result)) {
+        if ($collection->count() <= $result) {
             throw new \Error();
         }
 
-        return $result;
+        return $collection->getKeyByPosition($result);
     }
 
-    final public function getTree(): IntegerMatrix
+    final public function getTree(): IntegerCollection
     {
         return $this->tree;
     }
@@ -49,5 +46,5 @@ abstract class AbstractSlice extends AbstractValueObject
         return $this->steps;
     }
 
-    abstract protected function getKeyByCollection(AbstractCollection2 $collection): int;
+    abstract protected function getKeyPositionByCollection(AbstractCollection2 $collection): int;
 }

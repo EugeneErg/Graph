@@ -6,8 +6,8 @@ use EugeneErg\Graph\Collections\AbstractCollection2;
 
 class ZeroSlice extends AbstractSlice
 {
-    protected function getKeyByCollection(AbstractCollection2 $collection): int
+    protected function getKeyPositionByCollection(AbstractCollection2 $collection): int
     {
-        return $collection->getKeyByPosition(0);
+        return 0;
     }
 }

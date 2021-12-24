@@ -6,8 +6,8 @@ use EugeneErg\Graph\Collections\AbstractCollection2;
 
 class RandomSlice extends AbstractSlice
 {
-    protected function getKeyByCollection(AbstractCollection2 $collection): int
+    protected function getKeyPositionByCollection(AbstractCollection2 $collection): int
     {
-        return $collection->getRandomKey();
+        return rand(0, $collection->count() - 1);
     }
 }

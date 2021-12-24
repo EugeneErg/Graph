@@ -217,7 +217,6 @@ class EdgeServiceTest extends TestCase
 
     public function createConnectedEdgesFromGraphData(): array
     {
-
         return [
             'single' => [
                 [
