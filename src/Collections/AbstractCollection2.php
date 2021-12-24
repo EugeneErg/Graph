@@ -81,11 +81,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
             ? $this->items[] = $value
             : $this->items[$key] = $value;
 
-        if ($key !== null) {
-            return $key;
-        }
-
-        return $this->getKeyByPosition();
+        return $key === null ? $this->getKeyByPosition() : $key;
     }
 
     public static function createChildElement($value, bool $filtered = false)
