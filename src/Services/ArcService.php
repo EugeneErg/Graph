@@ -27,7 +27,6 @@ class ArcService extends AbstractService
         $troubleVertexes = new TroubleCollection();
         $troubles = new TroubleMatrix();
         $graphs = new SubGraphCollection([new SubGraph($outerEdge, $edges)]);
-        $step = 0;
 
         while (!$graphs->isEmpty()) {
             $graph = $graphs->shift();
@@ -46,7 +45,6 @@ class ArcService extends AbstractService
                         continue;
                     }
 
-                    $step++;
                     $found++;
                     $replaced = $graph->counter->getVertexes($replacement->start, $replacement->length);
                     $fromVertex = $replacement->firstVertex;
@@ -88,7 +86,6 @@ class ArcService extends AbstractService
                             }
 
                             for ($i = 1; $i < $replacement->vertexes->count() - 1; $i++) {
-                                //V 0 throw new \Exception('new test keys!');
                                 $troubleVertexes[$replacement->vertexes[$i]] = $trouble;
                             }
 
@@ -112,8 +109,7 @@ class ArcService extends AbstractService
                                 $decisions->getCollection(Solution::TYPE_ABSORPTION),
                                 $replacement->vertexes,
                                 $arcs,
-                                $graph,
-                                $step === 7
+                                $graph
                             ));
 
                             continue;
@@ -122,7 +118,6 @@ class ArcService extends AbstractService
 
                     if ($replacement->length === 2 || $troubles->issetItem($fromVertex, $toVertex)) {
                         if ($troubles->issetItem($fromVertex, $toVertex)) {
-                            throw new \Exception('new test keys!');
                             for ($i = 1; $i < $replaced->count() - 1; $i++) {
                                 unset($troubleVertexes[$replaced[$i]]);
                             }
@@ -139,8 +134,6 @@ class ArcService extends AbstractService
                         for ($i = 1; $i < $replacement->vertexes->count() - 1; $i++) {
                             $troubleVertexes[$replacement->vertexes[$i]] = $troubles->getItem($fromVertex, $toVertex);
                         }
-
-                        //var_dump('$troubles', $step, $troubles);die;
                     } else {
                         $arcs[] = new Arc(
                             GravityVertex::fromCollection($replaced->slice($replaced->count() >> 1, 1)),
@@ -219,7 +212,6 @@ class ArcService extends AbstractService
             $shiftsAndDirection = $this->getShiftsAndDirection($intersectB, $edgeCountB, $edgeA, $edgeB);
 
             if ($shiftsAndDirection === null) {
-                throw new \Exception('new test keys!');
                 return null;
             }
 
@@ -308,7 +300,6 @@ class ArcService extends AbstractService
         $shiftA = $edgeA->findVertex($edgeB->vertexes[$shiftB]);
 
         if ($shiftA === null) {
-            throw new \Exception('new test keys!');
             return null;
         }
 
@@ -321,8 +312,7 @@ class ArcService extends AbstractService
         SolutionCollection $solutions,
         IntegerCollection $vertexes,
         ArcCollection $arcs,
-        SubGraph $subGraph,
-        bool $debug
+        SubGraph $subGraph
     ): SubGraphCollection {
         $mainVertexes = new IntegerMatrix([clone $vertexes]);
         $count = 0;
@@ -357,7 +347,7 @@ class ArcService extends AbstractService
             } elseif ($solution->toPosition !== null && $solution->toVertex !== $solution->trouble->toVertex) {
                 $tree = $solution->trouble->trees[$solution->toVertex];
                 $rightPath = $tree->findPath($solution->toVertex, true);
-                $innerEdges = $solution->trouble->getInnerEdges($solution->toVertex, $solution->trouble->toVertex, $debug);
+                $innerEdges = $solution->trouble->getInnerEdges($solution->toVertex, $solution->trouble->toVertex);
                 $subGraph->edges = $subGraph->edges->merge($innerEdges);
                 $pos = $subGraph->counter->findVertex($solution->toVertex);
                 $pos2 = $subGraph->counter->findVertex($solution->trouble->toVertex);
@@ -376,34 +366,16 @@ class ArcService extends AbstractService
                     $innerEdges
                 );
             } else {
-                //V 3 throw new \Exception('new test keys!');
                 $newArcs[] = $solution->trouble->vertexes;
                 $graphs[] = new SubGraph(new Edge($solution->trouble->vertexes), $solution->trouble->edges);
             }
         }
 
-        //if (is_array($mainVertexes[0])) {
-            $mainGravityVertexes[$mainVertexes->getItem(0, 0)] = $mainVertexes->getItem(0, 0);
-        /*} else {
-            $mainGravityVertexes[$mainVertexes[0]] = $mainVertexes[0];
-        }*/
-
-
+        $mainGravityVertexes[$mainVertexes->getItem(0, 0)] = $mainVertexes->getItem(0, 0);
         $last = $mainVertexes->getValueByPosition()->getValueByPosition();
-
-        /*$last = end($mainVertexes);
-
-        if (is_array($last)) {
-            $last = end($last);
-        }*/
-
         $mainGravityVertexes[$last] = $last;
 
         foreach ($newArcs as $arc) {
-            /*if ($arc->count() === 1) {
-//                var_dump('arc', $arc);die;
-            }*/
-
             $arcs[] = new Arc(
                 GravityVertex::fromValues($mainGravityVertexes),
                 $arc instanceOf IntegerMatrix
