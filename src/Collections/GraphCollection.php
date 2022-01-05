@@ -1,6 +1,7 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Collections;
 
+use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Graph;
 
 /**
@@ -11,5 +12,5 @@ use EugeneErg\Graph\ValueObjects\Graph;
  */
 class GraphCollection extends AbstractCollection2
 {
-    protected const ELEMENT_CLASS = Graph::class;
+    protected const ELEMENT_CLASS = AbstractGraph::class;
 }

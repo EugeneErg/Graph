@@ -188,7 +188,7 @@ class Trouble extends AbstractValueObject
             $result->setItem(null, null, $parent->edge);
 
             if (!$parent->leftParents->isEmpty()) {
-                $parents->push(...TroubleTreeMatrix::fromMerge(false, ...$parent->leftParents));
+                $parents->push(...TroubleTreeCollection::fromMerge(false, ...$parent->leftParents));
             }
         }
 
