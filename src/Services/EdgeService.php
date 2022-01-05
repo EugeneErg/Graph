@@ -8,6 +8,17 @@ use EugeneErg\Graph\Collections\EdgeMatrix;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Collections\IntersectionCollection;
+use EugeneErg\Graph\Events\CreateSubGraphEvent;
+use EugeneErg\Graph\Events\CutInnerVertexesEvent;
+use EugeneErg\Graph\Events\CutPathEvent;
+use EugeneErg\Graph\Events\EdgeFoundEvent;
+use EugeneErg\Graph\Events\GraphDirectedEvent;
+use EugeneErg\Graph\Events\IntersectionMatrixFoundEvent;
+use EugeneErg\Graph\Events\IntersectionsFoundEvent;
+use EugeneErg\Graph\Events\OuterEdgeFoundEvent;
+use EugeneErg\Graph\Events\PathFoundEvent;
+use EugeneErg\Graph\Events\SubGraphSplitedEvent;
+use EugeneErg\Graph\Events\UnionEdgesEvent;
 use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
@@ -92,6 +103,7 @@ class EdgeService extends AbstractService
                     foreach ($path as $pos => $vertex) {
                         if (($branch->getCell($vertexA, $vertex, true) ?? null) === 1 && $pos > 1) {
                             $path->splice($pos + 1);
+                            EventService::instance()->send(new CutPathEvent($path));
 
                             break;
                         }
@@ -111,17 +123,22 @@ class EdgeService extends AbstractService
 
                     if (!$needOuter || $hasOuter) {
                         if ($innerVertexes->isEmpty()) {
-                            $resultChildren[] = new Edge($path);
+                            $newEdge = new Edge($path);
+                            $resultChildren[] = $newEdge;
+                            EventService::instance()->send(new EdgeFoundEvent($newEdge));
                         } else {
                             /** @var ClearGraph $graph */
                             $graph = $branch->createSupGraph(
                                 IntegerCollection::fromMerge(false, $path, $innerVertexes)
                             );
                             $graph->setOuterEdge($path);
+                            EventService::instance()->send(new CreateSubGraphEvent($graph));
                             $resultChildren[] = $this->splitOnTreeEdges($graph, $slice, $path, $level + 1);
+                            EventService::instance()->send(new SubGraphSplitedEvent());
                         }
                     } elseif ($outerEdge->isEmpty()) {
                         $outerEdge = $path;
+                        EventService::instance()->send(new OuterEdgeFoundEvent());
                         $hasOuter = true;
                     } else {
                         throw new LogicException('Is not planar graph');
@@ -133,6 +150,7 @@ class EdgeService extends AbstractService
 
                     $branch->joinOuterEdge($path);
                     $branch->deleteConnections($innerVertexes);
+                    EventService::instance()->send(new CutInnerVertexesEvent($innerVertexes));
                     $edgeVertexes = $edgeVertexes->replace($flipPath);
 
                     continue 3;
@@ -222,6 +240,8 @@ class EdgeService extends AbstractService
             $result[] = $currentVertex;
         }
 
+        EventService::instance()->send(new PathFoundEvent($steps, $result));
+
         return $result;
     }
 
@@ -273,6 +293,7 @@ class EdgeService extends AbstractService
 
         $root = $slice->nextKey($edgeMatrix);
         $graph = $tree->connections->direct($root);
+        EventService::instance()->send(new GraphDirectedEvent($graph));
         $connections = $graph->getConnections()->getCollection($root) ?? new IntegerCollection();
 
         while (null !== $keyValue = $connections->getKeyValueByPosition(0)) {
@@ -296,6 +317,8 @@ class EdgeService extends AbstractService
                 $edgeMap->setMatrix($root, $this->addEdgeToMap(new EdgeCollection([
                     $edgeNumberA => $newEdge,
                 ]), $connections));
+                EventService::instance()
+                    ->send(new UnionEdgesEvent($edgeA, $edgeB, new EdgeCollection([$newEdge])));
             } else {
                 $newEdges = $countAIsW || $countBIsW
                     ? $this->getEdgesFromWV(
@@ -310,13 +333,14 @@ class EdgeService extends AbstractService
                 $this->moveEdgeInMap($branch, $root, $edgeNumberB, $edgeMap);
                 $edgeLists[$edgeNumberA] = $newEdges[0];
                 $edgeLists[$edgeNumberB] = $newEdges[1];
-
                 $edgeMap->setMatrix($root, ($edgeMap->getMatrix($root, true) ?? new EdgeMatrix())->replace(
                     $this->addEdgeToMap(new EdgeCollection([
                         $edgeNumberA => $newEdges[0],
                         $edgeNumberB => $newEdges[1],
                     ]), $connections)
                 ));
+                EventService::instance()
+                    ->send(new UnionEdgesEvent($edgeA, $edgeB, $newEdges));
             }
         }
 
@@ -513,6 +537,8 @@ class EdgeService extends AbstractService
                 unset($unknowns[$vertexB]);
             }
         }
+
+        EventService::instance()->send(new IntersectionsFoundEvent($intersections, $matrix));
 
         return $result;
     }

@@ -5,6 +5,8 @@ use EugeneErg\Graph\Collections\GraphCollection;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
 use EugeneErg\Graph\Collections\TreeCollection;
+use EugeneErg\Graph\Events\ArticulationVertexesFoundEvent;
+use EugeneErg\Graph\Events\ConnectedGraphFoundEvent;
 use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
@@ -21,15 +23,16 @@ class TreeService extends AbstractService
 
     private function fromConnectionGraph(ClearGraph $graph): Tree
     {
-        $articulationVertex = ArticulationVertexesFinderService::instance()
+        $articulationVertexes = ArticulationVertexesFinderService::instance()
             ->getArticulationVertexesInConnectedGraph($graph);
+        EventService::instance()->send(new ArticulationVertexesFoundEvent($articulationVertexes));
 
-        if ($articulationVertex->isEmpty()) {
+        if ($articulationVertexes->isEmpty()) {
             return new Tree($graph, new GraphCollection([$graph]));
         }
 
         $result = new IntegerMatrix();
-        $this->split($articulationVertex, new Canvas($graph), $result);
+        $this->split($articulationVertexes, new Canvas($graph), $result);
         $branches = GraphCollection::fromMap(function (IntegerCollection $vertexes) use ($graph): AbstractGraph {
             return $graph->createSupGraph($vertexes);
         }, false, $result);
@@ -69,6 +72,7 @@ class TreeService extends AbstractService
                 $vertexes[$vertexA] = $vertexA;
 
                 if (!$this->split($articulationVertex, $canvas, $result, $color)) {
+                    EventService::instance()->send(new ConnectedGraphFoundEvent($vertexes));
                     $result->setCollection(null, $vertexes);
                 }
             }

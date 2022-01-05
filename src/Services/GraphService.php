@@ -4,6 +4,7 @@ namespace EugeneErg\Graph\Services;
 use EugeneErg\Graph\Collections\GraphCollection;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Collections\IntegerMatrix;
+use EugeneErg\Graph\Events\DisconnectedGraphFoundEvent;
 use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Canvas;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
@@ -35,7 +36,9 @@ class GraphService extends AbstractService
 
         foreach ($graph->vertexes as $vertex) {
             if ($canvas[$vertex] === 0) {
-                $operations->setCollection(null, CanvasService::instance()->fill($canvas, $vertex, 1));
+                $vertexes = CanvasService::instance()->fill($canvas, $vertex, 1);
+                EventService::instance()->send(new DisconnectedGraphFoundEvent($vertexes));
+                $operations->setCollection(null, $vertexes);
             }
         }
 

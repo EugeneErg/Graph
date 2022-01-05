@@ -10,6 +10,9 @@ use EugeneErg\Graph\Collections\SolutionMatrix;
 use EugeneErg\Graph\Collections\SubGraphCollection;
 use EugeneErg\Graph\Collections\TroubleCollection;
 use EugeneErg\Graph\Collections\TroubleMatrix;
+use EugeneErg\Graph\Events\EdgeFoundEvent;
+use EugeneErg\Graph\Events\EmbeddedInTrouble;
+use EugeneErg\Graph\Events\ReplacementFoundEvent;
 use EugeneErg\Graph\ValueObjects\Arc;
 use EugeneErg\Graph\ValueObjects\Edge;
 use EugeneErg\Graph\ValueObjects\GravityVertex;
@@ -56,7 +59,9 @@ class ArcService extends AbstractService
                         $replacement->length
                     );
 
-                    if (!$troubles->isEmpty()) {
+                    if ($troubles->isEmpty()) {
+                        EventService::instance()->send(new ReplacementFoundEvent($replacement));
+                    } else {
                         $selectTroubles = new TroubleCollection();
 
                         foreach ($replaced as $vertex) {
@@ -90,6 +95,7 @@ class ArcService extends AbstractService
                             }
 
                             $trouble->embedded($edge, $replacement);
+                            EventService::instance()->send(new EmbeddedInTrouble($trouble, $edge, $replacement));
 
                             continue;
                         } elseif ($decisions->issetCollection(Solution::TYPE_ABSORPTION)) {

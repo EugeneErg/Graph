@@ -8,7 +8,7 @@ namespace EugeneErg\Graph\Collections;
  * @method CallableCollection[] getIterator()
  * @method CallableCollection[] toArray()
  */
-class CallableMatrix extends AbstractMatrix
+class CallableMatrix extends AbstractMatrix2
 {
     protected const ELEMENT_CLASS = CallableCollection::class;
 }

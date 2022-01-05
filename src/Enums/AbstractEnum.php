@@ -2,11 +2,11 @@
 namespace EugeneErg\Graph\Enums;
 
 use Error;
+use JsonSerializable;
 
-abstract class AbstractEnum
+abstract class AbstractEnum implements JsonSerializable
 {
-    /** @var array */
-    protected static $values;
+    protected static array $values;
 
     private $value;
 
@@ -32,5 +32,15 @@ abstract class AbstractEnum
     public function isEqual(AbstractEnum $enum): bool
     {
         return $this->value === $enum->value;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->getValue();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getValue();
     }
 }

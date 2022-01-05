@@ -1,33 +1,30 @@
 <?php declare(strict_types=1);
 namespace EugeneErg\Graph\Services;
 
-use EugeneErg\Graph\Collections\CallableCube;
-use EugeneErg\Graph\Services\Event\EventInterface;
+use EugeneErg\Graph\Collections\CallableMatrix;
 
 class EventService extends AbstractService
 {
-    private CallableCube $listeners;
+    private CallableMatrix $listeners;
 
     protected function created()
     {
-        $this->listeners = new CallableCube();
+        $this->listeners = new CallableMatrix();
     }
 
-    public function listen(string $eventClass, callable $callback, string $tag = ''): int
+    public function listen(string $eventClass, callable $callback): int
     {
-        $this->listeners->set($tag, $eventClass, null, $callback);
-
-        return $this->listeners[$tag][$eventClass]->getKeyByPosition();
+        return $this->listeners->setItem($eventClass, null, $callback);
     }
 
-    public function dontListen(string $eventClass, int $key, string $tag = ''): void
+    public function dontListen(string $eventClass, int $key): void
     {
-        unset($this->listeners[$tag][$eventClass][$key]);
+        $this->listeners->unsetItem($eventClass, $key);
     }
 
-    public function send(EventInterface $event, string $tag = ''): void
+    public function send(object $event): void
     {
-        foreach ($this->listeners[$tag] ?? [] as $eventClass => $listeners) {
+        foreach ($this->listeners as $eventClass => $listeners) {
             if ($event instanceof $eventClass) {
                 foreach ($listeners as $callback) {
                     $callback($event);

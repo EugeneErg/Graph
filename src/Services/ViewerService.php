@@ -1,6 +1,10 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Services;
 
+use EugeneErg\Graph\Collections\IntegerCollection;
+use EugeneErg\Graph\Collections\IntersectionCollection;
+use EugeneErg\Graph\Events\DisconnectedGraphFoundEvent;
+use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
 use EugeneErg\Graph\ValueObjects\Graph;
 use EugeneErg\Graph\ValueObjects\GravityInterface;
@@ -54,7 +58,7 @@ class ViewerService extends AbstractService
         );
     }
 
-    private function returnTemplate(string $template, array $variables = []): string
+    public function returnTemplate(string $template, array $variables = []): string
     {
         ob_start();
         $this->echoTemplate($template, $variables);
@@ -64,7 +68,7 @@ class ViewerService extends AbstractService
 
     private function echoTemplate(string $template, array $variables = []): void
     {
-        $this->template = __DIR__ . '/' . $template . '.php';
+        $this->template = __DIR__ . '/../Views/' . $template . '.php';
         extract($variables);
 
         require $this->template;
@@ -214,5 +218,10 @@ class ViewerService extends AbstractService
             'x' => $x / count($points),
             'y' => $y / count($points),
         ];
+    }
+
+    public function createPointGraph(IntegerCollection $vertexes): string
+    {
+        //$this->returnTemplate('')
     }
 }

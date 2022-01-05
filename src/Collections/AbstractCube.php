@@ -45,6 +45,17 @@ abstract class AbstractCube extends AbstractCollection2
             && $this->getMatrix($matrixKey)->issetCollection($collectionKey);
     }
 
+    public function setCollection($matrixKey, $collectionKey, AbstractLineCollection $value): void
+    {
+        if ($matrixKey === null || !$this->isset($matrixKey)) {
+            /** @var AbstractMatrix2 $class */
+            $class = static::ELEMENT_CLASS;
+            $matrixKey = $this->setMatrix($matrixKey, $class::fromArray());
+        }
+
+        $this->getMatrix($matrixKey)->setCollection($collectionKey, $value);
+    }
+
     public function getCollection($matrixKey, $collectionKey, bool $nullIfNotExists = false): ?AbstractLineCollection
     {
         $matrix = $this->getMatrix($matrixKey, $nullIfNotExists);

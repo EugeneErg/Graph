@@ -42,6 +42,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
 
     public function __construct(array $items = [])
     {
+        $this->validateItems($items);
         $this->items = $items;
     }
 
@@ -73,6 +74,8 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     /** @param string|int|null $key */
     protected function set($key, $value)
     {
+        self::validate($value, $key);
+
         if ($key === null) {
             $key = static::getNextKey($this->items);
         }
@@ -727,5 +730,11 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         return static::fromArray(
             array_filter($collection->items, $callBack, ARRAY_FILTER_USE_BOTH)
         );
+    }
+
+    /** @return $this */
+    public static function fromFillKeysRecursive(AbstractCollection2 $keys, $value, bool $filtered = false): self
+    {
+        return static::fromRecursiveArray(array_fill_keys($keys->items, $value), $filtered);
     }
 }

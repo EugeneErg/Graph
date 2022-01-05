@@ -1,3 +1,21 @@
 <?php declare(strict_types = 1);
 error_reporting(E_ALL);
 include 'vendor/autoload.php';
+
+use EugeneErg\Graph\Processes\CreateSvgAnimationProcess;
+use EugeneErg\Tests\Helper;
+
+$graph = Helper::instance()->createClearGraph([
+    [0,1,0,0,0,0,1,0],
+    [1,0,1,0,1,0,0,0],
+    [0,1,0,1,1,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,1,1,0,0,0,1,99999 => 1],
+    [0,0,1,1,0,0,0,99999 => 1],
+    [1,0,0,0,1,0,0,99999 => 1],
+    99999 => [0,0,0,0,1,1,1,0],
+]);
+
+$svg = (new CreateSvgAnimationProcess($graph,null,20))->getSvgAnimation();
+
+echo $svg;

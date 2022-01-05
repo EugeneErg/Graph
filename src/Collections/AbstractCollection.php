@@ -121,8 +121,6 @@ class AbstractCollection extends AbstractValueObject implements JsonSerializable
         $offset === null
             ? $this->items[] = $value
             : $this->items[$offset] = $value;
-
-        EventService::instance()->send(new OffsetCollectionEvent($offset, $value), spl_object_hash($this));
     }
 
     /**
