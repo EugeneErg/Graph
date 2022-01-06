@@ -25,7 +25,7 @@ class TreeService extends AbstractService
     {
         $articulationVertexes = ArticulationVertexesFinderService::instance()
             ->getArticulationVertexesInConnectedGraph($graph);
-        EventService::instance()->send(new ArticulationVertexesFoundEvent($articulationVertexes));
+        EventService::instance()->send(new ArticulationVertexesFoundEvent(clone $articulationVertexes));
 
         if ($articulationVertexes->isEmpty()) {
             return new Tree($graph, new GraphCollection([$graph]));

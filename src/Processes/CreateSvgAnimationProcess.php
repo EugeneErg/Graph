@@ -6,9 +6,11 @@ use EugeneErg\Graph\Collections\CssPropertyAnimationMatrix;
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Dto\CSS\CssPropertyAnimationDto;
 use EugeneErg\Graph\Dto\Point2D;
+use EugeneErg\Graph\Events\ArticulationVertexesFoundEvent;
 use EugeneErg\Graph\Events\DisconnectedGraphFoundEvent;
 use EugeneErg\Graph\Services\EventService;
 use EugeneErg\Graph\Services\GraphService;
+use EugeneErg\Graph\Services\TreeService;
 use EugeneErg\Graph\Services\ViewerService;
 use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
@@ -50,7 +52,14 @@ final class CreateSvgAnimationProcess
                 $disconnectedGraphs[] = $event->getVertexes()->values();
             }
         );
-        GraphService::instance()->splitGraphOnDisconnected($this->mainClearGraph);
+        $articulationVertexes = [];
+        EventService::instance()->listen(
+            ArticulationVertexesFoundEvent::class,
+            function (ArticulationVertexesFoundEvent $event) use (&$articulationVertexes): void {
+                $articulationVertexes[] = $event->getVertexes()->values();
+            }
+        );
+        TreeService::instance()->createFromGraph($this->mainClearGraph);
         EventService::instance()
             ->dontListen(DisconnectedGraphFoundEvent::class, $disconnectedGraphFoundListenerId);
         $count = count($disconnectedGraphs);
@@ -86,6 +95,12 @@ final class CreateSvgAnimationProcess
             }
 
             $this->paintAnimation($disconnectedGraph, $animations, '#ffffff', true);
+            $this->offset--;
+
+            if (!$articulationVertexes[$number]->isEmpty()) {
+                $this->paintAnimation($articulationVertexes[$number], $animations, '#ff7f50');
+                $this->offset--;
+            }
         }
 
         $connectionAnimations = new CssPropertyAnimationCube();
@@ -167,7 +182,7 @@ final class CreateSvgAnimationProcess
         $steps = ['0' => $center];
 
         foreach ($vertexes as $animations) {
-            $percent = $partPercent * ($number + 1);
+            $percent = round($partPercent * ($number + 1), 2);
             $steps['100'] = $steps["{$percent}"] = $points[$number];
             $keyFrames = str_replace(
                 '.',
@@ -202,8 +217,8 @@ final class CreateSvgAnimationProcess
         for ($number = 0; $number < $count; $number++) {
             $angle = $startAngle + $number * $delta;
             $result[] = new Point2D(
-                $center->getX() + $graphRadius * sin($angle),
-                $center->getY() + $graphRadius * -cos($angle)
+                round($center->getX() + $graphRadius * sin($angle), 2),
+                round($center->getY() + $graphRadius * -cos($angle), 2)
             );
         }
 
@@ -217,7 +232,7 @@ final class CreateSvgAnimationProcess
         bool $fast = false
     ): void {
         $vertexCount = $vertexes->count();
-        $keyFrames = str_replace('#', '', "paintAnimation{$vertexCount}-{$color}");
+        $keyFrames = str_replace('#', '', "paintAnimation{$color}");
         $this->keyFrames[$keyFrames] = [
             100 => $color,
         ];

@@ -95,12 +95,12 @@ use EugeneErg\Graph\Dto\Point2D;
                 <?php else: ?>
                     <animate attributeName="<?= ['from' => 'x1', 'to' => 'x2'][$type] ?>"
                              values="<?= $lines->map(fn ($keyFrame) => $keyFrame->getX())->implode(';') ?>"
-                             keyTimes="<?= $lines->keys()->map(fn ($value) => $value / 100)->implode(';') ?>"
+                             keyTimes="<?= $lines->keys()->map(fn ($value) => round($value / 100, 2))->implode(';') ?>"
                              dur="<?= $animation->getDuration() ?>s" begin="<?= $animation->getDelay() ?>s" fill="freeze"
                     ></animate>
                     <animate attributeName="<?= ['from' => 'y1', 'to' => 'y2'][$type] ?>"
                              values="<?= $lines->map(fn ($keyFrame) => $keyFrame->getY())->implode(';') ?>"
-                             keyTimes="<?= $lines->keys()->map(fn ($value) => $value / 100)->implode(';') ?>"
+                             keyTimes="<?= $lines->keys()->map(fn ($value) => round($value / 100, 2))->implode(';') ?>"
                              dur="<?= $animation->getDuration() ?>s" begin="<?= $animation->getDelay() ?>s" fill="freeze"
                     ></animate>
                 <?PHP endif ?>
