@@ -6,11 +6,11 @@ use EugeneErg\Graph\Enums\CssAnimationFillModeEnum;
 class CssPropertyAnimationDto
 {
     private string $keyFrames;
-    private int $duration;
-    private int $delay;
+    private float $duration;
+    private float $delay;
     private CssAnimationFillModeEnum $fillMode;
 
-    public function __construct(string $keyFrames, int $duration, int $delay = 0, CssAnimationFillModeEnum $fillMode = null)
+    public function __construct(string $keyFrames, float $duration, float $delay = 0, CssAnimationFillModeEnum $fillMode = null)
     {
         $this->keyFrames = $keyFrames;
         $this->duration = $duration;
@@ -20,10 +20,10 @@ class CssPropertyAnimationDto
 
     public function __toString(): string
     {
-        return "{$this->keyFrames} {$this->duration}s {$this->delay}s {$this->fillMode}";
+        return "{$this->keyFrames} {$this->duration}s {$this->delay}s {$this->fillMode} linear";
     }
 
-    public function getDelay(): int
+    public function getDelay(): float
     {
         return $this->delay;
     }
@@ -33,7 +33,7 @@ class CssPropertyAnimationDto
         return $this->fillMode;
     }
 
-    public function getDuration(): int
+    public function getDuration(): float
     {
         return $this->duration;
     }

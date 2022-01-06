@@ -7,7 +7,7 @@ namespace EugeneErg\Graph\Collections;
  * @method callable[] getIterator()
  * @method callable[] toArray()
  */
-class CallableCollection extends AbstractCollection2
+class CallableCollection extends AbstractLineCollection
 {
     protected const ELEMENT_CLASS = 'callable';
 }

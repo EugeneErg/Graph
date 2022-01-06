@@ -22,9 +22,10 @@ class Edge extends AbstractValueObject
     {
         $this->vertexes = $vertexes;
         $this->children = $children ?? new EdgeCollection();
-        $this->children->map(function (Edge $child) {
+
+        foreach ($this->children as $child) {
             $child->parent = $this;
-        });
+        }
     }
 
     public function getNormalVertexNumber(int $offset): int

@@ -31,8 +31,12 @@ use EugeneErg\Graph\Dto\Point2D;
             @keyFrames <?= $keyFrame ?> {
                 <?php foreach ($steps as $percent => $point): ?>
                 <?= $percent ?>% {
+                    <?php if ($point instanceof Point2D): ?>
                     x: <?= $point->getX() ?>;
                     y: <?= $point->getY() ?>;
+                    <?php else: ?>
+                    fill: <?= $point ?>;
+                    <?php endif ?>
                 }
                 <?php endforeach ?>
             }
@@ -71,24 +75,35 @@ use EugeneErg\Graph\Dto\Point2D;
         <?php foreach ($connection as $type => $animationsByTypes): ?>
         <?php /** @var CssPropertyAnimationDto $animation */
             foreach ($animationsByTypes as $animation): ?>
-                <animate attributeName="<?= ['from' => 'x1', 'to' => 'x2'][$type] ?>"
-                         values="<?= Collection::fromMap(
-                                 fn ($keyFrame) => $keyFrame->getX(),
-                                 false,
-                                 new Collection($keyFrames[$animation->getKeyFrames()]))->implode(';')
-                         ?>"
-                         keyTimes="<?= Collection::fromKeys(new Collection($keyFrames[$animation->getKeyFrames()]))->map(fn ($value) => $value / 100)->implode(';') ?>"
-                         dur="<?= $animation->getDuration() ?>s" begin="<?= $animation->getDelay() ?>s" fill="freeze"
-                ></animate>
-                <animate attributeName="<?= ['from' => 'y1', 'to' => 'y2'][$type] ?>"
-                         values="<?= Collection::fromMap(
-                                 fn ($keyFrame) => $keyFrame->getY(),
-                                 false,
-                                 new Collection($keyFrames[$animation->getKeyFrames()]))->implode(';')
-                         ?>"
-                         keyTimes="<?= Collection::fromKeys(new Collection($keyFrames[$animation->getKeyFrames()]))->map(fn ($value) => $value / 100)->implode(';') ?>"
-                         dur="<?= $animation->getDuration() ?>s" begin="<?= $animation->getDelay() ?>s" fill="freeze"
-                ></animate>
+                <?php
+                    $lines = Collection::fromArray($keyFrames[$animation->getKeyFrames()])
+                        ->filter(fn ($value) => $value instanceof Point2D);
+
+                    if ($lines->isEmpty()) {
+                        continue;
+                    }
+                ?>
+                <?php if ($lines->count() === 1): ?>
+                    <animate attributeName="<?= ['from' => 'x1', 'to' => 'x2'][$type] ?>"
+                             to="<?= $lines->map(fn ($keyFrame) => $keyFrame->getX())->implode(';') ?>"
+                             dur="<?= $animation->getDuration() ?>s" begin="<?= $animation->getDelay() ?>s" fill="freeze"
+                    ></animate>
+                    <animate attributeName="<?= ['from' => 'y1', 'to' => 'y2'][$type] ?>"
+                             to="<?= $lines->map(fn ($keyFrame) => $keyFrame->getY())->implode(';') ?>"
+                             dur="<?= $animation->getDuration() ?>s" begin="<?= $animation->getDelay() ?>s" fill="freeze"
+                    ></animate>
+                <?php else: ?>
+                    <animate attributeName="<?= ['from' => 'x1', 'to' => 'x2'][$type] ?>"
+                             values="<?= $lines->map(fn ($keyFrame) => $keyFrame->getX())->implode(';') ?>"
+                             keyTimes="<?= $lines->keys()->map(fn ($value) => $value / 100)->implode(';') ?>"
+                             dur="<?= $animation->getDuration() ?>s" begin="<?= $animation->getDelay() ?>s" fill="freeze"
+                    ></animate>
+                    <animate attributeName="<?= ['from' => 'y1', 'to' => 'y2'][$type] ?>"
+                             values="<?= $lines->map(fn ($keyFrame) => $keyFrame->getY())->implode(';') ?>"
+                             keyTimes="<?= $lines->keys()->map(fn ($value) => $value / 100)->implode(';') ?>"
+                             dur="<?= $animation->getDuration() ?>s" begin="<?= $animation->getDelay() ?>s" fill="freeze"
+                    ></animate>
+                <?PHP endif ?>
             <?php endforeach ?>
         <?php endforeach ?>
         </line>

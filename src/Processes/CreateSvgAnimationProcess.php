@@ -41,30 +41,51 @@ final class CreateSvgAnimationProcess
     {
         $this->mainClearGraph = ClearGraph::fromGraph($this->mainGraph);
         $animations = CssPropertyAnimationMatrix::fromFillKeysRecursive($this->mainClearGraph->vertexes, []);
-        $graphRadius = (int) ceil($vertexRadius * 2 / sin(pi() / $animations->count()));
+        $graphRadius = $this->getRadius($vertexRadius * 2, $animations->count());
         $this->fromPointToCircleAnimation($animations, $graphRadius);
         $disconnectedGraphs = [];
         $disconnectedGraphFoundListenerId = EventService::instance()->listen(
             DisconnectedGraphFoundEvent::class,
             function (DisconnectedGraphFoundEvent $event) use (&$disconnectedGraphs): void {
-                $disconnectedGraphs[] = $event->getVertexes();
+                $disconnectedGraphs[] = $event->getVertexes()->values();
             }
         );
         GraphService::instance()->splitGraphOnDisconnected($this->mainClearGraph);
         EventService::instance()
             ->dontListen(DisconnectedGraphFoundEvent::class, $disconnectedGraphFoundListenerId);
-
         $count = count($disconnectedGraphs);
 
-        if ($count === 2) {
-            $centers = $this->getPoints(count($disconnectedGraphs), $graphRadius, -90);
+        if ($count < 3) {
+            $centers = $this->getPoints($count, $graphRadius, -90);
+            $imageRadius = $count < 2 ? $graphRadius : $graphRadius * 2;
         } else {
-            $centers = $this->getPoints(count($disconnectedGraphs) - 1, $graphRadius * 2, -90);
-            array_unshift($centers, new Point2D());
+            $graphsRadius = $count < 8 ? $graphRadius * 2 : $this->getRadius($graphRadius, $count - 1);
+            $centers = $this->getPoints(
+                $count - 1,
+                $graphsRadius,
+                -90
+            );
+            $centers[] = new Point2D();
+            $imageRadius = $graphRadius + $graphsRadius;
         }
 
-        foreach ($disconnectedGraphs as $disconnectedGraph) {
-            $this->paintAnimation($disconnectedGraph);
+        $mainVertexes = $this->mainClearGraph->vertexes;
+
+        /** @var IntegerCollection $disconnectedGraph */
+        foreach ($disconnectedGraphs as $number => $disconnectedGraph) {
+            $this->paintAnimation($disconnectedGraph, $animations, '#7fff00');
+            $disconnectedGraph = $mainVertexes->intersect($disconnectedGraph)->values();
+            $points = $this->getPoints($disconnectedGraph->count(), $graphRadius, 0, $centers[$number]);
+            $this->moveVertexes($disconnectedGraph, $points, $animations);
+            $mainVertexes = $mainVertexes->difference($disconnectedGraph)->values();
+
+            if (!$mainVertexes->isEmpty()) {
+                $this->offset--;
+                $points = $this->getPoints($mainVertexes->count(), $graphRadius);
+                $this->moveVertexes($mainVertexes, $points, $animations);
+            }
+
+            $this->paintAnimation($disconnectedGraph, $animations, '#ffffff', true);
         }
 
         $connectionAnimations = new CssPropertyAnimationCube();
@@ -74,20 +95,24 @@ final class CreateSvgAnimationProcess
                 /** @var CssPropertyAnimationDto $animationDto */
                 if ($vertex1 < $vertex2) {
                     foreach ($animations->getCollection($vertex1, true) ?? [] as $animationDto) {
-                        $connectionAnimations->setItem(
-                            $vertex1 . '-' . $vertex2,
-                            'from',
-                            null,
-                            $animationDto
-                        );
+                        if ($animationDto instanceof CssPropertyAnimationDto) {
+                            $connectionAnimations->setItem(
+                                $vertex1 . '-' . $vertex2,
+                                'from',
+                                null,
+                                $animationDto
+                            );
+                        }
                     }
                     foreach ($animations->getCollection($vertex2, true) ?? [] as $animationDto) {
-                        $connectionAnimations->setItem(
-                            $vertex1 . '-' . $vertex2,
-                            'to',
-                            null,
-                            $animationDto
-                        );
+                        if ($animationDto instanceof CssPropertyAnimationDto) {
+                            $connectionAnimations->setItem(
+                                $vertex1 . '-' . $vertex2,
+                                'to',
+                                null,
+                                $animationDto
+                            );
+                        }
                     }
                 }
             }
@@ -97,7 +122,7 @@ final class CreateSvgAnimationProcess
             'keyFrames' => $this->keyFrames,
             'animations' => $animations,
             'vertexRadius' => $vertexRadius,
-            'graphRadius' => $graphRadius,
+            'graphRadius' => $imageRadius,
             'connections' => $connectionAnimations,
         ]);
 
@@ -185,8 +210,53 @@ final class CreateSvgAnimationProcess
         return $result;
     }
 
-    private function paintAnimation(IntegerCollection $vertexes): void
-    {
+    private function paintAnimation(
+        IntegerCollection $vertexes,
+        CssPropertyAnimationMatrix $animations,
+        string $color,
+        bool $fast = false
+    ): void {
+        $vertexCount = $vertexes->count();
+        $keyFrames = str_replace('#', '', "paintAnimation{$vertexCount}-{$color}");
+        $this->keyFrames[$keyFrames] = [
+            100 => $color,
+        ];
 
+        foreach ($vertexes as $number => $vertex) {
+            $animations->setItem($vertex, null, new CssPropertyAnimationDto(
+                $keyFrames,
+                $fast ? 1 : 1 / $vertexCount,
+                $this->offset + ($fast ? 0 : $number / $vertexCount)
+            ));
+        }
+
+        $this->offset++;
+    }
+
+    private function getRadius(int $subRadius, int $count): int
+    {
+        return (int) ceil($subRadius / sin(pi() / $count));
+    }
+
+    /* @param Point2D[] $coordinates */
+    private function moveVertexes(
+        IntegerCollection $vertexes,
+        array $coordinates,
+        CssPropertyAnimationMatrix $animations
+    ): void {
+        foreach ($vertexes as $number => $vertex) {
+            $point = $coordinates[$number];
+            $keyFrames = str_replace('.', '_', "moveVertexes{$point->getX()}-{$point->getY()}");
+            $this->keyFrames[$keyFrames] = [
+                100 => $point,
+            ];
+            $animations->setItem($vertex, null, new CssPropertyAnimationDto(
+                $keyFrames,
+                1,
+                $this->offset
+            ));
+        }
+
+        $this->offset++;
     }
 }
