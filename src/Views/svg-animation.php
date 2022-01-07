@@ -41,11 +41,6 @@ use EugeneErg\Graph\Dto\Point2D;
                 <?php endforeach ?>
             }
         <?php endforeach ?>
-        <?php foreach ($animations as $vertex => $animation): ?>
-            .vertex<?= $vertex ?> {
-                animation: <?= $animation->implode(',') ?>;
-            }
-        <?php endforeach ?>
     </style>
     <?php foreach ($animations as $vertex => $animation): ?>
         <symbol id="vertex<?= $vertex ?>"
@@ -109,9 +104,11 @@ use EugeneErg\Graph\Dto\Point2D;
         </line>
     <?php endforeach ?>
     <?php foreach ($animations as $vertex => $animation): ?>
-        <use class="vertex<?= $vertex ?>"
-             href="#vertex<?= $vertex ?>"
-             style="transform: translate(-<?= $vertexRadius ?>px, -<?= $vertexRadius ?>px)">
+        <use href="#vertex<?= $vertex ?>"
+             style="
+                 transform: translate(-<?= $vertexRadius ?>px, -<?= $vertexRadius ?>px);
+                 animation: <?= $animation->implode(',') ?>;
+             ">
         </use>
     <?php endforeach ?>
 </svg>

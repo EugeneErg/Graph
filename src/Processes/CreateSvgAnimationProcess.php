@@ -7,6 +7,7 @@ use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Dto\CSS\CssPropertyAnimationDto;
 use EugeneErg\Graph\Dto\Point2D;
 use EugeneErg\Graph\Events\ArticulationVertexesFoundEvent;
+use EugeneErg\Graph\Events\ConnectedGraphFoundEvent;
 use EugeneErg\Graph\Events\DisconnectedGraphFoundEvent;
 use EugeneErg\Graph\Services\EventService;
 use EugeneErg\Graph\Services\GraphService;
@@ -42,9 +43,6 @@ final class CreateSvgAnimationProcess
     private function createSvgAnimation(int $vertexRadius): string
     {
         $this->mainClearGraph = ClearGraph::fromGraph($this->mainGraph);
-        $animations = CssPropertyAnimationMatrix::fromFillKeysRecursive($this->mainClearGraph->vertexes, []);
-        $graphRadius = $this->getRadius($vertexRadius * 2, $animations->count());
-        $this->fromPointToCircleAnimation($animations, $graphRadius);
         $disconnectedGraphs = [];
         $disconnectedGraphFoundListenerId = EventService::instance()->listen(
             DisconnectedGraphFoundEvent::class,
@@ -53,15 +51,30 @@ final class CreateSvgAnimationProcess
             }
         );
         $articulationVertexes = [];
-        EventService::instance()->listen(
+        $articulationVertexesFoundListenerId = EventService::instance()->listen(
             ArticulationVertexesFoundEvent::class,
             function (ArticulationVertexesFoundEvent $event) use (&$articulationVertexes): void {
                 $articulationVertexes[] = $event->getVertexes()->values();
             }
         );
+        $connectedGraphs = [];
+        $connectedGraphFoundListenerId = EventService::instance()->listen(
+            ConnectedGraphFoundEvent::class,
+            function (ConnectedGraphFoundEvent $event) use (&$connectedGraphs): void {
+                $connectedGraphs[] = $event->getVertexes();
+            }
+        );
         TreeService::instance()->createFromGraph($this->mainClearGraph);
         EventService::instance()
             ->dontListen(DisconnectedGraphFoundEvent::class, $disconnectedGraphFoundListenerId);
+        EventService::instance()
+            ->dontListen(ArticulationVertexesFoundEvent::class, $articulationVertexesFoundListenerId);
+        EventService::instance()
+            ->dontListen(ConnectedGraphFoundEvent::class, $connectedGraphFoundListenerId);
+
+        $graphRadius = $this->getRadius($vertexRadius * 2, $this->mainClearGraph->vertexes->count());
+        $animations = CssPropertyAnimationMatrix::fromFillKeysRecursive($this->mainClearGraph->vertexes, []);
+        $this->fromPointToCircleAnimation($animations, $graphRadius);
         $count = count($disconnectedGraphs);
 
         if ($count < 3) {
@@ -94,13 +107,13 @@ final class CreateSvgAnimationProcess
                 $this->moveVertexes($mainVertexes, $points, $animations);
             }
 
-            $this->paintAnimation($disconnectedGraph, $animations, '#ffffff', true);
+            $this->paintAnimation(
+                $disconnectedGraph->difference($articulationVertexes[$number])->values(),
+                $animations,
+                '#ffffff',
+                true
+            );
             $this->offset--;
-
-            if (!$articulationVertexes[$number]->isEmpty()) {
-                $this->paintAnimation($articulationVertexes[$number], $animations, '#ff7f50');
-                $this->offset--;
-            }
         }
 
         $connectionAnimations = new CssPropertyAnimationCube();
