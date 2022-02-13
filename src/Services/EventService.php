@@ -17,9 +17,11 @@ class EventService extends AbstractService
         return $this->listeners->setItem($eventClass, null, $callback);
     }
 
-    public function dontListen(string $eventClass, int $key): void
+    public function dontListen(array $classKeys): void
     {
-        $this->listeners->unsetItem($eventClass, $key);
+        foreach ($classKeys as $eventClass => $key) {
+            $this->listeners->unsetItem($eventClass, $key);
+        }
     }
 
     public function send(object $event): void

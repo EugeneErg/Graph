@@ -13,7 +13,6 @@ use EugeneErg\Graph\Events\CutInnerVertexesEvent;
 use EugeneErg\Graph\Events\CutPathEvent;
 use EugeneErg\Graph\Events\EdgeFoundEvent;
 use EugeneErg\Graph\Events\GraphDirectedEvent;
-use EugeneErg\Graph\Events\IntersectionMatrixFoundEvent;
 use EugeneErg\Graph\Events\IntersectionsFoundEvent;
 use EugeneErg\Graph\Events\OuterEdgeFoundEvent;
 use EugeneErg\Graph\Events\PathFoundEvent;

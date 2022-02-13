@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 include 'vendor/autoload.php';
 
-use EugeneErg\Graph\Processes\CreateSvgAnimationProcess;
+use EugeneErg\Graph\Processes\NewCreateSvgAnimationProcess;
 use EugeneErg\Tests\Helper;
 
 $graph = Helper::instance()->createClearGraph([
@@ -25,6 +25,6 @@ $graph = Helper::instance()->createClearGraph([
     [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,],
 ]);
 
-$svg = (new CreateSvgAnimationProcess($graph,null,20))->getSvgAnimation();
+$svg = (new NewCreateSvgAnimationProcess($graph,null,20))->getSvgAnimation();
 
 echo $svg;

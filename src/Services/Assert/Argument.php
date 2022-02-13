@@ -3,20 +3,17 @@ namespace EugeneErg\Graph\Services\Assert;
 
 class Argument
 {
-    public const MODE_COUNT = 'count';
-    public const MODE_LENGTH = 'length';
-    public const MODE_TYPE = 'type';
-
     private $value;
-    /** @var int|null */
-    private $number;
-    /** @var string|null */
-    private $name;
-    /** @var string|null */
-    private $mode;
+    private ?int $number;
+    private ?string $name;
+    private ?ArgumentModeInterface $mode;
 
-    public function __construct($value, ?int $number = null, ?string $name = null, ?string $mode = null)
-    {
+    public function __construct(
+        $value,
+        ?int $number = null,
+        ?string $name = null,
+        ArgumentModeInterface $mode = null
+    ) {
         $this->value = $value;
         $this->number = $number;
         $this->name = $name;
@@ -25,12 +22,9 @@ class Argument
 
     public function getValue()
     {
-        switch ($this->mode) {
-            case self::MODE_COUNT: return count($this->value);
-            case self::MODE_LENGTH: return strlen($this->value);
-            case self::MODE_TYPE: return is_object($this->value) ? get_class($this->value) : gettype($this->value);
-            default: return $this->value;
-        }
+        return $this->mode
+            ? $this->mode->getValue($this->value)
+            : $this->value;
     }
 
     public function getName(): ?string
@@ -60,11 +54,8 @@ class Argument
 
     private function getPrefix(): string
     {
-        switch ($this->mode) {
-            case self::MODE_COUNT: return 'the number of elements in argument';
-            case self::MODE_LENGTH: return 'the length of the value of the argument';
-            case self::MODE_TYPE: return 'the type of the argument';
-            default: return 'argument';
-        }
+        return $this->mode
+            ? $this->mode->getPrefix($this->value)
+            : 'argument';
     }
 }

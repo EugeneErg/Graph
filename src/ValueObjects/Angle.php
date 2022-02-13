@@ -1,7 +1,9 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\ValueObjects;
 
-class Angle implements \JsonSerializable
+use JsonSerializable;
+
+final class Angle implements JsonSerializable
 {
     public const BETWEEN_FLAG_IS_SECTION = 1;
     public const BETWEEN_FLAG_INCLUDE_A = 2;
@@ -32,6 +34,11 @@ class Angle implements \JsonSerializable
     public static function percent(float $value = 0): self
     {
         return new Angle($value * M_PI / 50);
+    }
+
+    public static function asin(float $num): self
+    {
+        return new self(asin($num));
     }
 
     public function modulo(): Angle
@@ -118,7 +125,7 @@ class Angle implements \JsonSerializable
 
     private function hasFlag(int $expected, int $value): bool
     {
-        return $expected & $value === $expected;
+        return ($expected & $value) === $expected;
     }
 
     private function betweenFloat(float $angleA, float $angleB, int $flag): bool
@@ -145,5 +152,15 @@ class Angle implements \JsonSerializable
     public function times(float $multiplier): Angle
     {
         return new Angle($this->value * $multiplier);
+    }
+
+    public function sin(): float
+    {
+        return sin($this->value);
+    }
+
+    public function cos(): float
+    {
+        return cos($this->value);
     }
 }

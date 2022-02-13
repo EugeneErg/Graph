@@ -10,7 +10,6 @@ use EugeneErg\Graph\Events\ArticulationVertexesFoundEvent;
 use EugeneErg\Graph\Events\ConnectedGraphFoundEvent;
 use EugeneErg\Graph\Events\DisconnectedGraphFoundEvent;
 use EugeneErg\Graph\Services\EventService;
-use EugeneErg\Graph\Services\GraphService;
 use EugeneErg\Graph\Services\TreeService;
 use EugeneErg\Graph\Services\ViewerService;
 use EugeneErg\Graph\ValueObjects\AbstractGraph;
@@ -71,7 +70,6 @@ final class CreateSvgAnimationProcess
             ->dontListen(ArticulationVertexesFoundEvent::class, $articulationVertexesFoundListenerId);
         EventService::instance()
             ->dontListen(ConnectedGraphFoundEvent::class, $connectedGraphFoundListenerId);
-
         $graphRadius = $this->getRadius($vertexRadius * 2, $this->mainClearGraph->vertexes->count());
         $animations = CssPropertyAnimationMatrix::fromFillKeysRecursive($this->mainClearGraph->vertexes, []);
         $this->fromPointToCircleAnimation($animations, $graphRadius);

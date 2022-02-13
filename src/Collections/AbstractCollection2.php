@@ -5,6 +5,9 @@ namespace EugeneErg\Graph\Collections;
 use Error;
 use EugeneErg\Graph\Collections\Iterator\Iterator;
 use EugeneErg\Graph\Collections\Iterator\IteratorItem;
+use EugeneErg\Graph\Collections\Sort\SortDirectionEnum;
+use EugeneErg\Graph\Collections\Sort\SortFlagEnum;
+use EugeneErg\Graph\Collections\Sort\SortKeysStateEnum;
 use EugeneErg\Graph\Services\Assert\Argument;
 use EugeneErg\Graph\Services\AssertService;
 use EugeneErg\Graph\Traits\AttributeTrait;
@@ -712,9 +715,11 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         return static::fromArray($collection->items);
     }
 
-    public function unshift($value): int
+    public function unshift(...$values): int
     {
-        return array_unshift($this->items, $value);
+        $this->validateItems($values);
+
+        return array_unshift($this->items, ...$values);
     }
 
     public function pop()
@@ -736,5 +741,78 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
     public static function fromFillKeysRecursive(AbstractCollection2 $keys, $value, bool $filtered = false): self
     {
         return static::fromRecursiveArray(array_fill_keys($keys->items, $value), $filtered);
+    }
+
+    /** @return $this */
+    public static function fromCombine(AbstractCollection2 $keys, AbstractCollection2 $values): self
+    {
+        return static::fromArray(array_combine($keys->items, $values->items));
+    }
+
+    /** @return $this */
+    public function combineKeys(AbstractCollection2 $keys): self
+    {
+        return static::fromCombine($keys, $this);
+    }
+
+    public function has($value, bool $strict = false): bool
+    {
+        return in_array($value, $this->items, $strict);
+    }
+
+    /**
+     * @param SortFlagEnum|callable|null $flag
+     * @param SortKeysStateEnum|null $keysState
+     * @param SortDirectionEnum|null $direction
+     */
+    public function sort(
+        ?callable $flag = null,
+        ?SortKeysStateEnum $keysState = null,
+        ?SortDirectionEnum $direction = null
+    ): void {
+        $flag = $flag ?? SortFlagEnum::REGULAR();
+        $keysState = $keysState ?? SortKeysStateEnum::WITHOUT_KEYS();
+        $direction = $direction ?? SortDirectionEnum::ASC();
+
+        if ($flag instanceof SortFlagEnum) {
+            switch ([$keysState, $direction]) {
+                case [SortKeysStateEnum::WITHOUT_KEYS(), SortDirectionEnum::ASC()]:
+                    sort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::WITH_KEYS(), SortDirectionEnum::ASC()]:
+                    asort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::BY_KEYS(), SortDirectionEnum::ASC()]:
+                    ksort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::WITHOUT_KEYS(), SortDirectionEnum::DESC()]:
+                    rsort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::WITH_KEYS(), SortDirectionEnum::DESC()]:
+                    arsort($this->items, $flag->getValue());
+                    break;
+                case [SortKeysStateEnum::BY_KEYS(), SortDirectionEnum::DESC()]:
+                    krsort($this->items, $flag->getValue());
+                    break;
+            }
+        } else {
+            if ($direction->isEqual(SortDirectionEnum::DESC())) {
+                $flag = function ($value1, $value2) use ($flag): int {
+                    return $flag($value2, $value1);
+                };
+            }
+
+            switch ($keysState) {
+                case SortKeysStateEnum::WITHOUT_KEYS():
+                    usort($this->items, $flag);
+                    break;
+                case SortKeysStateEnum::WITH_KEYS():
+                    uasort($this->items, $flag);
+                    break;
+                case SortKeysStateEnum::BY_KEYS():
+                    uksort($this->items, $flag);
+                    break;
+            }
+        }
     }
 }
