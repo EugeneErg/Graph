@@ -539,7 +539,7 @@ class AbstractCollection extends AbstractValueObject implements JsonSerializable
         ?CollectionFilterEnum $mode = null
     ): self {
         return static::fromArray(
-            array_filter($collection->items, $callBack, ($mode ?? CollectionFilterEnum::VALUE())->getValue())
+            array_filter($collection->items, $callBack, ($mode ?? CollectionFilterEnum::VALUE())->value)
         );
     }
 
@@ -842,8 +842,8 @@ class AbstractCollection extends AbstractValueObject implements JsonSerializable
 
         foreach ($sorts as $sort) {
             $arguments[] = &$sort->getCollection()->items;
-            $arguments[] = $sort->getDirection()->getValue();
-            $arguments[] = $sort->getFlag()->getValue();
+            $arguments[] = $sort->getDirection()->value;
+            $arguments[] = $sort->getFlag()->value;
         }
 
         array_multisort(...$arguments);
@@ -885,7 +885,7 @@ class AbstractCollection extends AbstractValueObject implements JsonSerializable
                     break;
             }
         } else {
-            if ($direction->isEqual(SortDirectionEnum::DESC())) {
+            if ($direction === SortDirectionEnum::DESC()) {
                 $flag = function ($value1, $value2) use ($flag): int {
                     return $flag($value2, $value1);
                 };

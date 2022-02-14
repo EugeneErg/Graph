@@ -9,7 +9,7 @@ class CountArgumentMode implements ArgumentModeInterface
         return count($value);
     }
 
-    public function getPrefix($value): string
+    public function getPrefix(): string
     {
         return 'the number of elements in argument';
     }

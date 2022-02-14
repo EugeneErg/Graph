@@ -9,6 +9,7 @@ abstract class AbstractBackedEnum extends AbstractUnitEnum
 {
     private $value;
 
+    /** @param int|string $value */
     final public static function from($value): self
     {
         $result = static::tryFrom($value);
@@ -22,6 +23,7 @@ abstract class AbstractBackedEnum extends AbstractUnitEnum
         return $result;
     }
 
+    /** @param int|string $value */
     final public static function tryFrom($value): ?self
     {
         $name = array_search($value, static::$cases, true);
@@ -41,5 +43,15 @@ abstract class AbstractBackedEnum extends AbstractUnitEnum
         $result->value = static::$cases[$name];
 
         return $result;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->value;
     }
 }

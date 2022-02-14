@@ -9,7 +9,7 @@ class LengthArgumentMode implements ArgumentModeInterface
         return strlen($value);
     }
 
-    public function getPrefix($value): string
+    public function getPrefix(): string
     {
         return 'the length of the value of the argument';
     }

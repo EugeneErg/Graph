@@ -5,9 +5,9 @@ namespace EugeneErg\Graph\Enums;
 /**
  * @method static self  FORWARDS()
  */
-class CssAnimationFillModeEnum extends AbstractEnum
+final class CssAnimationFillModeEnum extends AbstractBackedEnum
 {
-    protected static array $values = [
+    protected static array $cases = [
         'FORWARDS' => 'forwards',
     ];
 }

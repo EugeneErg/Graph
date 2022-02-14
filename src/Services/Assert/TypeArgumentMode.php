@@ -9,7 +9,7 @@ class TypeArgumentMode implements ArgumentModeInterface
         return is_object($value) ? get_class($value) : gettype($value);
     }
 
-    public function getPrefix($value): string
+    public function getPrefix(): string
     {
         return 'the type of the argument';
     }

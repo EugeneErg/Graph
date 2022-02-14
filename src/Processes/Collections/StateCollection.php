@@ -4,6 +4,7 @@ namespace EugeneErg\Graph\Processes\Collections;
 
 use EugeneErg\Graph\Collections\AbstractLineCollection;
 use EugeneErg\Graph\Collections\StringCollection;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\GroupState;
 use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\State;
 
 /**
@@ -13,26 +14,30 @@ class StateCollection extends AbstractLineCollection
 {
     protected const ELEMENT_CLASS = State::class;
 
-
     public function groupByOptions(): GroupStateCollection
     {
         $result = new GroupStateCollection();
+        $delay = 0;
         $currentOptions = new StringCollection();
+        $currentOptionsCount = 0;
 
         foreach ($this as $state) {
             $classes = $state->getOptions()->getClasses();
 
             if ($state->getDelay() !== 0
-                || $currentOptions->count() !== $state->getOptions()->count()
-                || $classes->intersect($currentOptions)->count() !== $currentOptions->count()
+                || $state->getOptions()->count() !== $currentOptionsCount
+                || $classes->intersect($currentOptions)->count() !== $currentOptionsCount
             ) {
+                $currentStateCollection = new StateCollection();
                 $currentOptions = $classes;
-                $result[] = $currentOptions;
+                $result[] = new GroupState($delay, $currentStateCollection);
+                $currentOptionsCount = $state->getOptions()->count();
             }
 
-            $currentOptions[] = $state;
+            $delay += $state->getDelay() + $state->getDuration();
+            $currentStateCollection[] = $state;
         }
+
+        return $result;
     }
-
-
 }

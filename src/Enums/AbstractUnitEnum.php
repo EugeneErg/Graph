@@ -5,7 +5,7 @@ namespace EugeneErg\Graph\Enums;
 /**
  * @property-read string $name
  */
-abstract class AbstractUnitEnum
+abstract class AbstractUnitEnum implements \JsonSerializable
 {
     private string $name;
     protected static array $cases = [];
@@ -15,25 +15,6 @@ abstract class AbstractUnitEnum
     final public static function cases(): array
     {
         return array_values(static::getInstances());
-    }
-
-    private static function getInstance(string $name): ?self
-    {
-        $instances = static::getInstances();
-
-        return $instances[$name] ?? null;
-    }
-
-    /** @return static[] */
-    private static function getInstances(): array
-    {
-        if (static::$instances === null) {
-            foreach (static::$cases as $name) {
-                static::$instances[$name] = static::createInstance($name);
-            }
-        }
-
-        return static::$instances;
     }
 
     protected static function createInstance(string $name): self
@@ -71,6 +52,35 @@ abstract class AbstractUnitEnum
         $class = static::class;
 
         throw new \Error("Cannot create dynamic property {$class}::\${$name}");
+    }
+
+    private static function getInstance(string $name): ?self
+    {
+        $instances = static::getInstances();
+
+        return $instances[$name] ?? null;
+    }
+
+    /** @return static[] */
+    private static function getInstances(): array
+    {
+        if (static::$instances === null) {
+            foreach (static::$cases as $name) {
+                static::$instances[$name] = static::createInstance($name);
+            }
+        }
+
+        return static::$instances;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->name;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     final private function __construct() {}

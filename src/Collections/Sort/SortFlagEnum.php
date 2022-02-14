@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace EugeneErg\Graph\Collections\Sort;
 
-use EugeneErg\Graph\Enums\AbstractEnum;
+use EugeneErg\Graph\Enums\AbstractBackedEnum;
 
 /**
  * @method static self REGULAR()
@@ -11,9 +11,9 @@ use EugeneErg\Graph\Enums\AbstractEnum;
  * @method static self NATURAL()
  * @method static self FLAG_CASE()
 */
-final class SortFlagEnum extends AbstractEnum
+final class SortFlagEnum extends AbstractBackedEnum
 {
-    protected static array $values = [
+    protected static array $cases = [
         'REGULAR' => SORT_REGULAR,
         'NUMERIC' => SORT_NUMERIC,
         'STRING' => SORT_STRING,

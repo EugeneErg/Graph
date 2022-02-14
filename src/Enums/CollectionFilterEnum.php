@@ -6,9 +6,9 @@ namespace EugeneErg\Graph\Enums;
  * @method static self BOTH()
  * @method static self VALUE()
  */
-class CollectionFilterEnum extends AbstractEnum
+final class CollectionFilterEnum extends AbstractBackedEnum
 {
-    protected static $values = [
+    protected static array $cases = [
         'KEY' => ARRAY_FILTER_USE_KEY,
         'BOTH' => ARRAY_FILTER_USE_BOTH,
         'VALUE' => 0,

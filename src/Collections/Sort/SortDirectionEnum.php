@@ -2,15 +2,15 @@
 
 namespace EugeneErg\Graph\Collections\Sort;
 
-use EugeneErg\Graph\Enums\AbstractEnum;
+use EugeneErg\Graph\Enums\AbstractBackedEnum;
 
 /**
  * @method static self ASC()
  * @method static self DESC()
  */
-class SortDirectionEnum extends AbstractEnum
+final class SortDirectionEnum extends AbstractBackedEnum
 {
-    protected static $values = [
+    protected static array $cases = [
         'ASC' => SORT_ASC,
         'DESC' => SORT_DESC,
     ];

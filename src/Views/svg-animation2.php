@@ -31,8 +31,8 @@ use EugeneErg\Graph\Processes\Collections\VertexesCollection;
      xmlns="http://www.w3.org/2000/svg">
     <style>
         <?php foreach ($vertexes as $vertex):?>
-            <?php foreach ($vertex->getState()->getHistory() as $state): ?>
-                <?php foreach ($state->getOptions() as $option): ?>
+            <?php foreach ($vertex->getState()->getHistory()->groupByOptions() as $group): ?>
+                <?php foreach ($group-> as $option): ?>
 
                 <?php endforeach ?>
             <?php endforeach ?>

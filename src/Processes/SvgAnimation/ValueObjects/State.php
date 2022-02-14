@@ -1,10 +1,12 @@
 <?php declare(strict_types = 1);
 namespace EugeneErg\Graph\Processes\SvgAnimation\ValueObject;
 
+use EugeneErg\Graph\Collections\AbstractCollection2;
 use EugeneErg\Graph\Processes\Collections\OptionCollection;
 use EugeneErg\Graph\Processes\Collections\StateCollection;
 use EugeneErg\Graph\Services\AbstractService;
 use EugeneErg\Graph\Services\Assert\Argument;
+use EugeneErg\Graph\Services\Assert\ArgumentMode;
 use EugeneErg\Graph\Services\AssertService;
 use EugeneErg\Graph\ValueObjects\AbstractValueObject;
 use EugeneErg\Graph\ValueObjects\Options\VisibleOption;
@@ -24,14 +26,9 @@ class State extends AbstractValueObject
         ?self $parent = null
     ) {
         AssertService::instance()->notEmpty(new Argument($options, 1, 'options', new ArgumentMode(
-            function () {
-
-            },
-            function () {
-
-            }
+            fn (AbstractCollection2 $options): array => $options->toArray(),
+            'the number of elements in argument'
         )));
-
         $this->delay = $delay;
         $this->duration = $duration;
         $this->options = $options;

@@ -6,13 +6,12 @@ class ArgumentMode implements ArgumentModeInterface
 {
     /** @var callable */
     private $valueCallback;
-    /** @var callable */
-    private $prefixCallback;
+    private string $prefix;
 
-    public function __construct(callable $valueCallback, callable $prefixCallback)
+    public function __construct(callable $valueCallback, string $prefix)
     {
         $this->valueCallback = $valueCallback;
-        $this->prefixCallback = $prefixCallback;
+        $this->prefix = $prefix;
     }
 
     public function getValue($value)
@@ -20,8 +19,8 @@ class ArgumentMode implements ArgumentModeInterface
         ($this->valueCallback)($value);
     }
 
-    public function getPrefix($value): string
+    public function getPrefix(): string
     {
-        ($this->prefixCallback)($value);
+        return $this->prefix;
     }
 }

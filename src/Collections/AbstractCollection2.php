@@ -796,7 +796,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
                     break;
             }
         } else {
-            if ($direction->isEqual(SortDirectionEnum::DESC())) {
+            if ($direction === SortDirectionEnum::DESC()) {
                 $flag = function ($value1, $value2) use ($flag): int {
                     return $flag($value2, $value1);
                 };
@@ -814,5 +814,39 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
                     break;
             }
         }
+    }
+
+    public static function fromSplit(
+        AbstractCollection2 $collection,
+        callable $callback,
+        bool $preserveKeys = false
+    ): AbstractCollection2 {
+        $previous = null;
+        $result = new static();
+        $offset = 0;
+        $length = 0;
+
+        foreach ($collection as $item) {
+            if ($previous !== null || $callback($item, $previous)) {
+                $result->set(null, $collection->slice($offset, $length, $preserveKeys));
+                $offset += $length;
+                $length = 0;
+            } else {
+                $length++;
+            }
+
+            $previous = $item;
+        }
+
+        if ($length !== 0) {
+            $result->set(null, $collection->slice($offset, $length, $preserveKeys));
+        }
+
+        return $result;
+    }
+
+    public function reduce(callable $callback, $initial = null)
+    {
+        return array_reduce($this->items, $callback, $initial);
     }
 }
