@@ -2,7 +2,7 @@
 namespace EugeneErg\Graph\Processes\Collections;
 
 use EugeneErg\Graph\Collections\AbstractLineCollection;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\Connection;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\Connection;
 
 class ConnectionsCollection extends AbstractLineCollection
 {

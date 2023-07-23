@@ -4,8 +4,8 @@ namespace EugeneErg\Graph\Processes\Collections;
 
 use EugeneErg\Graph\Collections\AbstractLineCollection;
 use EugeneErg\Graph\Collections\StringCollection;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\GroupState;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\State;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\GroupState;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\State;
 
 /**
  * @method State[] getIterator()

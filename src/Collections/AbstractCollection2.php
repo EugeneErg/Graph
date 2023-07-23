@@ -274,6 +274,10 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
             }, $data);
         }
 
+        if (!is_object($data)) {
+            return $data;
+        }
+
         foreach (['toArray', '__debugInfo', '__sleep', '__serialize'] as $method) {
             if (method_exists($data, $method)) {
                 return self::staticToArrayRecursive(call_user_func([$data, $method]));
@@ -284,11 +288,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
             return self::staticToArrayRecursive($data->jsonSerialize());
         }
 
-        if (is_object($data)) {
-            return self::staticToArrayRecursive((array) $data);
-        }
-
-        return $data;
+        return self::staticToArrayRecursive((array) $data);
     }
 
     public function __call(string $method, array $arguments): self
@@ -316,7 +316,7 @@ class AbstractCollection2 implements IteratorAggregate, JsonSerializable
         return $this->items;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->items;
     }

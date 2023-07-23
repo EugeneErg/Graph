@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
-namespace EugeneErg\Graph\Processes\SvgAnimation\ValueObject;
+namespace EugeneErg\Graph\Processes\SvgAnimation\ValueObjects;
 
-use EugeneErg\Graph\ValueObjects\AbstractValueObject;
+use EugeneErg\Graph\ValueObjects\AbstractValueObjects;
 
 class Connection extends AbstractValueObject
 {

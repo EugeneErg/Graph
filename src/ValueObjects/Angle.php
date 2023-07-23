@@ -118,9 +118,9 @@ final class Angle implements JsonSerializable
         return $this->value;
     }
 
-    public function __debugInfo(): float
+    public function __debugInfo(): array
     {
-        return $this->value;
+        return ['value' => $this->value];
     }
 
     private function hasFlag(int $expected, int $value): bool

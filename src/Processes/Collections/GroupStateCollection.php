@@ -3,7 +3,7 @@
 namespace EugeneErg\Graph\Processes\Collections;
 
 use EugeneErg\Graph\Collections\AbstractLineCollection;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\GroupState;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\GroupState;
 
 /**
  * @method GroupState[] getIterator()

@@ -13,16 +13,14 @@ class Iterator implements \SeekableIterator, \ArrayAccess
         $this->items = $this->prepareItems($items);
     }
 
-    public function current()
+    public function current(): mixed
     {
         return $this->items[$this->position] ?? null;
     }
 
-    public function next()
+    public function next(): void
     {
         $this->position++;
-
-        return $this->current();
     }
 
     public function key(): ?string
@@ -35,11 +33,9 @@ class Iterator implements \SeekableIterator, \ArrayAccess
         return isset($this->items[$this->position]);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->position = 0;
-
-        return $this->current();
     }
 
     /** @param int $offset */
@@ -49,7 +45,7 @@ class Iterator implements \SeekableIterator, \ArrayAccess
     }
 
     /** @param int $offset */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->items[$offset];
     }
@@ -70,11 +66,9 @@ class Iterator implements \SeekableIterator, \ArrayAccess
     }
 
     /** @param int $offset */
-    public function seek($offset)
+    public function seek(mixed $offset): void
     {
         $this->position = $offset;
-
-        return $this->current();
     }
 
     public function unshift(array ...$items): int

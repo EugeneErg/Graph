@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
-namespace EugeneErg\Graph\Processes\SvgAnimation\ValueObject;
+namespace EugeneErg\Graph\Processes\SvgAnimation\ValueObjects;
 
 use EugeneErg\Graph\Collections\IntegerCollection;
 use EugeneErg\Graph\Dto\Point2D;
 use EugeneErg\Graph\Processes\Collections\ConnectionsMatrix;
 use EugeneErg\Graph\Processes\Collections\VertexesCollection;
-use EugeneErg\Graph\ValueObjects\AbstractValueObject;
+use EugeneErg\Graph\ValueObjects\AbstractValueObjects;
 use EugeneErg\Graph\ValueObjects\Angle;
 
 class Graph extends AbstractValueObject

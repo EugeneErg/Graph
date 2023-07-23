@@ -1,2383 +1,1104 @@
 <svg version="1.1"
-     width="1328"
-     height="1328"
+     width="500"
+     height="500"
      stroke="black"
      stroke-width="1"
      vector-effect="non-scaling-stroke"
      fill="white"
-     viewBox="
-        -674        -674        1348        1348"
+     viewBox="-250 -250 500 500"
      xmlns="http://www.w3.org/2000/svg">
-    <style>
-        @keyFrames fromPointToCircleAnimation0-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        100% {
-        x: 0;
-        y: -218;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation1-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        100% {
-        x: 78.75;
-        y: -203.28;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation2-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        100% {
-        x: 146.87;
-        y: -161.1;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation3-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        100% {
-        x: 195.15;
-        y: -97.17;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation4-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        100% {
-        x: 217.07;
-        y: -20.11;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation5-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        100% {
-        x: 209.68;
-        y: 59.66;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation6-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        100% {
-        x: 173.97;
-        y: 131.37;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation7-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        100% {
-        x: 114.76;
-        y: 185.35;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation8-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        100% {
-        x: 40.06;
-        y: 214.29;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation9-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        58.82% {
-        x: -40.06;
-        y: 214.29;
-        }
-        100% {
-        x: -40.06;
-        y: 214.29;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation10-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        58.82% {
-        x: -40.06;
-        y: 214.29;
-        }
-        64.71% {
-        x: -114.76;
-        y: 185.35;
-        }
-        100% {
-        x: -114.76;
-        y: 185.35;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation11-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        58.82% {
-        x: -40.06;
-        y: 214.29;
-        }
-        64.71% {
-        x: -114.76;
-        y: 185.35;
-        }
-        70.59% {
-        x: -173.97;
-        y: 131.37;
-        }
-        100% {
-        x: -173.97;
-        y: 131.37;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation12-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        58.82% {
-        x: -40.06;
-        y: 214.29;
-        }
-        64.71% {
-        x: -114.76;
-        y: 185.35;
-        }
-        70.59% {
-        x: -173.97;
-        y: 131.37;
-        }
-        76.47% {
-        x: -209.68;
-        y: 59.66;
-        }
-        100% {
-        x: -209.68;
-        y: 59.66;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation13-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        58.82% {
-        x: -40.06;
-        y: 214.29;
-        }
-        64.71% {
-        x: -114.76;
-        y: 185.35;
-        }
-        70.59% {
-        x: -173.97;
-        y: 131.37;
-        }
-        76.47% {
-        x: -209.68;
-        y: 59.66;
-        }
-        82.35% {
-        x: -217.07;
-        y: -20.11;
-        }
-        100% {
-        x: -217.07;
-        y: -20.11;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation14-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        58.82% {
-        x: -40.06;
-        y: 214.29;
-        }
-        64.71% {
-        x: -114.76;
-        y: 185.35;
-        }
-        70.59% {
-        x: -173.97;
-        y: 131.37;
-        }
-        76.47% {
-        x: -209.68;
-        y: 59.66;
-        }
-        82.35% {
-        x: -217.07;
-        y: -20.11;
-        }
-        88.24% {
-        x: -195.15;
-        y: -97.17;
-        }
-        100% {
-        x: -195.15;
-        y: -97.17;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation15-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        58.82% {
-        x: -40.06;
-        y: 214.29;
-        }
-        64.71% {
-        x: -114.76;
-        y: 185.35;
-        }
-        70.59% {
-        x: -173.97;
-        y: 131.37;
-        }
-        76.47% {
-        x: -209.68;
-        y: 59.66;
-        }
-        82.35% {
-        x: -217.07;
-        y: -20.11;
-        }
-        88.24% {
-        x: -195.15;
-        y: -97.17;
-        }
-        94.12% {
-        x: -146.87;
-        y: -161.1;
-        }
-        100% {
-        x: -146.87;
-        y: -161.1;
-        }
-        }
-        @keyFrames fromPointToCircleAnimation16-17-0-0-218 {
-        0% {
-        x: 0;
-        y: 0;
-        }
-        5.88% {
-        x: 0;
-        y: -218;
-        }
-        11.76% {
-        x: 78.75;
-        y: -203.28;
-        }
-        17.65% {
-        x: 146.87;
-        y: -161.1;
-        }
-        23.53% {
-        x: 195.15;
-        y: -97.17;
-        }
-        29.41% {
-        x: 217.07;
-        y: -20.11;
-        }
-        35.29% {
-        x: 209.68;
-        y: 59.66;
-        }
-        41.18% {
-        x: 173.97;
-        y: 131.37;
-        }
-        47.06% {
-        x: 114.76;
-        y: 185.35;
-        }
-        52.94% {
-        x: 40.06;
-        y: 214.29;
-        }
-        58.82% {
-        x: -40.06;
-        y: 214.29;
-        }
-        64.71% {
-        x: -114.76;
-        y: 185.35;
-        }
-        70.59% {
-        x: -173.97;
-        y: 131.37;
-        }
-        76.47% {
-        x: -209.68;
-        y: 59.66;
-        }
-        82.35% {
-        x: -217.07;
-        y: -20.11;
-        }
-        88.24% {
-        x: -195.15;
-        y: -97.17;
-        }
-        94.12% {
-        x: -146.87;
-        y: -161.1;
-        }
-        100% {
-        x: -78.75;
-        y: -203.28;
-        }
-        }
-        @keyFrames paintAnimation7fff00 {
-        100% {
-        fill: #7fff00;
-        }
-        }
-        @keyFrames moveVertexes-436--218 {
-        100% {
-        x: -436;
-        y: -218;
-        }
-        }
-        @keyFrames moveVertexes-228_67--67_37 {
-        100% {
-        x: -228.67;
-        y: -67.37;
-        }
-        }
-        @keyFrames moveVertexes-307_86-176_37 {
-        100% {
-        x: -307.86;
-        y: 176.37;
-        }
-        }
-        @keyFrames moveVertexes-564_14-176_37 {
-        100% {
-        x: -564.14;
-        y: 176.37;
-        }
-        }
-        @keyFrames moveVertexes-643_33--67_37 {
-        100% {
-        x: -643.33;
-        y: -67.37;
-        }
-        }
-        @keyFrames moveVertexes0--218 {
-        100% {
-        x: 0;
-        y: -218;
-        }
-        }
-        @keyFrames moveVertexes109--188_79 {
-        100% {
-        x: 109;
-        y: -188.79;
-        }
-        }
-        @keyFrames moveVertexes188_79--109 {
-        100% {
-        x: 188.79;
-        y: -109;
-        }
-        }
-        @keyFrames moveVertexes218--0 {
-        100% {
-        x: 218;
-        y: -0;
-        }
-        }
-        @keyFrames moveVertexes188_79-109 {
-        100% {
-        x: 188.79;
-        y: 109;
-        }
-        }
-        @keyFrames moveVertexes109-188_79 {
-        100% {
-        x: 109;
-        y: 188.79;
-        }
-        }
-        @keyFrames moveVertexes0-218 {
-        100% {
-        x: 0;
-        y: 218;
-        }
-        }
-        @keyFrames moveVertexes-109-188_79 {
-        100% {
-        x: -109;
-        y: 188.79;
-        }
-        }
-        @keyFrames moveVertexes-188_79-109 {
-        100% {
-        x: -188.79;
-        y: 109;
-        }
-        }
-        @keyFrames moveVertexes-218-0 {
-        100% {
-        x: -218;
-        y: 0;
-        }
-        }
-        @keyFrames moveVertexes-188_79--109 {
-        100% {
-        x: -188.79;
-        y: -109;
-        }
-        }
-        @keyFrames moveVertexes-109--188_79 {
-        100% {
-        x: -109;
-        y: -188.79;
-        }
-        }
-        @keyFrames paintAnimationffffff {
-        100% {
-        fill: #ffffff;
-        }
-        }
-        @keyFrames moveVertexes436--218 {
-        100% {
-        x: 436;
-        y: -218;
-        }
-        }
-        @keyFrames moveVertexes564_14--176_37 {
-        100% {
-        x: 564.14;
-        y: -176.37;
-        }
-        }
-        @keyFrames moveVertexes643_33--67_37 {
-        100% {
-        x: 643.33;
-        y: -67.37;
-        }
-        }
-        @keyFrames moveVertexes643_33-67_37 {
-        100% {
-        x: 643.33;
-        y: 67.37;
-        }
-        }
-        @keyFrames moveVertexes564_14-176_37 {
-        100% {
-        x: 564.14;
-        y: 176.37;
-        }
-        }
-        @keyFrames moveVertexes436-218 {
-        100% {
-        x: 436;
-        y: 218;
-        }
-        }
-        @keyFrames moveVertexes307_86-176_37 {
-        100% {
-        x: 307.86;
-        y: 176.37;
-        }
-        }
-        @keyFrames moveVertexes228_67-67_37 {
-        100% {
-        x: 228.67;
-        y: 67.37;
-        }
-        }
-        @keyFrames moveVertexes228_67--67_37 {
-        100% {
-        x: 228.67;
-        y: -67.37;
-        }
-        }
-        @keyFrames moveVertexes307_86--176_37 {
-        100% {
-        x: 307.86;
-        y: -176.37;
-        }
-        }
-    </style>
-    <symbol id="vertex0"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                0                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex1"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                1                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex2"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                2                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex3"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                3                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex4"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                4                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex5"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                5                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex6"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                6                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex7"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                7                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex8"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                8                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex9"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-6 -12 12 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                9                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex10"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-12 -12 24 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                10                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex11"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-12 -12 24 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                11                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex12"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-12 -12 24 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                12                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex13"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-12 -12 24 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                13                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex14"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-12 -12 24 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                14                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex15"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-12 -12 24 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                15                </text>
-        </svg>
-    </symbol>
-    <symbol id="vertex16"
-            width="40"
-            height="40"
-            viewBox="0 0 40 40">
-        <circle
-                vector-effect="non-scaling-stroke"
-                cx="20"
-                cy="20"
-                r="20"/>
-        <svg width="40"
-             height="40"
-             viewBox="-12 -12 24 24">
-            <text dominant-baseline="central"
-                  text-anchor="middle"
-                  font-size="20"
-                  font-family="monospace"
-                  vector-effect="non-scaling-stroke">
-                16                </text>
-        </svg>
-    </symbol>
-    <line class="0-12">
-        <animate attributeName="x1"
-                 values="0;0;0"
-                 keyTimes="0;0.06;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-218"
-                 keyTimes="0;0.06;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="-436"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-209.68"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;59.66"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-643.33"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-67.37"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1701ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154;-146.86565031495;-78.7506832288"
+                keyTimes="0;0.11816578483245;0.17695473251029;0.23574368018812;0.29453262786596;0.3533215755438;0.41211052322163;0.47089947089947;0.52968841857731;0.58847736625514;0.64726631393298;0.70605526161082;0.76484420928865;0.82363315696649;0.88242210464433;0.94121105232216;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1701ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285;-161.1039439541;-203.27894601015"
+                keyTimes="0;0.11816578483245;0.17695473251029;0.23574368018812;0.29453262786596;0.3533215755438;0.41211052322163;0.47089947089947;0.52968841857731;0.58847736625514;0.64726631393298;0.70605526161082;0.76484420928865;0.82363315696649;0.88242210464433;0.94121105232216;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="501ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232"
+                keyTimes="0;0.40119760479042;0.60079840319361;0.80039920159681;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="501ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363"
+                keyTimes="0;0.40119760479042;0.60079840319361;0.80039920159681;1"
+        />
     </line>
-    <line class="1-7">
-        <animate attributeName="x1"
-                 values="0;0;78.75;78.75"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-203.28"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="436"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;114.76"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;185.35"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="564.14"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154;-146.86565031495"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285;-161.1039439541"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="1001ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012"
+                keyTimes="0;0.2007992007992;0.3006993006993;0.4005994005994;0.5004995004995;0.6003996003996;0.7002997002997;0.8001998001998;0.9000999000999;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="1001ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109"
+                keyTimes="0;0.2007992007992;0.3006993006993;0.4005994005994;0.5004995004995;0.6003996003996;0.7002997002997;0.8001998001998;0.9000999000999;1"
+        />
     </line>
-    <line class="1-9">
-        <animate attributeName="x1"
-                 values="0;0;78.75;78.75"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-203.28"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="436"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-40.06"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;214.29"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="436"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154;-146.86565031495"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285;-161.1039439541"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="801ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726"
+                keyTimes="0;0.25093632958801;0.37578027465668;0.50062421972534;0.62546816479401;0.75031210986267;0.87515605493134;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="801ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906"
+                keyTimes="0;0.25093632958801;0.37578027465668;0.50062421972534;0.62546816479401;0.75031210986267;0.87515605493134;1"
+        />
     </line>
-    <line class="1-10">
-        <animate attributeName="x1"
-                 values="0;0;78.75;78.75"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-203.28"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="436"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-114.76"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;185.35"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="307.86"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154;-146.86565031495"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285;-161.1039439541"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="701ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="701ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
     </line>
-    <line class="1-14">
-        <animate attributeName="x1"
-                 values="0;0;78.75;78.75"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-203.28"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="436"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-217.07;-195.15;-195.15"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;-20.11;-97.17;-97.17"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="228.67"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154;-146.86565031495"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285;-161.1039439541"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="301ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495"
+                keyTimes="0;0.66777408637874;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="301ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541"
+                keyTimes="0;0.66777408637874;1"
+        />
     </line>
-    <line class="1-15">
-        <animate attributeName="x1"
-                 values="0;0;78.75;78.75"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-203.28"
-                 keyTimes="0;0.06;0.12;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="436"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-217.07;-195.15;-146.87;-146.87"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;-20.11;-97.17;-161.1;-161.1"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="228.67"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154;-146.86565031495"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1601ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285;-161.1039439541"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="201ms"
+                fill="freeze"
+                values="0;78.750683228799"
+                keyTimes="0;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="201ms"
+                fill="freeze"
+                values="0;-203.27894601015"
+                keyTimes="0;1"
+        />
     </line>
-    <line class="2-3">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;146.87"
-                 keyTimes="0;0.06;0.12;0.18;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-161.1"
-                 keyTimes="0;0.06;0.12;0.18;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="564.14"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;195.15"
-                 keyTimes="0;0.06;0.12;0.18;0.24;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-97.17"
-                 keyTimes="0;0.06;0.12;0.18;0.24;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="643.33"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1501ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154"
+                keyTimes="0;0.13391072618254;0.20053297801466;0.26715522984677;0.33377748167888;0.40039973351099;0.4670219853431;0.53364423717522;0.60026648900733;0.66688874083944;0.73351099267155;0.80013324450366;0.86675549633578;0.93337774816789;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1501ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285"
+                keyTimes="0;0.13391072618254;0.20053297801466;0.26715522984677;0.33377748167888;0.40039973351099;0.4670219853431;0.53364423717522;0.60026648900733;0.66688874083944;0.73351099267155;0.80013324450366;0.86675549633578;0.93337774816789;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="1401ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232"
+                keyTimes="0;0.14346895074946;0.21484653818701;0.28622412562455;0.3576017130621;0.42897930049964;0.50035688793719;0.57173447537473;0.64311206281228;0.71448965024982;0.78586723768737;0.85724482512491;0.92862241256246;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="1401ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363"
+                keyTimes="0;0.14346895074946;0.21484653818701;0.28622412562455;0.3576017130621;0.42897930049964;0.50035688793719;0.57173447537473;0.64311206281228;0.71448965024982;0.78586723768737;0.85724482512491;0.92862241256246;1"
+        />
     </line>
-    <line class="2-15">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;146.87"
-                 keyTimes="0;0.06;0.12;0.18;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-161.1"
-                 keyTimes="0;0.06;0.12;0.18;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="564.14"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-217.07;-195.15;-146.87;-146.87"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;-20.11;-97.17;-161.1;-161.1"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="228.67"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1501ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154"
+                keyTimes="0;0.13391072618254;0.20053297801466;0.26715522984677;0.33377748167888;0.40039973351099;0.4670219853431;0.53364423717522;0.60026648900733;0.66688874083944;0.73351099267155;0.80013324450366;0.86675549633578;0.93337774816789;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1501ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285"
+                keyTimes="0;0.13391072618254;0.20053297801466;0.26715522984677;0.33377748167888;0.40039973351099;0.4670219853431;0.53364423717522;0.60026648900733;0.66688874083944;0.73351099267155;0.80013324450366;0.86675549633578;0.93337774816789;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="201ms"
+                fill="freeze"
+                values="0;78.750683228799"
+                keyTimes="0;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="201ms"
+                fill="freeze"
+                values="0;-203.27894601015"
+                keyTimes="0;1"
+        />
     </line>
-    <line class="3-10">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;195.15"
-                 keyTimes="0;0.06;0.12;0.18;0.24;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-97.17"
-                 keyTimes="0;0.06;0.12;0.18;0.24;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="643.33"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-114.76"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;185.35"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="307.86"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1401ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232"
+                keyTimes="0;0.14346895074946;0.21484653818701;0.28622412562455;0.3576017130621;0.42897930049964;0.50035688793719;0.57173447537473;0.64311206281228;0.71448965024982;0.78586723768737;0.85724482512491;0.92862241256246;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1401ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363"
+                keyTimes="0;0.14346895074946;0.21484653818701;0.28622412562455;0.3576017130621;0.42897930049964;0.50035688793719;0.57173447537473;0.64311206281228;0.71448965024982;0.78586723768737;0.85724482512491;0.92862241256246;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="701ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="701ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
     </line>
-    <line class="3-15">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;195.15"
-                 keyTimes="0;0.06;0.12;0.18;0.24;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-97.17"
-                 keyTimes="0;0.06;0.12;0.18;0.24;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="643.33"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-217.07;-195.15;-146.87;-146.87"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;-20.11;-97.17;-161.1;-161.1"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="228.67"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1401ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232"
+                keyTimes="0;0.14346895074946;0.21484653818701;0.28622412562455;0.3576017130621;0.42897930049964;0.50035688793719;0.57173447537473;0.64311206281228;0.71448965024982;0.78586723768737;0.85724482512491;0.92862241256246;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1401ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363"
+                keyTimes="0;0.14346895074946;0.21484653818701;0.28622412562455;0.3576017130621;0.42897930049964;0.50035688793719;0.57173447537473;0.64311206281228;0.71448965024982;0.78586723768737;0.85724482512491;0.92862241256246;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="201ms"
+                fill="freeze"
+                values="0;78.750683228799"
+                keyTimes="0;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="201ms"
+                fill="freeze"
+                values="0;-203.27894601015"
+                keyTimes="0;1"
+        />
     </line>
-    <line class="4-13">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;217.07"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;-20.11"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="0"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="0"
-                 dur="1s" begin="7s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-218"
-                 dur="1s" begin="7s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-217.07;-217.07"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;-20.11;-20.11"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="0"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="0"
-                 dur="1s" begin="7s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="218"
-                 dur="1s" begin="7s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1301ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167"
+                keyTimes="0;0.15449654112221;0.23136049192929;0.30822444273636;0.38508839354343;0.4619523443505;0.53881629515757;0.61568024596464;0.69254419677171;0.76940814757879;0.84627209838586;0.92313604919293;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1301ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714"
+                keyTimes="0;0.15449654112221;0.23136049192929;0.30822444273636;0.38508839354343;0.4619523443505;0.53881629515757;0.61568024596464;0.69254419677171;0.76940814757879;0.84627209838586;0.92313604919293;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="401ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154"
+                keyTimes="0;0.50124688279302;0.75062344139651;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="401ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285"
+                keyTimes="0;0.50124688279302;0.75062344139651;1"
+        />
     </line>
-    <line class="5-7">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;209.68"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;59.66"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="643.33"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;114.76"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;185.35"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="564.14"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1201ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709"
+                keyTimes="0;0.16736053288926;0.25062447960033;0.33388842631141;0.41715237302248;0.50041631973356;0.58368026644463;0.6669442131557;0.75020815986678;0.83347210657785;0.91673605328893;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1201ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068"
+                keyTimes="0;0.16736053288926;0.25062447960033;0.33388842631141;0.41715237302248;0.50041631973356;0.58368026644463;0.6669442131557;0.75020815986678;0.83347210657785;0.91673605328893;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="1001ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012"
+                keyTimes="0;0.2007992007992;0.3006993006993;0.4005994005994;0.5004995004995;0.6003996003996;0.7002997002997;0.8001998001998;0.9000999000999;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="1001ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109"
+                keyTimes="0;0.2007992007992;0.3006993006993;0.4005994005994;0.5004995004995;0.6003996003996;0.7002997002997;0.8001998001998;0.9000999000999;1"
+        />
     </line>
-    <line class="6-8">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;173.97"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;131.37"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="-228.67"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-67.37"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;40.06"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-307.86"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="176.37"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1101ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726"
+                keyTimes="0;0.18256130790191;0.27338782924614;0.36421435059037;0.4550408719346;0.54586739327884;0.63669391462307;0.7275204359673;0.81834695731153;0.90917347865577;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1101ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906"
+                keyTimes="0;0.18256130790191;0.27338782924614;0.36421435059037;0.4550408719346;0.54586739327884;0.63669391462307;0.7275204359673;0.81834695731153;0.90917347865577;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="901ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012"
+                keyTimes="0;0.22308546059933;0.33407325194229;0.44506104328524;0.55604883462819;0.66703662597114;0.7780244173141;0.88901220865705;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="901ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109"
+                keyTimes="0;0.22308546059933;0.33407325194229;0.44506104328524;0.55604883462819;0.66703662597114;0.7780244173141;0.88901220865705;1"
+        />
     </line>
-    <line class="6-11">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;173.97"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;131.37"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="-228.67"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="-67.37"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-173.97"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;131.37"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-564.14"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="176.37"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1101ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726"
+                keyTimes="0;0.18256130790191;0.27338782924614;0.36421435059037;0.4550408719346;0.54586739327884;0.63669391462307;0.7275204359673;0.81834695731153;0.90917347865577;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1101ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906"
+                keyTimes="0;0.18256130790191;0.27338782924614;0.36421435059037;0.4550408719346;0.54586739327884;0.63669391462307;0.7275204359673;0.81834695731153;0.90917347865577;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="601ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167"
+                keyTimes="0;0.33444259567388;0.50083194675541;0.66722129783694;0.83361064891847;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="601ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714"
+                keyTimes="0;0.33444259567388;0.50083194675541;0.66722129783694;0.83361064891847;1"
+        />
     </line>
-    <line class="7-15">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;114.76"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;185.35"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="564.14"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-217.07;-195.15;-146.87;-146.87"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;-20.11;-97.17;-161.1;-161.1"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="228.67"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="1001ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012"
+                keyTimes="0;0.2007992007992;0.3006993006993;0.4005994005994;0.5004995004995;0.6003996003996;0.7002997002997;0.8001998001998;0.9000999000999;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="1001ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109"
+                keyTimes="0;0.2007992007992;0.3006993006993;0.4005994005994;0.5004995004995;0.6003996003996;0.7002997002997;0.8001998001998;0.9000999000999;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="201ms"
+                fill="freeze"
+                values="0;78.750683228799"
+                keyTimes="0;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="201ms"
+                fill="freeze"
+                values="0;-203.27894601015"
+                keyTimes="0;1"
+        />
     </line>
-    <line class="8-12">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;40.06"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="-307.86"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="176.37"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-209.68"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;59.66"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-643.33"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-67.37"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="901ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012"
+                keyTimes="0;0.22308546059933;0.33407325194229;0.44506104328524;0.55604883462819;0.66703662597114;0.7780244173141;0.88901220865705;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="901ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109"
+                keyTimes="0;0.22308546059933;0.33407325194229;0.44506104328524;0.55604883462819;0.66703662597114;0.7780244173141;0.88901220865705;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="501ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232"
+                keyTimes="0;0.40119760479042;0.60079840319361;0.80039920159681;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="501ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363"
+                keyTimes="0;0.40119760479042;0.60079840319361;0.80039920159681;1"
+        />
     </line>
-    <line class="9-10">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-40.06"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;214.29"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="0"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="218"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="436"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="218"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-114.76"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;185.35"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="307.86"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="801ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726"
+                keyTimes="0;0.25093632958801;0.37578027465668;0.50062421972534;0.62546816479401;0.75031210986267;0.87515605493134;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="801ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906"
+                keyTimes="0;0.25093632958801;0.37578027465668;0.50062421972534;0.62546816479401;0.75031210986267;0.87515605493134;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="701ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="701ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
     </line>
-    <line class="10-15">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-114.76"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;185.35"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="307.86"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-217.07;-195.15;-146.87;-146.87"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;-20.11;-97.17;-161.1;-161.1"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="228.67"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-67.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="701ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="701ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="201ms"
+                fill="freeze"
+                values="0;78.750683228799"
+                keyTimes="0;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="201ms"
+                fill="freeze"
+                values="0;-203.27894601015"
+                keyTimes="0;1"
+        />
     </line>
-    <line class="10-16">
-        <animate attributeName="x1"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-114.76"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;185.35"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x1"
-                 to="307.86"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y1"
-                 to="176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 values="0;0;78.75;146.87;195.15;217.07;209.68;173.97;114.76;40.06;-40.06;-114.76;-173.97;-209.68;-217.07;-195.15;-146.87;-78.75"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 values="0;-218;-203.28;-161.1;-97.17;-20.11;59.66;131.37;185.35;214.29;214.29;185.35;131.37;59.66;-20.11;-97.17;-161.1;-203.28"
-                 keyTimes="0;0.06;0.12;0.18;0.24;0.29;0.35;0.41;0.47;0.53;0.59;0.65;0.71;0.76;0.82;0.88;0.94;1"
-                 dur="2s" begin="0s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="-109"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-188.79"
-                 dur="1s" begin="3s" fill="freeze"
-        ></animate>
-        <animate attributeName="x2"
-                 to="307.86"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
-        <animate attributeName="y2"
-                 to="-176.37"
-                 dur="1s" begin="5s" fill="freeze"
-        ></animate>
+    <line
+            vector-effect="non-scaling-stroke"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="0"
+            stroke="#000"
+    >
+        <animate
+                attributeName="x1"
+                dur="701ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+        <animate
+                attributeName="y1"
+                dur="701ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+        <animate
+                attributeName="x2"
+                dur="101ms"
+                fill="freeze"
+                values="0;0"
+                keyTimes="0;1"
+        />
+        <animate
+                attributeName="y2"
+                dur="101ms"
+                fill="freeze"
+                values="0;-218"
+                keyTimes="0;1"
+        />
     </line>
-    <use href="#vertex0"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation0-17-0-0-218 2s 0s forwards linear,paintAnimation7fff00 0.2s 2s forwards linear,moveVertexes-436--218 1s 3s forwards linear,paintAnimationffffff 1s 4s forwards linear;
-             ">
-    </use>
-    <use href="#vertex1"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation1-17-0-0-218 2s 0s forwards linear,moveVertexes0--218 1s 3s forwards linear,paintAnimation7fff00 0.1s 4s forwards linear,moveVertexes436--218 1s 5s forwards linear;
-             ">
-    </use>
-    <use href="#vertex2"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation2-17-0-0-218 2s 0s forwards linear,moveVertexes109--188_79 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.9s forwards linear,moveVertexes564_14--176_37 1s 5s forwards linear,paintAnimationffffff 1s 6s forwards linear;
-             ">
-    </use>
-    <use href="#vertex3"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation3-17-0-0-218 2s 0s forwards linear,moveVertexes188_79--109 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.7s forwards linear,moveVertexes643_33--67_37 1s 5s forwards linear,paintAnimationffffff 1s 6s forwards linear;
-             ">
-    </use>
-    <use href="#vertex4"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation4-17-0-0-218 2s 0s forwards linear,moveVertexes218--0 1s 3s forwards linear,moveVertexes0--218 1s 5s forwards linear,paintAnimation7fff00 0.5s 6s forwards linear,moveVertexes0--218 1s 7s forwards linear,paintAnimationffffff 1s 8s forwards linear;
-             ">
-    </use>
-    <use href="#vertex5"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation5-17-0-0-218 2s 0s forwards linear,moveVertexes188_79-109 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.6s forwards linear,moveVertexes643_33-67_37 1s 5s forwards linear,paintAnimationffffff 1s 6s forwards linear;
-             ">
-    </use>
-    <use href="#vertex6"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation6-17-0-0-218 2s 0s forwards linear,paintAnimation7fff00 0.2s 2.6s forwards linear,moveVertexes-228_67--67_37 1s 3s forwards linear;
-             ">
-    </use>
-    <use href="#vertex7"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation7-17-0-0-218 2s 0s forwards linear,moveVertexes109-188_79 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.1s forwards linear,moveVertexes564_14-176_37 1s 5s forwards linear;
-             ">
-    </use>
-    <use href="#vertex8"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation8-17-0-0-218 2s 0s forwards linear,paintAnimation7fff00 0.2s 2.4s forwards linear,moveVertexes-307_86-176_37 1s 3s forwards linear;
-             ">
-    </use>
-    <use href="#vertex9"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation9-17-0-0-218 2s 0s forwards linear,moveVertexes0-218 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.2s forwards linear,moveVertexes436-218 1s 5s forwards linear,paintAnimationffffff 1s 6s forwards linear;
-             ">
-    </use>
-    <use href="#vertex10"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation10-17-0-0-218 2s 0s forwards linear,moveVertexes-109-188_79 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.3s forwards linear,moveVertexes307_86-176_37 1s 5s forwards linear;
-             ">
-    </use>
-    <use href="#vertex11"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation11-17-0-0-218 2s 0s forwards linear,paintAnimation7fff00 0.2s 2.8s forwards linear,moveVertexes-564_14-176_37 1s 3s forwards linear,paintAnimationffffff 1s 4s forwards linear;
-             ">
-    </use>
-    <use href="#vertex12"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation12-17-0-0-218 2s 0s forwards linear,paintAnimation7fff00 0.2s 2.2s forwards linear,moveVertexes-643_33--67_37 1s 3s forwards linear;
-             ">
-    </use>
-    <use href="#vertex13"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation13-17-0-0-218 2s 0s forwards linear,moveVertexes-188_79-109 1s 3s forwards linear,moveVertexes0-218 1s 5s forwards linear,paintAnimation7fff00 0.5s 6.5s forwards linear,moveVertexes0-218 1s 7s forwards linear,paintAnimationffffff 1s 8s forwards linear;
-             ">
-    </use>
-    <use href="#vertex14"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation14-17-0-0-218 2s 0s forwards linear,moveVertexes-218-0 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.4s forwards linear,moveVertexes228_67-67_37 1s 5s forwards linear,paintAnimationffffff 1s 6s forwards linear;
-             ">
-    </use>
-    <use href="#vertex15"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation15-17-0-0-218 2s 0s forwards linear,moveVertexes-188_79--109 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.5s forwards linear,moveVertexes228_67--67_37 1s 5s forwards linear,paintAnimationffffff 1s 6s forwards linear;
-             ">
-    </use>
-    <use href="#vertex16"
-         style="
-                 transform: translate(-20px, -20px);
-                 animation: fromPointToCircleAnimation16-17-0-0-218 2s 0s forwards linear,moveVertexes-109--188_79 1s 3s forwards linear,paintAnimation7fff00 0.1s 4.8s forwards linear,moveVertexes307_86--176_37 1s 5s forwards linear,paintAnimationffffff 1s 6s forwards linear;
-             ">
-    </use>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="1701ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154;-146.86565031495;-78.7506832288"
+                keyTimes="0;0.11816578483245;0.17695473251029;0.23574368018812;0.29453262786596;0.3533215755438;0.41211052322163;0.47089947089947;0.52968841857731;0.58847736625514;0.64726631393298;0.70605526161082;0.76484420928865;0.82363315696649;0.88242210464433;0.94121105232216;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="1701ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285;-161.1039439541;-203.27894601015"
+                keyTimes="0;0.11816578483245;0.17695473251029;0.23574368018812;0.29453262786596;0.3533215755438;0.41211052322163;0.47089947089947;0.52968841857731;0.58847736625514;0.64726631393298;0.70605526161082;0.76484420928865;0.82363315696649;0.88242210464433;0.94121105232216;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="1601ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154;-146.86565031495"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="1601ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285;-161.1039439541"
+                keyTimes="0;0.12554653341661;0.18800749531543;0.25046845721424;0.31292941911305;0.37539038101187;0.43785134291068;0.50031230480949;0.56277326670831;0.62523422860712;0.68769519050593;0.75015615240475;0.81261711430356;0.87507807620237;0.93753903810119;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="1501ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232;-195.1455975154"
+                keyTimes="0;0.13391072618254;0.20053297801466;0.26715522984677;0.33377748167888;0.40039973351099;0.4670219853431;0.53364423717522;0.60026648900733;0.66688874083944;0.73351099267155;0.80013324450366;0.86675549633578;0.93337774816789;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="1501ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363;-97.170961559285"
+                keyTimes="0;0.13391072618254;0.20053297801466;0.26715522984677;0.33377748167888;0.40039973351099;0.4670219853431;0.53364423717522;0.60026648900733;0.66688874083944;0.73351099267155;0.80013324450366;0.86675549633578;0.93337774816789;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="1401ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167;-217.07005043232"
+                keyTimes="0;0.14346895074946;0.21484653818701;0.28622412562455;0.3576017130621;0.42897930049964;0.50035688793719;0.57173447537473;0.64311206281228;0.71448965024982;0.78586723768737;0.85724482512491;0.92862241256246;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="1401ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714;-20.114502363"
+                keyTimes="0;0.14346895074946;0.21484653818701;0.28622412562455;0.3576017130621;0.42897930049964;0.50035688793719;0.57173447537473;0.64311206281228;0.71448965024982;0.78586723768737;0.85724482512491;0.92862241256246;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="1301ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709;-209.67799021167"
+                keyTimes="0;0.15449654112221;0.23136049192929;0.30822444273636;0.38508839354343;0.4619523443505;0.53881629515757;0.61568024596464;0.69254419677171;0.76940814757879;0.84627209838586;0.92313604919293;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="1301ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068;59.658531835714"
+                keyTimes="0;0.15449654112221;0.23136049192929;0.30822444273636;0.38508839354343;0.4619523443505;0.53881629515757;0.61568024596464;0.69254419677171;0.76940814757879;0.84627209838586;0.92313604919293;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="1201ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726;-173.96775554709"
+                keyTimes="0;0.16736053288926;0.25062447960033;0.33388842631141;0.41715237302248;0.50041631973356;0.58368026644463;0.6669442131557;0.75020815986678;0.83347210657785;0.91673605328893;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="1201ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906;131.37435073068"
+                keyTimes="0;0.16736053288926;0.25062447960033;0.33388842631141;0.41715237302248;0.50041631973356;0.58368026644463;0.6669442131557;0.75020815986678;0.83347210657785;0.91673605328893;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="1101ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012;-114.76221150726"
+                keyTimes="0;0.18256130790191;0.27338782924614;0.36421435059037;0.4550408719346;0.54586739327884;0.63669391462307;0.7275204359673;0.81834695731153;0.90917347865577;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="1101ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109;185.34733558906"
+                keyTimes="0;0.18256130790191;0.27338782924614;0.36421435059037;0.4550408719346;0.54586739327884;0.63669391462307;0.7275204359673;0.81834695731153;0.90917347865577;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="1001ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012;-40.057394884012"
+                keyTimes="0;0.2007992007992;0.3006993006993;0.4005994005994;0.5004995004995;0.6003996003996;0.7002997002997;0.8001998001998;0.9000999000999;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="1001ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109;214.28813573109"
+                keyTimes="0;0.2007992007992;0.3006993006993;0.4005994005994;0.5004995004995;0.6003996003996;0.7002997002997;0.8001998001998;0.9000999000999;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="901ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726;40.057394884012"
+                keyTimes="0;0.22308546059933;0.33407325194229;0.44506104328524;0.55604883462819;0.66703662597114;0.7780244173141;0.88901220865705;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="901ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906;214.28813573109"
+                keyTimes="0;0.22308546059933;0.33407325194229;0.44506104328524;0.55604883462819;0.66703662597114;0.7780244173141;0.88901220865705;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="801ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709;114.76221150726"
+                keyTimes="0;0.25093632958801;0.37578027465668;0.50062421972534;0.62546816479401;0.75031210986267;0.87515605493134;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="801ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068;185.34733558906"
+                keyTimes="0;0.25093632958801;0.37578027465668;0.50062421972534;0.62546816479401;0.75031210986267;0.87515605493134;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="701ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167;173.96775554709"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="701ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714;131.37435073068"
+                keyTimes="0;0.2867332382311;0.42938659058488;0.57203994293866;0.71469329529244;0.85734664764622;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="601ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232;209.67799021167"
+                keyTimes="0;0.33444259567388;0.50083194675541;0.66722129783694;0.83361064891847;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="601ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363;59.658531835714"
+                keyTimes="0;0.33444259567388;0.50083194675541;0.66722129783694;0.83361064891847;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="501ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154;217.07005043232"
+                keyTimes="0;0.40119760479042;0.60079840319361;0.80039920159681;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="501ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285;-20.114502363"
+                keyTimes="0;0.40119760479042;0.60079840319361;0.80039920159681;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="401ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495;195.1455975154"
+                keyTimes="0;0.50124688279302;0.75062344139651;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="401ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541;-97.170961559285"
+                keyTimes="0;0.50124688279302;0.75062344139651;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="301ms"
+                fill="freeze"
+                values="0;78.750683228799;146.86565031495"
+                keyTimes="0;0.66777408637874;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="301ms"
+                fill="freeze"
+                values="0;-203.27894601015;-161.1039439541"
+                keyTimes="0;0.66777408637874;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="201ms"
+                fill="freeze"
+                values="0;78.750683228799"
+                keyTimes="0;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="201ms"
+                fill="freeze"
+                values="0;-203.27894601015"
+                keyTimes="0;1"
+        />
+    </circle>
+    <circle
+            vector-effect="non-scaling-stroke"
+            cx="0"
+            cy="0"
+            r="20"
+            fill="#fff"
+            stroke="#000"
+    >
+        <animate
+                attributeName="cx"
+                dur="101ms"
+                fill="freeze"
+                values="0;0"
+                keyTimes="0;1"
+        />
+        <animate
+                attributeName="cy"
+                dur="101ms"
+                fill="freeze"
+                values="0;-218"
+                keyTimes="0;1"
+        />
+    </circle>
 </svg>

@@ -3,7 +3,7 @@
     "minimum-stability": "dev",
     "require": {
         "ext-json": "*",
-        "php": ">=7.4"
+        "eugeneerg/collections": "dev-main"
     },
     "autoload": {
         "psr-4": {
@@ -17,6 +17,12 @@
     },
     "description": "",
     "require-dev": {
-        "phpunit/phpunit": "^7.5"
-    }
+        "phpunit/phpunit": "^10.3@dev"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:EugeneErg/Collections.git"
+        }
+    ]
 }

@@ -9,7 +9,7 @@ abstract class AbstractLineCollection extends AbstractCollection2 implements \Ar
         return $this->isset($offset);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->get($offset);
     }
@@ -19,7 +19,7 @@ abstract class AbstractLineCollection extends AbstractCollection2 implements \Ar
         $this->set($offset, $value);
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         $this->unset($offset);
     }

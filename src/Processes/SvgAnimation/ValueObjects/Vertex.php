@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
-namespace EugeneErg\Graph\Processes\SvgAnimation\ValueObject;
+namespace EugeneErg\Graph\Processes\SvgAnimation\ValueObjects;
 
 use EugeneErg\Graph\Dto\Point2D;
 use EugeneErg\Graph\Processes\Collections\OptionCollection;
-use EugeneErg\Graph\ValueObjects\AbstractValueObject;
+use EugeneErg\Graph\ValueObjects\AbstractValueObjects;
 use EugeneErg\Graph\ValueObjects\Options\Point2DOption;
 use EugeneErg\Graph\ValueObjects\Options\ColorOption;
 

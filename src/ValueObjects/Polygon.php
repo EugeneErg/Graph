@@ -50,7 +50,15 @@ class Polygon extends AbstractCollection
 
     public function next(): Point2D
     {
-        return parent::next() ?? $this->rewind();
+        parent::next();
+
+        if (parent::current() !== null) {
+            return parent::current();
+        }
+
+        $this->rewind();
+
+        return parent::current();
     }
 
     protected static function create(array $records = []): AbstractCollection

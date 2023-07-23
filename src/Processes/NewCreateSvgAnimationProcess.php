@@ -16,11 +16,12 @@ use EugeneErg\Graph\Processes\Collections\ActionCollection;
 use EugeneErg\Graph\Processes\Collections\ConnectionsCollection;
 use EugeneErg\Graph\Processes\Collections\ConnectionsMatrix;
 use EugeneErg\Graph\Processes\Collections\GraphCollection;
+use EugeneErg\Graph\Processes\Collections\OptionCollection;
 use EugeneErg\Graph\Processes\Collections\VertexesCollection;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\Connection;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\Graph;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\Vertex;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\State;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\Connection;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\Graph;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\Vertex;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\State;
 use EugeneErg\Graph\Services\CoordinateService;
 use EugeneErg\Graph\Services\EventService;
 use EugeneErg\Graph\Services\TreeService;
@@ -28,6 +29,7 @@ use EugeneErg\Graph\Services\ViewerService;
 use EugeneErg\Graph\ValueObjects\AbstractGraph;
 use EugeneErg\Graph\ValueObjects\Angle;
 use EugeneErg\Graph\ValueObjects\ClearGraph;
+use EugeneErg\Graph\ValueObjects\Options\Point2DOption;
 use EugeneErg\Graph\ValueObjects\Slices\AbstractSlice;
 
 class NewCreateSvgAnimationProcess
@@ -142,35 +144,35 @@ class NewCreateSvgAnimationProcess
         $angle = CoordinateService::instance()->getAngle($vertexesCount);
         $graphRadius = CoordinateService::instance()
             ->getRadius($vertexRadius * 2, $vertexesCount);
-        $vertexState = new State(0, 0, null, new Point2D());
-        $number = 0;
+        $vertexState = new State(new OptionCollection([new Point2DOption(new Point2D())]), 0, 0, null);
+        $number2 = 0;
         $vertexes = VertexesCollection::fromWalk(
             $createNewGraphAction->getVertexes(),
             function (int $vertex, int $number)
-            use (&$vertexState, $vertexesCount, &$number, $angle, $graphRadius, &$minPoint, &$maxPoint): Vertex {
+            use (&$vertexState, $vertexesCount, &$number2, $angle, $graphRadius, &$minPoint, &$maxPoint): Vertex {
                 $coordinate = CoordinateService::instance()
-                    ->getPoint($graphRadius, CoordinateService::instance()->getFinalAngle($angle, $number));
+                    ->getPoint($graphRadius, CoordinateService::instance()->getFinalAngle($angle, $number2));
                 $maxPoint = Point2D::max($coordinate, $maxPoint);
                 $minPoint = Point2D::min($coordinate, $minPoint);
                 $vertexState = new State(
+                    new OptionCollection([new Point2DOption($coordinate)]),
                     100,
                     0,
                     $vertexState,
-                    $coordinate
                 );
 
-                if ($vertexesCount !== $number + 1) {
+                if ($vertexesCount !== $number2 + 1) {
                     $vertexStateWithFinal = new State(
-                        100 * ($vertexesCount - $number - 1),
+                        new OptionCollection([new Point2DOption($coordinate)]),
+                        100 * ($vertexesCount - $number2 - 1),
                         0,
                         $vertexState,
-                        $coordinate
                     );
                 }
 
                 return new Vertex($vertex, $vertexStateWithFinal ?? $vertexState);
             }
-        )->combineKeys($createNewGraphAction->getVertexes());
+        )->replaceKeys($createNewGraphAction->getVertexes());
         $connectionsMatrix = new ConnectionsMatrix();
 
         foreach ($createNewGraphAction->getVertexes() as $vertexA => $connection) {

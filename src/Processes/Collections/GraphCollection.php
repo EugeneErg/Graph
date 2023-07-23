@@ -2,7 +2,7 @@
 namespace EugeneErg\Graph\Processes\Collections;
 
 use EugeneErg\Graph\Collections\AbstractLineCollection;
-use EugeneErg\Graph\Processes\SvgAnimation\ValueObject\Graph;
+use EugeneErg\Graph\Processes\SvgAnimation\ValueObjects\Graph;
 
 /**
  * @method Graph[] getIterator()
