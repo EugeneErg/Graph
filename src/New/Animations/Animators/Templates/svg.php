@@ -20,7 +20,7 @@ $printAnimation = function (AbstractTrack $track, string $attributeName, ?callab
             values="<?= implode(';', $getValues === null ? $track->getValues()->toArray() : $getValues($track->getValues())->toArray()) ?>"
             keyTimes="<?= implode(';', FloatCollection::fromMap(
                 fn (int $milliseconds): float => $milliseconds / $track->getDurationMilliSecond(),
-                $track->getEnds())->toArray(),
+                $track->getTimes())->toArray(),
             ) ?>"
         />
     <?php endif;
@@ -34,12 +34,10 @@ $printAnimation = function (AbstractTrack $track, string $attributeName, ?callab
  * @var DataTransferObjectCollection $objects
  */
 ?>
-<svg version="1.1"
-     width="<?= $width ?>"
+<svg width="<?= $width ?>"
      height="<?= $height ?>"
      stroke="black"
      stroke-width="1"
-     vector-effect="non-scaling-stroke"
      fill="white"
      viewBox="<?= $left ?> <?= $top ?> <?= $width ?> <?= $height ?>"
      xmlns="http://www.w3.org/2000/svg">

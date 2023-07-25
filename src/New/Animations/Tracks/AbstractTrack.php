@@ -19,7 +19,7 @@ abstract class AbstractTrack
     {
         if ($startMilliSecond === null) {
             $startMilliSecond = $this->getDurationMilliSecond();
-            $this->segments->set($segment, $startMilliSecond);
+            $this->segments = $this->segments->set($segment, $startMilliSecond);
 
             return $startMilliSecond + $segment->getDurationMilliSecond();
         }
@@ -29,7 +29,7 @@ abstract class AbstractTrack
         }
 
         if ($this->segments->isEmpty()) {
-            $this->segments->set($segment, $startMilliSecond);
+            $this->segments = $this->segments->set($segment, $startMilliSecond);
 
             return $startMilliSecond + $segment->getDurationMilliSecond();
         }
@@ -50,7 +50,7 @@ abstract class AbstractTrack
                     $startMilliSecond,
                 )
             ) {
-                throw new \LogicException('Segments is crossed.');
+                throw new \LogicException('Segments is crossed.' . " {$startMilliSecondA}, {$segmentA->getDurationMilliSecond()}, {$startMilliSecond}");
             }
         }
 
@@ -86,11 +86,11 @@ abstract class AbstractTrack
     {
         $prev = 0;
         $prevValue = $this->defaultValue;
-        $result = [];
+        $result = [$prevValue];
 
         foreach ($this->segments as $start => $segment) {
             if ($start !== $prev) {
-                $result = [$prevValue];
+                $result[] = $prevValue;
             }
 
             $result[] = $segment->getValue();
@@ -101,19 +101,21 @@ abstract class AbstractTrack
         return new MixedCollection($result);
     }
 
-    public function getEnds(): IntegerCollection
+    public function getTimes(): IntegerCollection
     {
         $prev = 0;
         $result = [];
 
         foreach ($this->segments as $start => $segment) {
             if ($start !== $prev) {
-                $result = [$prev];
+                $result[] = $prev;
             }
 
+            $result[] = $start;
             $prev = $start + $segment->getDurationMilliSecond();
-            $result[] = $prev;
         }
+
+        $result[] = $prev;
 
         return new IntegerCollection($result);
     }

@@ -14,6 +14,6 @@ class ColorTrack extends AbstractTrack
 {
     public function __construct(string $defaultValue)
     {
-        parent::__construct($defaultValue, new ColorSegmentCollection(immutable: false));
+        parent::__construct($defaultValue, new ColorSegmentCollection());
     }
 }

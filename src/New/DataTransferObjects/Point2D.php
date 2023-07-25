@@ -35,4 +35,9 @@ class Point2D
 
         return new self($x, $y);
     }
+
+    public function plus(self $point): self
+    {
+        return new self($this->x + $point->x, $this->y + $point->y);
+    }
 }

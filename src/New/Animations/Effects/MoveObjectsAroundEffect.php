@@ -12,14 +12,14 @@ use EugeneErg\Graph\New\DataTransferObjects\Point2D;
 use EugeneErg\Graph\New\Services\CoordinateService;
 use EugeneErg\Graph\New\ValueObjects\Angle;
 
-class ExpandObjectsAroundEffect implements EffectInterface
+class MoveObjectsAroundEffect implements EffectInterface
 {
     public readonly Point2D $center;
     public readonly Angle $startAngle;
     public readonly Angle $shiftAngle;
 
     public function __construct(
-        public readonly int $stepMilliSeconds,
+        public readonly int $durationMilliSeconds,
         public readonly int $startRadius,
         ?Point2D $center = null,
         ?Angle $startAngle = null,
@@ -42,26 +42,18 @@ class ExpandObjectsAroundEffect implements EffectInterface
             fn (int $result, Point2DTrack $track): int => max($result, $track->getDurationMilliSecond()),
             0,
         );
-        $segments = [];
-
-        for ($i = 0; $i < $tracks->count(); $i++) {
-            $segments[] = new Point2DSegment(
-                $this->stepMilliSeconds,
-                CoordinateService::getPoint(
-                    $this->startRadius + $this->shiftRadius * $i,
-                    $this->startAngle->plus($this->shiftAngle->times($i)),
-                ),
-            );
-        }
+        $radius = $this->startRadius;
+        $angle = $this->startAngle;
 
         foreach ($tracks as $point) {
-            foreach ($segments as $number => $segment) {
-                $point->addSegment($segment, $startMilliSeconds + $this->stepMilliSeconds * $number);
-            }
-
-            array_pop($segments);
+            $point->addSegment(
+                new Point2DSegment($this->durationMilliSeconds, CoordinateService::getPoint($radius, $angle)->plus($this->center)),
+                $startMilliSeconds,
+            );
+            $radius += $this->shiftRadius;
+            $angle = $angle->plus($this->shiftAngle);
         }
 
-        return $startMilliSeconds + ($tracks->count() + 1) * $this->stepMilliSeconds;
+        return $startMilliSeconds + $this->durationMilliSeconds;
     }
 }

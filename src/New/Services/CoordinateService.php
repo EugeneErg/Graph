@@ -31,4 +31,9 @@ class CoordinateService
             ($center === null ? 0 : $center->y) + $distance * -$angle->cos(),
         );
     }
+
+    public static function findAnOccupiedAngle(int $radiusA, int $radiusB): Angle
+    {
+        return Angle::asin($radiusB / ($radiusA + $radiusB))->times(2);
+    }
 }

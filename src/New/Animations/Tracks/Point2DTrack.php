@@ -18,7 +18,7 @@ class Point2DTrack extends AbstractTrack
 {
     public function __construct(Point2D $defaultValue)
     {
-        parent::__construct($defaultValue, new Point2DSegmentCollection(immutable: false));
+        parent::__construct($defaultValue, new Point2DSegmentCollection());
     }
 
     public function getValues(): Point2DCollection

@@ -13,10 +13,10 @@ class SvgAnimator implements AnimatorInterface
         ob_start();
         $this->echoTemplate(__DIR__ . '/Templates/svg.php', [
             'objects' => $objects,
-            'width' => 500,
-            'height' => 500,
-            'top' => -250,
-            'left' => -250,
+            'width' => 1000,
+            'height' => 1000,
+            'top' => -500,
+            'left' => -500,
         ]);
 
         return ob_get_clean();

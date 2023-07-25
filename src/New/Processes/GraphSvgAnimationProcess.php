@@ -4,39 +4,47 @@ declare(strict_types=1);
 
 namespace EugeneErg\Graph\New\Processes;
 
-use EugeneErg\Graph\New\Actions\CreateNewGraphAction;
+use EugeneErg\Graph\New\Actions\CreateNewGraphAbstractAction;
 use EugeneErg\Graph\New\Actions\MoveDisconnectedSubGraphAction;
-use EugeneErg\Graph\New\Animations\Animators\AnimatorInterface;
 use EugeneErg\Graph\New\Animations\Collections\DataTransferObjectCollection;
+use EugeneErg\Graph\New\Animations\DataTransferObjects\DataTransferObjectInterface;
+use EugeneErg\Graph\New\DataTransferObjects\AnimationVertex;
 use EugeneErg\Graph\New\Events\DisconnectedGraphFoundEvent;
 use EugeneErg\Graph\New\Services\EventService;
+use EugeneErg\Graph\New\Services\GraphService;
 use EugeneErg\Graph\New\ValueObjects\Graph;
 
 class GraphSvgAnimationProcess
 {
     public function __construct(
         private readonly EventService $eventService,
-        private readonly AnimatorInterface $animator,
+        private readonly GraphService $graphService,
     ) {
     }
 
-    public function generate(Graph $graph, int $vertexRadius = 20)
+    public function generate(Graph $graph, int $vertexRadius = 20): DataTransferObjectCollection
     {
         $clearGraph = $graph->clone(false, false);
         $action = $this->getAction($clearGraph, $vertexRadius);
         $animationGraph = $action->createNewGraph();
-        $objects = DataTransferObjectCollection::fromMerge($animationGraph->connections, $animationGraph->vertexes);
-        echo $this->animator->generateContent($objects);
+
+        return DataTransferObjectCollection::fromMerge(
+            $animationGraph->connections,
+            DataTransferObjectCollection::fromMap(
+                fn (AnimationVertex $vertex): DataTransferObjectInterface => $vertex->circle,
+                $animationGraph->vertexes,
+            ),
+        );
     }
 
-    private function getAction(Graph $graph, int $vertexRadius): CreateNewGraphAction
+    private function getAction(Graph $graph, int $vertexRadius): CreateNewGraphAbstractAction
     {
-        $result = new CreateNewGraphAction($graph->vertexes, $graph->connections, $vertexRadius);
+        $result = new CreateNewGraphAbstractAction($graph->vertexes, $graph->connections, $vertexRadius);
         $moveDisconnectedSubGraphActions = [];
         $disconnectedGraphFoundListenerId = $this->eventService->listen(
             DisconnectedGraphFoundEvent::class,
-            function (DisconnectedGraphFoundEvent $event) use ($result, &$moveDisconnectedSubGraphActions): void {
-                $moveDisconnectedSubGraphActions[] = new MoveDisconnectedSubGraphAction($event->vertexes, $result);
+            function (DisconnectedGraphFoundEvent $event) use ($result, &$moveDisconnectedSubGraphActions, $vertexRadius): void {
+                $moveDisconnectedSubGraphActions[] = new MoveDisconnectedSubGraphAction($result, $event->vertexes, $vertexRadius);
             },
         );
         /*$selectArticulationVertexesActions = [];
@@ -62,6 +70,7 @@ class GraphSvgAnimationProcess
             }
         );
         TreeService::instance()->createFromGraph($clearGraph);*/
+        $this->graphService->splitGraphOnDisconnected($graph);
         $this->eventService->dontListen([
             DisconnectedGraphFoundEvent::class => $disconnectedGraphFoundListenerId,
             //ArticulationVertexesFoundEvent::class => $articulationVertexesFoundListenerId,

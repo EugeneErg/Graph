@@ -15,7 +15,7 @@ class RadiusTrack extends AbstractTrack
 {
     public function __construct(int $defaultValue)
     {
-        parent::__construct($defaultValue, new RadiusSegmentCollection(immutable: false));
+        parent::__construct($defaultValue, new RadiusSegmentCollection());
     }
 
     public function getValues(): IntegerCollection

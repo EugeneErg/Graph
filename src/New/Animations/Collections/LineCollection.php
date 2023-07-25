@@ -7,7 +7,7 @@ namespace EugeneErg\Graph\New\Animations\Collections;
 use EugeneErg\Collections\ObjectCollection;
 use EugeneErg\Graph\New\Animations\DataTransferObjects\Line;
 
-class ConnectionCollection extends ObjectCollection
+class LineCollection extends ObjectCollection
 {
     protected const VALUE_TYPE = Line::class;
 }
