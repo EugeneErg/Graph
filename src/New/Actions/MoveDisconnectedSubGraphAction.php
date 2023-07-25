@@ -8,6 +8,7 @@ use EugeneErg\Collections\IntegerCollection;
 use EugeneErg\Graph\New\Animations\Collections\ColorTrackCollection;
 use EugeneErg\Graph\New\Animations\Collections\LineCollection;
 use EugeneErg\Graph\New\Animations\Collections\Point2DTrackCollection;
+use EugeneErg\Graph\New\Animations\Effects\BrushObjectsAroundEffect;
 use EugeneErg\Graph\New\Animations\Effects\BrushObjectsEffect;
 use EugeneErg\Graph\New\Animations\Effects\MoveObjectsAroundEffect;
 use EugeneErg\Graph\New\Animations\Tracks\ColorTrack;
@@ -33,27 +34,36 @@ class MoveDisconnectedSubGraphAction extends AbstractAction
         $vertexes = new AnimationVertexCollection(immutable: false);
         $connections = [];
 
-        foreach ($this->vertexes as $vertexA) {
-            $vertexes->set($parentGraph->vertexes[$vertexA], $vertexA);
-            $connections[] = $parentGraph->vertexes[$vertexA]->connections;
+        foreach ($parentGraph->vertexes as $vertexId => $vertex) {
+            if ($this->vertexes->has($vertexId)) {
+                $vertexes->set($parentGraph->vertexes[$vertexId], $vertexId);
+                $connections[] = $parentGraph->vertexes[$vertexId]->connections;
+            }
         }
 
         $graph = new AnimationGraph($vertexes->setImmutable(), LineCollection::fromMerge(...$connections)->unique());
-        $startMilliseconds = (new BrushObjectsEffect('#0f0', 500))->apply(
+        $startMilliseconds = (new BrushObjectsAroundEffect('#0f0', 300))->apply(
             ColorTrackCollection::fromMap(
                 fn (AnimationVertex $vertex): ColorTrack => $vertex->circle->color,
                 $graph->vertexes,
             ),
             $startMilliseconds,
         );
-        $startMilliseconds = (new MoveObjectsAroundEffect(
-            300,
+        (new MoveObjectsAroundEffect(
+            500,
             $radius,
             $center,
             shiftAngle: CoordinateService::getAngle($this->vertexes->count()),
         ))->apply(
             Point2DTrackCollection::fromMap(
                 fn (AnimationVertex $vertex): Point2DTrack => $vertex->circle->center,
+                $graph->vertexes,
+            ),
+            $startMilliseconds,
+        );
+        $startMilliseconds = (new BrushObjectsEffect('#fff', 500))->apply(
+            ColorTrackCollection::fromMap(
+                fn (AnimationVertex $vertex): ColorTrack => $vertex->circle->color,
                 $graph->vertexes,
             ),
             $startMilliseconds,

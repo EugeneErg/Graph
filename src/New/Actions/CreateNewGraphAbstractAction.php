@@ -112,7 +112,7 @@ class CreateNewGraphAbstractAction extends AbstractAction
                 : $this->getCenter($distance, $fullAngle, $angle);
             $fullAngle = $fullAngle->plus($angle)->plus($delta);
             $actions[$number]->drawGraph($graph, $center, $childGraphRadius, $startMilliseconds);
-            $startMilliseconds += 500 * $actions[$number]->vertexes->count();
+            $startMilliseconds += 300 * $actions[$number]->vertexes->count() + 500;
         }
 
         $bigAction->drawGraph($graph, new Point2D(), $graphRadius, $startMilliseconds);

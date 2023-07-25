@@ -9,11 +9,11 @@ use EugeneErg\Graph\New\Animations\Collections\ColorTrackCollection;
 use EugeneErg\Graph\New\Animations\Segments\ColorSegment;
 use EugeneErg\Graph\New\Animations\Tracks\ColorTrack;
 
-class BrushObjectsEffect implements EffectInterface
+class BrushObjectsAroundEffect implements EffectInterface
 {
     public function __construct(
         public readonly string $color,
-        public readonly int $durationMilliSeconds,
+        public readonly int $stepMilliSeconds,
     ) {
     }
 
@@ -28,13 +28,16 @@ class BrushObjectsEffect implements EffectInterface
             fn (int $result, ColorTrack $track): int => max($result, $track->getDurationMilliSecond()),
             0,
         );
-        $segment = new ColorSegment($this->durationMilliSeconds, $this->color);
 
         /** @var ColorTrack $track */
         foreach ($tracks as $track) {
-            $track->addSegment($segment, $startMilliSeconds);
+            $track->addSegment(
+                new ColorSegment($this->stepMilliSeconds, $this->color),
+                $startMilliSeconds,
+            );
+            $startMilliSeconds += $this->stepMilliSeconds;
         }
 
-        return $startMilliSeconds + $this->durationMilliSeconds;
+        return $startMilliSeconds;
     }
 }

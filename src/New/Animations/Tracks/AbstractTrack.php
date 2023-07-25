@@ -79,7 +79,7 @@ abstract class AbstractTrack
 
     public function getSegments(): AbstractSegmentCollection
     {
-        return (clone $this->segments)->setImmutable();
+        return $this->segments;
     }
 
     public function getValues(): MixedCollection

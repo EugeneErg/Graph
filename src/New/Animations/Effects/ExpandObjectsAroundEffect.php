@@ -44,7 +44,7 @@ class ExpandObjectsAroundEffect implements EffectInterface
         );
         $segments = [];
 
-        for ($i = 0; $i < $tracks->count(); $i++) {
+        for ($i = $tracks->count() - 1; $i >= 0 ; $i--) {
             $segments[] = new Point2DSegment(
                 $this->stepMilliSeconds,
                 CoordinateService::getPoint(
