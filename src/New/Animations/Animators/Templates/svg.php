@@ -43,12 +43,30 @@ $printAnimation = function (AbstractTrack $track, string $attributeName, ?callab
      xmlns="http://www.w3.org/2000/svg">
     <?php foreach ($objects as $number => $object): ?>
         <?php if ($object instanceof Circle): ?>
+            <pattern id="id-<?= $number ?>" width="100%" height="100%" viewBox="0, 0, 10, 10">
+                <rect stroke="none" x="0" y="0" width="10" height="10" fill="<?= $object->color->getLastValue() ?>">
+                    <?= $printAnimation($object->color, 'fill') ?>
+                </rect>
+                <text
+                    stroke="none"
+                    fill="#000"
+                    dominant-baseline="central"
+                    text-anchor="middle"
+                    x="5"
+                    y="5"
+                    font-size="4"
+                    font-family="monospace"
+                    vector-effect="non-scaling-stroke"
+                >
+                    <?= $object->text ?>
+                </text>
+            </pattern>
             <circle
                 vector-effect="non-scaling-stroke"
-                cx="<?= $object->center->defaultValue->x ?>"
-                cy="<?= $object->center->defaultValue->y ?>"
-                r="<?= $object->radius->defaultValue ?>"
-                fill="<?= $object->color->defaultValue ?>"
+                cx="<?= $object->center->getLastValue()->x ?>"
+                cy="<?= $object->center->getLastValue()->y ?>"
+                r="<?= $object->radius->getLastValue() ?>"
+                fill="url(#id-<?= $number ?>)"
                 stroke="#000"
             >
                 <?= $printAnimation($object->radius, 'r') ?>
@@ -64,16 +82,15 @@ $printAnimation = function (AbstractTrack $track, string $attributeName, ?callab
                     fn (Point2DCollection $points): IntegerCollection
                         => IntegerCollection::fromMap(fn (Point2D $point): float => $point->y, $points),
                 ) ?>
-                <?= $printAnimation($object->color, 'fill') ?>
             </circle>
         <?php elseif ($object instanceof Line): ?>
             <line
                 vector-effect="non-scaling-stroke"
-                x1="<?= $object->from->defaultValue->x ?>"
-                y1="<?= $object->from->defaultValue->y ?>"
-                x2="<?= $object->to->defaultValue->x ?>"
-                y2="<?= $object->to->defaultValue->y ?>"
-                stroke="<?= $object->color->defaultValue ?>"
+                x1="<?= $object->from->getLastValue()->x ?>"
+                y1="<?= $object->from->getLastValue()->y ?>"
+                x2="<?= $object->to->getLastValue()->x ?>"
+                y2="<?= $object->to->getLastValue()->y ?>"
+                stroke="<?= $object->color->getLastValue() ?>"
             >
                 <?= $printAnimation($object->color, 'stroke') ?>
                 <?= $printAnimation(

@@ -125,6 +125,11 @@ abstract class AbstractTrack
         return $this->segments->last();
     }
 
+    public function getLastValue(): mixed
+    {
+        return $this->segments->last()?->getValue() ?? $this->defaultValue;
+    }
+
     public function getDurationMilliSecond(): int
     {
         return $this->segments->isEmpty()
