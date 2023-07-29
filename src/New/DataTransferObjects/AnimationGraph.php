@@ -11,7 +11,7 @@ class AnimationGraph
 {
     public function __construct(
         public readonly AnimationVertexCollection $vertexes,
-        public readonly LineCollection            $connections,
+        public readonly LineCollection $connections,
     ) {
     }
 }

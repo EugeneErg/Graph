@@ -16,7 +16,10 @@ class CoordinateService
 
     public static function getRadius(int $subRadius, int $count): int
     {
-        return (int) ceil($subRadius / sin(pi() / $count));
+        try {
+            return (int)ceil($subRadius / sin(pi() / $count));
+        } catch (\Throwable $throwable) {
+        }
     }
 
     public static function getFinalAngle(Angle $angle, int $number, ?Angle $startAngle = null): Angle

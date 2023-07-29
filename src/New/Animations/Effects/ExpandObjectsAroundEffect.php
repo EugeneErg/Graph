@@ -44,7 +44,7 @@ class ExpandObjectsAroundEffect implements EffectInterface
         );
         $segments = [];
 
-        for ($i = $tracks->count() - 1; $i >= 0 ; $i--) {
+        for ($i = 0; $i < $tracks->count(); $i++) {
             $segments[] = new Point2DSegment(
                 $this->stepMilliSeconds,
                 CoordinateService::getPoint(
@@ -54,12 +54,14 @@ class ExpandObjectsAroundEffect implements EffectInterface
             );
         }
 
+        $trackNumber = 0;
+
         foreach ($tracks as $point) {
-            foreach ($segments as $number => $segment) {
-                $point->addSegment($segment, $startMilliSeconds + $this->stepMilliSeconds * $number);
+            for ($number = 0; $number <= $trackNumber; $number++) {
+                $point->addSegment($segments[$number], $startMilliSeconds + $this->stepMilliSeconds * $number);
             }
 
-            array_pop($segments);
+            $trackNumber++;
         }
 
         return $startMilliSeconds + ($tracks->count() + 1) * $this->stepMilliSeconds;

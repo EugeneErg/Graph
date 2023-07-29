@@ -13,14 +13,13 @@ use EugeneErg\Graph\New\Animations\Effects\ExpandObjectsAroundEffect;
 use EugeneErg\Graph\New\Animations\Tracks\ColorTrack;
 use EugeneErg\Graph\New\Animations\Tracks\Point2DTrack;
 use EugeneErg\Graph\New\Animations\Tracks\RadiusTrack;
-use EugeneErg\Graph\New\Collections\ActionCollection;
+use EugeneErg\Graph\New\Collections\AnimationGraphCollection;
 use EugeneErg\Graph\New\Collections\IntegerMatrix;
 use EugeneErg\Graph\New\Collections\AnimationVertexCollection;
 use EugeneErg\Graph\New\DataTransferObjects\AnimationGraph;
 use EugeneErg\Graph\New\DataTransferObjects\AnimationVertex;
 use EugeneErg\Graph\New\DataTransferObjects\Point2D;
 use EugeneErg\Graph\New\Services\CoordinateService;
-use EugeneErg\Graph\New\ValueObjects\Angle;
 
 class CreateNewGraphAbstractAction extends AbstractAction
 {
@@ -32,11 +31,12 @@ class CreateNewGraphAbstractAction extends AbstractAction
         parent::__construct();
     }
 
-    public function createNewGraph(): AnimationGraph
+    public function createNewGraph(): AnimationGraphCollection
     {
         $vertexesCount = $this->vertexes->count();
         $graphRadius = CoordinateService::getRadius($this->vertexRadius * 2, $vertexesCount);
         $result = new AnimationGraph(new AnimationVertexCollection(immutable: false), new LineCollection(immutable: false));
+        $graphs = new AnimationGraphCollection([$result]);
 
         foreach ($this->vertexes as $vertex) {
             $result->vertexes->set(new AnimationVertex(
@@ -74,65 +74,19 @@ class CreateNewGraphAbstractAction extends AbstractAction
             $result->vertexes,
         ));
 
-        $this->moveDisconnectedSubGraphs($result, $graphRadius);
-
-        return $result;
+        return $this->moveDisconnectedSubGraphs($graphs, $graphRadius);
     }
 
-    private function moveDisconnectedSubGraphs(AnimationGraph $graph, int $graphRadius): void
+    private function moveDisconnectedSubGraphs(AnimationGraphCollection $graphs, int $graphRadius): AnimationGraphCollection
     {
-        $big = $this->getNumberActionWithMaximumVertexCount();
-        /** @var MoveDisconnectedSubGraphAction[]|ActionCollection $actions */
-        $actions = clone $this->children;
-        $bigAction = $actions[$big];
-        unset($actions[$big]);
-        $actionsCount = $actions->count();// + $bigAction->getChildren()->count();
-        $fullAngle = Angle::degrees($actionsCount < 3 ? -90 : 0);
         $startMilliseconds = 200 * $this->vertexes->count();
-        $delta = Angle::degrees(360);
-        $data = [];
 
-        foreach ($actions as $number => $action) {
-            $childGraphRadius = $actionsCount < 8
-                ? $graphRadius
-                : CoordinateService::getRadius($this->vertexRadius * 2, $action->vertexes->count());
-            $angle = $actionsCount === 1
-                ? Angle::degrees(360)
-                : CoordinateService::findAnOccupiedAngle($actionsCount < 4 ? 0 : $graphRadius, $childGraphRadius);
-            $delta = $delta->minus($angle);
-            $data[$number] = [$childGraphRadius, $angle];
+        /** @var MoveDisconnectedSubGraphAction $child */
+        foreach ($this->children as $child) {
+            $graphs = $child->drawGraph($graphs, 0, $graphRadius, $startMilliseconds);
+            $startMilliseconds += 300 * $child->vertexes->count() + 500;
         }
 
-        $delta = $delta->divided($actionsCount);
-
-        foreach ($data as $number => [$childGraphRadius, $angle]) {
-            $distance = ($actionsCount === 1 ? 0 : $graphRadius) + $childGraphRadius;
-            $center = $actionsCount === 3 && $number === 2
-                ? new Point2D()
-                : $this->getCenter($distance, $fullAngle, $angle);
-            $fullAngle = $fullAngle->plus($angle)->plus($delta);
-            $actions[$number]->drawGraph($graph, $center, $childGraphRadius, $startMilliseconds);
-            $startMilliseconds += 300 * $actions[$number]->vertexes->count() + 500;
-        }
-
-        $bigAction->drawGraph($graph, new Point2D(), $graphRadius, $startMilliseconds);
-    }
-
-    public function getNumberActionWithMaximumVertexCount(): ?int
-    {
-        $result = null;
-
-        foreach ($this->children as $number => $action) {
-            if ($result === null || $action->vertexes->count() > $this->children[$result]->vertexes->count()) {
-                $result = $number;
-            }
-        }
-
-        return $result;
-    }
-
-    private function getCenter(int $distance, Angle $fullAngle, Angle $angle): Point2D
-    {
-        return CoordinateService::getPoint($distance, $angle->divided(2)->plus($fullAngle));
+        return $graphs;
     }
 }

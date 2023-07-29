@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 use EugeneErg\Graph\New\Animations\Animators\SvgAnimator;
 use EugeneErg\Graph\New\Processes\GraphSvgAnimationProcess;
+use EugeneErg\Graph\New\Services\ArticulationVertexesFinderService;
 use EugeneErg\Graph\New\Services\CanvasService;
 use EugeneErg\Graph\New\Services\EventService;
 use EugeneErg\Graph\New\Services\GraphService;
@@ -58,6 +59,10 @@ $graph = \EugeneErg\Graph\New\ValueObjects\Graph::createFromStrings(new \EugeneE
     '----------1------',
 ]));
 $eventService = new EventService();
-$process = new GraphSvgAnimationProcess($eventService, new GraphService(new CanvasService(), $eventService));
+$process = new GraphSvgAnimationProcess(
+    $eventService,
+    new GraphService(new CanvasService(), $eventService),
+    new ArticulationVertexesFinderService(),
+);
 
 file_put_contents('test.svg', (new SvgAnimator())->generateContent($process->generate($graph)));
