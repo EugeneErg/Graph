@@ -11,7 +11,7 @@ class ArticulationVertexesFinderService
 {
     private int $children;
     private IntegerCollection $result;
-    private IntegerCollection$number;
+    private IntegerCollection $number;
     private IntegerCollection$index;
     private Graph $graph;
 
@@ -38,7 +38,7 @@ class ArticulationVertexesFinderService
             = $this->index[$vertexA]
             = $parentVertex === null ? 0 : $this->number[$parentVertex] + 1;
 
-        foreach ($this->graph->getColumn($vertexA, true) ?? [] as $vertexB => $value) {
+        foreach ($this->graph->getColumn($vertexA) ?? [] as $vertexB => $value) {
             if ($vertexB === $parentVertex) {
                 continue;
             }

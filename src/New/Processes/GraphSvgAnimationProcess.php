@@ -100,3 +100,32 @@ class GraphSvgAnimationProcess
         return $result;
     }
 }
+
+/**
+ * R^2 + R(r1+r2) - r1*r2 - cos(a) * (R^2 + R(r1+r2) + r1*r2) = 0
+ * R^2(1-cos(a)) + R(r1+r2)(1-cos(a)) - (r1*r2)(1 + cos(a)) = 0
+ *
+ * D = (r1+r2)^2(1-cos(a))^2 + 4(1-cos^2(a))(r1*r2)
+ *
+ * D = (r1+r2)^2(1-cos(a))^2 + 4 * sin^2(a) * r1 * r2
+ * D = (r1^2 + r2^2 + 2 * r1 * r2) * (1 - 2 * cos(a) + cos^2(a)) + 4 * r1 * r2 - 4 * cos^2(a) * r1 * r2
+ *
+ *
+ * + r1^2
+ * + r2^2
+ * + (r1^2 + r2^2) * cos^2(a)
+ * - 2 * (r1^2 + r2^2) * cos(a)
+ * - 4 * cos(a) * r1 * r2
+ * + 6 * r1 * r2
+ * - 2 * cos^2(a) * r1 * r2
+ *
+ *
+ *
+ *
+ *
+ * x1,x2 = (-(r1+r2)(1-cos(a)) +- sqrt((r1+r2)^2(1-cos(a))^2 + 4(1-cos^2(a))(r1*r2)))/2(1-cos(a))
+ *
+ *
+ *
+ *
+ */

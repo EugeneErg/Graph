@@ -84,6 +84,11 @@ class MoveDisconnectedSubGraphAction extends AbstractAction
             $startMilliseconds,
         );
 
+        /** @var SelectArticulationVertexesAction $child */
+        foreach ($this->children as $child) {
+            $child->brushVertexes($graph, $startMilliseconds);
+        }
+
         return $graphs;
     }
 
@@ -93,44 +98,19 @@ class MoveDisconnectedSubGraphAction extends AbstractAction
             return $startMilliseconds;
         }
 
-        if ($graphs->count() === 1) {
-            return (new MoveObjectsAroundEffect(
-                500,
-                CoordinateService::getRadius($this->vertexRadius * 2, $graphs->first()->vertexes->count()),
-                new Point2D(),
-                shiftAngle: CoordinateService::getAngle($graphs->first()->vertexes->count()),
-            ))->apply(
-                Point2DTrackCollection::fromMap(
-                    fn (AnimationVertex $vertex): Point2DTrack => $vertex->circle->center,
-                    $graphs->first()->vertexes,
-                ),
-                $startMilliseconds,
-            );
-        }
+        $radii = IntegerCollection::fromMap(
+            fn (AnimationGraph $graph): int
+                => CoordinateService::getRadius($this->vertexRadius * 2, $graph->vertexes->count()) + $this->vertexRadius,
+            $graphs,
+        );
 
-        $delta = Angle::pi(2);
-        $data = [];
+        $centers = CoordinateService::insertCircles($radii);
 
         foreach ($graphs as $graphNumber => $graph) {
-            $childGraphRadius = $graphs->count() < 7
-                ? $graphRadius
-                : CoordinateService::getRadius($this->vertexRadius * 2, $graph->vertexes->count());
-            $angle = CoordinateService::findAnOccupiedAngle($graphRadius, $childGraphRadius);
-            $delta = $delta->minus($angle);
-            $data[$graphNumber] = [$graphNumber, $childGraphRadius, $angle];
-        }
-
-        $delta = $delta->divided($graphs->count());
-        $fullAngle = Angle::degrees($graphs->count() < 3 ? -90 : 0);
-
-        foreach ($data as [$graphNumber, $childGraphRadius, $angle]) {
-            $distance = $graphRadius + $childGraphRadius;
-            $center = $this->getCenter($distance, $fullAngle, $angle);
-            $fullAngle = $fullAngle->plus($angle)->plus($delta);
             (new MoveObjectsAroundEffect(
                 500,
                 CoordinateService::getRadius($this->vertexRadius * 2, $graphs[$graphNumber]->vertexes->count()),
-                $center,
+                $centers[$graphNumber],
                 shiftAngle: CoordinateService::getAngle($graphs[$graphNumber]->vertexes->count()),
             ))->apply(
                 Point2DTrackCollection::fromMap(

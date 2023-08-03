@@ -163,7 +163,7 @@ class Graph
 
             foreach ($vertexes as $vertexB) {
                 if (isset($this->connections[$vertexA][$vertexB])) {
-                    $connection[] = $this->connections[$vertexA][$vertexB];
+                    $connection[$vertexB] = $this->connections[$vertexA][$vertexB];
                 }
             }
 

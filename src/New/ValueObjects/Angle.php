@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace EugeneErg\Graph\New\ValueObjects;
 
+use function PHPUnit\Framework\isNan;
+
 class Angle implements \JsonSerializable
 {
     public const BETWEEN_FLAG_IS_SECTION = 1;
@@ -36,6 +38,10 @@ class Angle implements \JsonSerializable
 
     public static function asin(float $num): self
     {
+        if (asin($num) === NAN) {
+            throw new \Exception((string) $num);
+        }
+
         return new self(asin($num));
     }
 
