@@ -45,6 +45,25 @@ class Angle implements \JsonSerializable
         return new self(asin($num));
     }
 
+    public static function max(Angle ...$angles): ?self
+    {
+        return array_reduce(
+            $angles,
+            fn (?Angle $result, Angle $next): Angle =>
+                $result === null || $next->greaterThan($result) ? $next : $result,
+        );
+    }
+
+    public function greaterThan(Angle $angle): bool
+    {
+        return $this->value > $angle->value;
+    }
+
+    public function greaterThanOrEqual(Angle $angle): bool
+    {
+        return $this->value >= $angle->value;
+    }
+
     public function modulo(): Angle
     {
         $result = $this->value - M_PI * 2 * intdiv($this->value, M_PI * 2);

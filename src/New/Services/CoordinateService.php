@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace EugeneErg\Graph\New\Services;
 
-use EugeneErg\Collections\FloatCollection;
 use EugeneErg\Collections\IntegerCollection;
 use EugeneErg\Graph\New\Collections\AngleCollection;
 use EugeneErg\Graph\New\Collections\Point2DCollection;
@@ -62,7 +61,7 @@ class CoordinateService
         if ($radii->count() === 2) {
             $resultRadius = $radii->reduce(fn (int $current, int $next): int => $current + $next, 0);
             $angles = new AngleCollection([Angle::pi(1/2), Angle::pi(1/2)]);
-            $radian = Angle::pi();
+            $scale = 1;
         } else {
             $maxRadius = $radii->reduce(fn(int $current, int $next): int => max($current, $next), 0);
             $left = 2 * $maxRadius;
@@ -81,15 +80,25 @@ class CoordinateService
                 );
                 $resultRadius > M_PI ? $right = $resultRadius : $left = $resultRadius;
             } while (!$radian->isEqual($pi, 0.001) && abs($resultRadius - $left) >= 0.001);
+
+            $maxAngle = Angle::max(...$angles);
+
+            if (Angle::pi(2 / $radii->count())->greaterThanOrEqual($maxAngle)) {
+                $angles = AngleCollection::fromFill(0, $radii->count(), Angle::pi(2 / $radii->count()));
+                $scale = 1;
+            } else {
+                $scale = $pi->getRadian() / $radian->getRadian();
+            }
         }
 
         $startAngle = $startAngle ?? new Angle();
-        $scale = $pi->getRadian() / $radian->getRadian();
 
         return Point2DCollection::fromMap(
             function (int $radius, Angle $angle) use ($resultRadius, &$startAngle, $center, $scale): Point2D {
-                $startAngle = $startAngle->plus($angle->times($scale));
-                var_dump($startAngle->getDegrees());
+                if ($startAngle->getRadian() != 0) {
+                    $startAngle = $startAngle->plus($angle->times($scale));
+                }
+
                 $result = self::getPoint((int) ceil($resultRadius - $radius), $startAngle, $center);
                 $startAngle = $startAngle->plus($angle->times($scale));
 

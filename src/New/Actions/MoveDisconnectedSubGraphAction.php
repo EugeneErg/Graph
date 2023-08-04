@@ -61,7 +61,7 @@ class MoveDisconnectedSubGraphAction extends AbstractAction
                 $changeVertexes->setImmutable(),
                 LineCollection::fromMerge(...$connections)->unique(),
             );
-            $graphs = $graphs->set($graph)->set($changeGraph, 0);
+            $graphs = AnimationGraphCollection::fromMerge(new AnimationGraphCollection([$changeGraph, $graph]), $graphs->slice(1));
         }
 
         $startMilliseconds = (new BrushObjectsAroundEffect('#0f0', 300))->apply(
@@ -99,11 +99,12 @@ class MoveDisconnectedSubGraphAction extends AbstractAction
         }
 
         $radii = IntegerCollection::fromMap(
-            fn (AnimationGraph $graph): int
-                => CoordinateService::getRadius($this->vertexRadius * 2, $graph->vertexes->count()) + $this->vertexRadius,
+            fn (AnimationGraph $graph): int => CoordinateService::getRadius(
+                $this->vertexRadius * 2,
+                $graph->vertexes->count(),
+            ) + $this->vertexRadius,
             $graphs,
         );
-
         $centers = CoordinateService::insertCircles($radii);
 
         foreach ($graphs as $graphNumber => $graph) {
