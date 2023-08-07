@@ -29,7 +29,7 @@ class CanvasService extends AbstractService
     {
         foreach ($vertexes as $vertex) {
             $canvas[$vertex] = $color;
-            $operations[$vertex] = $vertex;
+            //$operations[$vertex] = $vertex;
         }
     }
 

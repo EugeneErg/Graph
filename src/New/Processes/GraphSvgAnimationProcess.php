@@ -4,27 +4,38 @@ declare(strict_types=1);
 
 namespace EugeneErg\Graph\New\Processes;
 
-use EugeneErg\Graph\New\Actions\CreateNewGraphAbstractAction;
+use EugeneErg\Collections\IntegerCollection;
+use EugeneErg\Graph\New\Actions\AbstractAction;
+use EugeneErg\Graph\New\Actions\CreateNewGraphAction;
+use EugeneErg\Graph\New\Actions\MoveConnectedGraphAction;
 use EugeneErg\Graph\New\Actions\MoveDisconnectedSubGraphAction;
 use EugeneErg\Graph\New\Actions\SelectArticulationVertexesAction;
 use EugeneErg\Graph\New\Animations\Collections\DataTransferObjectCollection;
+use EugeneErg\Graph\New\Animations\Collections\LineCollection;
+use EugeneErg\Graph\New\Animations\Collections\Point2DTrackCollection;
 use EugeneErg\Graph\New\Animations\DataTransferObjects\DataTransferObjectInterface;
+use EugeneErg\Graph\New\Animations\Effects\MoveObjectsAroundEffect;
+use EugeneErg\Graph\New\Animations\Tracks\Point2DTrack;
 use EugeneErg\Graph\New\Collections\ActionCollection;
+use EugeneErg\Graph\New\Collections\AnimationGraphCollection;
+use EugeneErg\Graph\New\Collections\AnimationVertexCollection;
 use EugeneErg\Graph\New\DataTransferObjects\AnimationGraph;
 use EugeneErg\Graph\New\DataTransferObjects\AnimationVertex;
 use EugeneErg\Graph\New\Events\ArticulationVertexesFoundEvent;
+use EugeneErg\Graph\New\Events\ConnectedGraphFoundEvent;
 use EugeneErg\Graph\New\Events\DisconnectedGraphFoundEvent;
-use EugeneErg\Graph\New\Services\ArticulationVertexesFinderService;
+use EugeneErg\Graph\New\Services\CoordinateService;
 use EugeneErg\Graph\New\Services\EventService;
-use EugeneErg\Graph\New\Services\GraphService;
+use EugeneErg\Graph\New\Services\TreeService;
 use EugeneErg\Graph\New\ValueObjects\Graph;
 
 class GraphSvgAnimationProcess
 {
+    private array $levels = [];
+
     public function __construct(
         private readonly EventService $eventService,
-        private readonly GraphService $graphService,
-        private readonly ArticulationVertexesFinderService $articulationVertexesFinderService,
+        private readonly TreeService $treeService,
     ) {
     }
 
@@ -32,7 +43,15 @@ class GraphSvgAnimationProcess
     {
         $clearGraph = $graph->clone(false, false);
         $action = $this->getAction($clearGraph, $vertexRadius);
-        $animationGraphs = $action->createNewGraph();
+        $animationGraphs = new AnimationGraphCollection(immutable: false);
+        $this->levels = [];
+        $this->runAction(
+            $action,
+            new AnimationGraph(new AnimationVertexCollection(immutable: false), new LineCollection(immutable: false)),
+            $animationGraphs,
+            0,
+            $vertexRadius,
+        );
         $forMerge = [];
 
         foreach ($animationGraphs as $animationGraph) {
@@ -46,9 +65,9 @@ class GraphSvgAnimationProcess
         return DataTransferObjectCollection::fromMerge(...$forMerge);
     }
 
-    private function getAction(Graph $graph, int $vertexRadius): CreateNewGraphAbstractAction
+    private function getAction(Graph $graph, int $vertexRadius): CreateNewGraphAction
     {
-        $result = new CreateNewGraphAbstractAction($graph->vertexes, $graph->connections, $vertexRadius);
+        $result = new CreateNewGraphAction($graph->vertexes, $graph->connections, $vertexRadius);
         $moveDisconnectedSubGraphActions = new ActionCollection(immutable: false);
         $disconnectedGraphFoundListenerId = $this->eventService->listen(
             DisconnectedGraphFoundEvent::class,
@@ -73,59 +92,106 @@ class GraphSvgAnimationProcess
                 );
             }
         );
-        /*$moveConnectedGraphActions = [];
-        $connectedGraphFoundListenerId = EventService::instance()->listen(
+        $moveConnectedGraphActions = new ActionCollection(immutable: false);
+        $connectedGraphFoundListenerId = $this->eventService->listen(
             ConnectedGraphFoundEvent::class,
             function (ConnectedGraphFoundEvent $event)
-            use (&$moveConnectedGraphActions, &$selectArticulationVertexesActions): void {
+            use ($moveConnectedGraphActions, $selectArticulationVertexesActions): void {
                 $moveConnectedGraphActions[] = new MoveConnectedGraphAction(
-                    $event->getVertexes(),
-                    end($selectArticulationVertexesActions)
+                    $selectArticulationVertexesActions->last(),
+                    $event->vertexes,
                 );
             }
         );
-        TreeService::instance()->createFromGraph($clearGraph);*/
-        foreach ($this->graphService->splitGraphOnDisconnected($graph) as $subGraph) {
+        $this->treeService->createFromGraph($graph);
+        /*foreach ($this->graphService->splitGraphOnDisconnected($graph) as $subGraph) {
             $articulationVertexes = $this->articulationVertexesFinderService
                 ->getArticulationVertexesInConnectedGraph($subGraph);
             $this->eventService->send(new ArticulationVertexesFoundEvent($articulationVertexes));
-        }
+        }*/
 
         $this->eventService->dontListen([
             DisconnectedGraphFoundEvent::class => $disconnectedGraphFoundListenerId,
             ArticulationVertexesFoundEvent::class => $articulationVertexesFoundListenerId,
-            //ConnectedGraphFoundEvent::class => $connectedGraphFoundListenerId,
+            ConnectedGraphFoundEvent::class => $connectedGraphFoundListenerId,
         ]);
 
         return $result;
     }
-}
 
-/**
- * R^2 + R(r1+r2) - r1*r2 - cos(a) * (R^2 + R(r1+r2) + r1*r2) = 0
- * R^2(1-cos(a)) + R(r1+r2)(1-cos(a)) - (r1*r2)(1 + cos(a)) = 0
- *
- * D = (r1+r2)^2(1-cos(a))^2 + 4(1-cos^2(a))(r1*r2)
- *
- * D = (r1+r2)^2(1-cos(a))^2 + 4 * sin^2(a) * r1 * r2
- * D = (r1^2 + r2^2 + 2 * r1 * r2) * (1 - 2 * cos(a) + cos^2(a)) + 4 * r1 * r2 - 4 * cos^2(a) * r1 * r2
- *
- *
- * + r1^2
- * + r2^2
- * + (r1^2 + r2^2) * cos^2(a)
- * - 2 * (r1^2 + r2^2) * cos(a)
- * - 4 * cos(a) * r1 * r2
- * + 6 * r1 * r2
- * - 2 * cos^2(a) * r1 * r2
- *
- *
- *
- *
- *
- * x1,x2 = (-(r1+r2)(1-cos(a)) +- sqrt((r1+r2)^2(1-cos(a))^2 + 4(1-cos^2(a))(r1*r2)))/2(1-cos(a))
- *
- *
- *
- *
- */
+    private function runAction(
+        AbstractAction $action,
+        AnimationGraph $parentGraph,
+        AnimationGraphCollection $graphs,
+        int $startMilliseconds,
+        int $vertexRadius,
+    ): void {
+        $steps = [[[$action, $parentGraph]]];
+
+        do {
+            $nextSteps = [];
+
+            foreach ($steps as $parentGraphs) {
+                $stepsMaxMilliseconds = $startMilliseconds;
+                $graphsCount = $graphs->count();
+
+                foreach ($parentGraphs as [$action, $parentGraph]) {
+                    [$nextMilliseconds, $graph] = $action->drawGraph($parentGraph, $graphs, $startMilliseconds);
+                    $stepsMaxMilliseconds = max($stepsMaxMilliseconds, $nextMilliseconds);
+
+                    foreach ($action->children as $step => $child) {
+                        $nextSteps[$step][] = [$child, $graph];
+                    }
+                }
+
+                $startMilliseconds = $graphsCount === $graphs->count()
+                    ? $stepsMaxMilliseconds
+                    : $this->relaxGraphs($graphs, $stepsMaxMilliseconds, $vertexRadius);
+            }
+
+            $steps = $nextSteps;
+        } while (!empty($steps));
+    }
+
+    private function relaxGraphs(AnimationGraphCollection $graphs, int $startMilliseconds, int $vertexRadius): int
+    {
+        if ($graphs->count() === 0) {
+            return $startMilliseconds;
+        }
+
+        $radii = IntegerCollection::fromMap(
+            fn (AnimationGraph $graph): int => CoordinateService::getRadius(
+                    $vertexRadius * 2,
+                    $graph->vertexes->count(),
+                ) + $vertexRadius,
+            $graphs,
+        );
+        $centers = CoordinateService::insertCircles($radii);
+
+        foreach ($graphs as $graphNumber => $graph) {
+            (new MoveObjectsAroundEffect(
+                500,
+                CoordinateService::getRadius($vertexRadius * 2, $graphs[$graphNumber]->vertexes->count()),
+                $centers[$graphNumber],
+                shiftAngle: CoordinateService::getAngle($graphs[$graphNumber]->vertexes->count()),
+            ))->apply(
+                Point2DTrackCollection::fromMap(
+                    fn (AnimationVertex $vertex): Point2DTrack => $vertex->circle->center,
+                    $graphs[$graphNumber]->vertexes,
+                ),
+                $startMilliseconds,
+            );
+        }
+
+        return $startMilliseconds + 500;
+    }
+
+    private function start(int $level): callable
+    {
+        $this->levels[$level] = ($this->levels[$level] ?? 0) + 1;
+
+        return function (callable $callback) {
+
+        };
+    }
+}

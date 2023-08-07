@@ -83,7 +83,7 @@ class CoordinateService
 
             $maxAngle = Angle::max(...$angles);
 
-            if (Angle::pi(2 / $radii->count())->greaterThanOrEqual($maxAngle)) {
+            if (Angle::pi(2)->greaterThanOrEqual($maxAngle->times($radii->count()))) {
                 $angles = AngleCollection::fromFill(0, $radii->count(), Angle::pi(2 / $radii->count()));
                 $scale = 1;
             } else {

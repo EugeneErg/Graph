@@ -15,13 +15,15 @@ use EugeneErg\Graph\New\Animations\Tracks\Point2DTrack;
 use EugeneErg\Graph\New\Animations\Tracks\RadiusTrack;
 use EugeneErg\Graph\New\Collections\AnimationGraphCollection;
 use EugeneErg\Graph\New\Collections\IntegerMatrix;
-use EugeneErg\Graph\New\Collections\AnimationVertexCollection;
 use EugeneErg\Graph\New\DataTransferObjects\AnimationGraph;
 use EugeneErg\Graph\New\DataTransferObjects\AnimationVertex;
 use EugeneErg\Graph\New\DataTransferObjects\Point2D;
 use EugeneErg\Graph\New\Services\CoordinateService;
 
-class CreateNewGraphAbstractAction extends AbstractAction
+/**
+ * @property-read MoveDisconnectedSubGraphAction[] $children
+ */
+class CreateNewGraphAction extends AbstractAction
 {
     public function __construct(
         public readonly IntegerCollection $vertexes,
@@ -31,15 +33,17 @@ class CreateNewGraphAbstractAction extends AbstractAction
         parent::__construct();
     }
 
-    public function createNewGraph(): AnimationGraphCollection
-    {
+    public function drawGraph(
+        AnimationGraph $parentGraph,
+        AnimationGraphCollection $graphs,
+        int $startMilliseconds,
+    ): array {
         $vertexesCount = $this->vertexes->count();
         $graphRadius = CoordinateService::getRadius($this->vertexRadius * 2, $vertexesCount);
-        $result = new AnimationGraph(new AnimationVertexCollection(immutable: false), new LineCollection(immutable: false));
-        $graphs = new AnimationGraphCollection([$result]);
+        $graphs->set($parentGraph);
 
         foreach ($this->vertexes as $vertex) {
-            $result->vertexes->set(new AnimationVertex(
+            $parentGraph->vertexes->set(new AnimationVertex(
                 new Circle(
                     (string) $vertex,
                     new RadiusTrack($this->vertexRadius),
@@ -55,38 +59,25 @@ class CreateNewGraphAbstractAction extends AbstractAction
                 if ($vertexB > $vertexA) {
                     $line = new Line(
                         new ColorTrack('#000'),
-                        $result->vertexes[$vertexA]->circle->center,
-                        $result->vertexes[$vertexB]->circle->center,
+                        $parentGraph->vertexes[$vertexA]->circle->center,
+                        $parentGraph->vertexes[$vertexB]->circle->center,
                     );
-                    $result->connections->set($line);
-                    $result->vertexes[$vertexA]->connections->set($line, $vertexB);
-                    $result->vertexes[$vertexB]->connections->set($line, $vertexA);
+                    $parentGraph->connections->set($line);
+                    $parentGraph->vertexes[$vertexA]->connections->set($line, $vertexB);
+                    $parentGraph->vertexes[$vertexB]->connections->set($line, $vertexA);
                 }
             }
         }
 
-        (new ExpandObjectsAroundEffect(
+        $startMilliseconds = (new ExpandObjectsAroundEffect(
             200,
             $graphRadius,
             shiftAngle: CoordinateService::getAngle($vertexesCount),
         ))->apply(Point2DTrackCollection::fromMap(
             fn (AnimationVertex $vertex): Point2DTrack => $vertex->circle->center,
-            $result->vertexes,
-        ));
+            $parentGraph->vertexes,
+        ), $startMilliseconds);
 
-        return $this->moveDisconnectedSubGraphs($graphs, $graphRadius);
-    }
-
-    private function moveDisconnectedSubGraphs(AnimationGraphCollection $graphs, int $graphRadius): AnimationGraphCollection
-    {
-        $startMilliseconds = 200 * $this->vertexes->count();
-
-        /** @var MoveDisconnectedSubGraphAction $child */
-        foreach ($this->children as $child) {
-            $graphs = $child->drawGraph($graphs, 0, $graphRadius, $startMilliseconds);
-            $startMilliseconds += 300 * $child->vertexes->count() + 500;
-        }
-
-        return $graphs;
+        return [$startMilliseconds, $parentGraph];
     }
 }

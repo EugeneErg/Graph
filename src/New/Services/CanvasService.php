@@ -35,4 +35,11 @@ class CanvasService
             yield $key => $collection[$key];
         }
     }
+
+    public function pixels(Canvas $canvas, IntegerCollection $vertexes, int $color): void
+    {
+        foreach ($vertexes as $vertex) {
+            $canvas[$vertex] = $color;
+        }
+    }
 }
