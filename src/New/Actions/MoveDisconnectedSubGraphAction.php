@@ -6,7 +6,6 @@ namespace EugeneErg\Graph\New\Actions;
 
 use EugeneErg\Collections\IntegerCollection;
 use EugeneErg\Graph\New\Animations\Collections\ColorTrackCollection;
-use EugeneErg\Graph\New\Animations\Collections\LineCollection;
 use EugeneErg\Graph\New\Animations\Effects\BrushObjectsAroundEffect;
 use EugeneErg\Graph\New\Animations\Tracks\ColorTrack;
 use EugeneErg\Graph\New\Collections\AnimationGraphCollection;
@@ -29,30 +28,19 @@ class MoveDisconnectedSubGraphAction extends AbstractAction
         AnimationGraphCollection $graphs,
         int $startMilliseconds,
     ): array {
-        if ($this->vertexes->count() === $parentGraph->vertexes->count()) {
-            $graph = $parentGraph;
-        } else {
-            $vertexes = new AnimationVertexCollection(immutable: false);
-            $connections = [];
-
-            foreach ($this->vertexes as $vertexId) {
-                $vertexes->set($parentGraph->vertexes[$vertexId], $vertexId);
-                $connections[] = $parentGraph->vertexes[$vertexId]->connections;
-                unset($parentGraph->vertexes[$vertexId]);
-            }
-
-            $graph = new AnimationGraph($vertexes, LineCollection::fromMerge(...$connections)->unique(false));
-            $connections = [];
-
-            foreach ($parentGraph->vertexes as $vertexId => $vertex) {
-                $connections[] = $parentGraph->vertexes[$vertexId]->connections;
-            }
-
-            $parentGraph->connections->splice();
-            $parentGraph->connections->push(LineCollection::fromMerge(...$connections)->unique());
-            $graphs->splice($graphs->search($parentGraph) + 1, 0, new AnimationGraphCollection([$graph]));
+        if ($this->parent->children->last() === $this) {
+            return [$startMilliseconds, $parentGraph];
         }
 
+        $vertexes = new AnimationVertexCollection(immutable: false);
+
+        foreach ($this->vertexes as $vertexId) {
+            $vertexes->set($parentGraph->vertexes[$vertexId], $vertexId);
+            unset($parentGraph->vertexes[$vertexId]);
+        }
+
+        $graph = new AnimationGraph($vertexes);
+        $graphs->splice($graphs->search($parentGraph) + 1, 0, new AnimationGraphCollection([$graph]));
         $startMilliseconds = (new BrushObjectsAroundEffect('#0f0', 300))->apply(
             ColorTrackCollection::fromMap(
                 fn (AnimationVertex $vertex): ColorTrack => $vertex->circle->color,

@@ -6,12 +6,12 @@ namespace EugeneErg\Graph\New\Animations\Tracks;
 
 use EugeneErg\Collections\IntegerCollection;
 use EugeneErg\Graph\New\Animations\Collections\RadiusSegmentCollection;
-use EugeneErg\Graph\New\Animations\Segments\RadiusSegment;
+use EugeneErg\Graph\New\Animations\Segments\IntegerSegment;
 
 /**
- * @method int addSegment(RadiusSegment $segment, ?int $startMilliSecond = null)
+ * @method int addSegment(IntegerSegment $segment, ?int $startMilliSecond = null)
  */
-class RadiusTrack extends AbstractTrack
+class IntegerTrack extends AbstractTrack
 {
     public function __construct(int $defaultValue)
     {

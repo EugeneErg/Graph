@@ -8,9 +8,9 @@ use EugeneErg\Graph\New\Animations\Collections\DataTransferObjectCollection;
 use EugeneErg\Graph\New\Animations\DataTransferObjects\Circle;
 use EugeneErg\Graph\New\Animations\DataTransferObjects\Line;
 use EugeneErg\Graph\New\Animations\Segments\Point2DSegment;
-use EugeneErg\Graph\New\Animations\Segments\RadiusSegment;
+use EugeneErg\Graph\New\Animations\Segments\IntegerSegment;
 use EugeneErg\Graph\New\Animations\Tracks\Point2DTrack;
-use EugeneErg\Graph\New\Animations\Tracks\RadiusTrack;
+use EugeneErg\Graph\New\Animations\Tracks\IntegerTrack;
 use EugeneErg\Graph\New\DataTransferObjects\Point2D;
 
 class SvgAnimator implements AnimatorInterface
@@ -76,10 +76,10 @@ class SvgAnimator implements AnimatorInterface
         return new Point2D(min($pointA->x, $pointB?->x), min($pointA->y, $pointB?->y));
     }
 
-    private function getMaxRadius(RadiusTrack $radius): int
+    private function getMaxRadius(IntegerTrack $radius): int
     {
         return $radius->getSegments()->reduce(
-            fn (int $result, RadiusSegment $segment): int => max($segment->getValue(), $result),
+            fn (int $result, IntegerSegment $segment): int => max($segment->getValue(), $result),
             $radius->defaultValue,
         );
     }

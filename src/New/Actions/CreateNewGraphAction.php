@@ -12,7 +12,8 @@ use EugeneErg\Graph\New\Animations\DataTransferObjects\Line;
 use EugeneErg\Graph\New\Animations\Effects\ExpandObjectsAroundEffect;
 use EugeneErg\Graph\New\Animations\Tracks\ColorTrack;
 use EugeneErg\Graph\New\Animations\Tracks\Point2DTrack;
-use EugeneErg\Graph\New\Animations\Tracks\RadiusTrack;
+use EugeneErg\Graph\New\Animations\Tracks\IntegerTrack;
+use EugeneErg\Graph\New\Collections\ActionCollection;
 use EugeneErg\Graph\New\Collections\AnimationGraphCollection;
 use EugeneErg\Graph\New\Collections\IntegerMatrix;
 use EugeneErg\Graph\New\DataTransferObjects\AnimationGraph;
@@ -21,7 +22,7 @@ use EugeneErg\Graph\New\DataTransferObjects\Point2D;
 use EugeneErg\Graph\New\Services\CoordinateService;
 
 /**
- * @property-read MoveDisconnectedSubGraphAction[] $children
+ * @property-read ActionCollection<MoveDisconnectedSubGraphAction> $children
  */
 class CreateNewGraphAction extends AbstractAction
 {
@@ -46,9 +47,10 @@ class CreateNewGraphAction extends AbstractAction
             $parentGraph->vertexes->set(new AnimationVertex(
                 new Circle(
                     (string) $vertex,
-                    new RadiusTrack($this->vertexRadius),
+                    new IntegerTrack($this->vertexRadius),
                     new ColorTrack('#fff'),
                     new Point2DTrack(new Point2D()),
+                    new IntegerTrack(100),
                 ),
                 new LineCollection(immutable: false),
             ), $vertex);
@@ -62,7 +64,6 @@ class CreateNewGraphAction extends AbstractAction
                         $parentGraph->vertexes[$vertexA]->circle->center,
                         $parentGraph->vertexes[$vertexB]->circle->center,
                     );
-                    $parentGraph->connections->set($line);
                     $parentGraph->vertexes[$vertexA]->connections->set($line, $vertexB);
                     $parentGraph->vertexes[$vertexB]->connections->set($line, $vertexA);
                 }
@@ -77,7 +78,31 @@ class CreateNewGraphAction extends AbstractAction
             fn (AnimationVertex $vertex): Point2DTrack => $vertex->circle->center,
             $parentGraph->vertexes,
         ), $startMilliseconds);
+        $this->sortChildren();
 
         return [$startMilliseconds, $parentGraph];
+    }
+
+    private function sortChildren(): void
+    {
+        if ($this->children->isEmpty()) {
+            return;
+        }
+
+        $max = $this->getChildWithMaxVertexCount();
+        $pos = $this->children->search($max);
+        unset($this->children[$pos]);
+        $this->children[] = $max;
+    }
+
+    public function getChildWithMaxVertexCount(): MoveDisconnectedSubGraphAction
+    {
+        return $this->children->reduce(
+            fn (
+                ?MoveDisconnectedSubGraphAction $result,
+                MoveDisconnectedSubGraphAction $next,
+            ): MoveDisconnectedSubGraphAction =>
+                $result === null || $result->vertexes->count() < $next->vertexes->count() ? $next : $result,
+        );
     }
 }

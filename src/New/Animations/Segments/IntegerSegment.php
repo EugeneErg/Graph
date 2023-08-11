@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace EugeneErg\Graph\New\Animations\Segments;
 
-class RadiusSegment implements SegmentInterface
+class IntegerSegment implements SegmentInterface
 {
     public function __construct(
         private readonly int $durationMilliSecond,

@@ -66,6 +66,7 @@ $printAnimation = function (AbstractTrack $track, string $attributeName, ?callab
                 cx="<?= $object->center->getLastValue()->x ?>"
                 cy="<?= $object->center->getLastValue()->y ?>"
                 r="<?= $object->radius->getLastValue() ?>"
+                opacity="<?= $object->opacity->getLastValue() ?>"
                 fill="url(#id-<?= $number ?>)"
                 stroke="#000"
             >
@@ -81,6 +82,12 @@ $printAnimation = function (AbstractTrack $track, string $attributeName, ?callab
                     'cy',
                     fn (Point2DCollection $points): IntegerCollection
                         => IntegerCollection::fromMap(fn (Point2D $point): float => $point->y, $points),
+                ) ?>
+                <?= $printAnimation(
+                    $object->opacity,
+                    'opacity',
+                    fn (IntegerCollection $points): FloatCollection
+                        => FloatCollection::fromMap(fn (int $opacity): float => $opacity / 100, $points),
                 ) ?>
             </circle>
         <?php elseif ($object instanceof Line): ?>

@@ -47,22 +47,27 @@ class GraphSvgAnimationProcess
         $this->levels = [];
         $this->runAction(
             $action,
-            new AnimationGraph(new AnimationVertexCollection(immutable: false), new LineCollection(immutable: false)),
+            new AnimationGraph(new AnimationVertexCollection(immutable: false)),
             $animationGraphs,
-            0,
             $vertexRadius,
         );
         $forMerge = [];
 
         foreach ($animationGraphs as $animationGraph) {
-            $forMerge[] = $animationGraph->connections;
+            /** @var AnimationVertex $vertex */
+            foreach ($animationGraph->vertexes as $vertex) {
+                $forMerge[] = $vertex->connections;
+            }
+        }
+
+        foreach ($animationGraphs as $animationGraph) {
             $forMerge[] = DataTransferObjectCollection::fromMap(
                 fn (AnimationVertex $vertex): DataTransferObjectInterface => $vertex->circle,
                 $animationGraph->vertexes,
             );
         }
 
-        return DataTransferObjectCollection::fromMerge(...$forMerge);
+        return DataTransferObjectCollection::fromMerge(...$forMerge)->unique();
     }
 
     private function getAction(Graph $graph, int $vertexRadius): CreateNewGraphAction
@@ -96,10 +101,11 @@ class GraphSvgAnimationProcess
         $connectedGraphFoundListenerId = $this->eventService->listen(
             ConnectedGraphFoundEvent::class,
             function (ConnectedGraphFoundEvent $event)
-            use ($moveConnectedGraphActions, $selectArticulationVertexesActions): void {
+            use ($moveConnectedGraphActions, $selectArticulationVertexesActions, $vertexRadius): void {
                 $moveConnectedGraphActions[] = new MoveConnectedGraphAction(
                     $selectArticulationVertexesActions->last(),
                     $event->vertexes,
+                    $vertexRadius,
                 );
             }
         );
@@ -123,10 +129,10 @@ class GraphSvgAnimationProcess
         AbstractAction $action,
         AnimationGraph $parentGraph,
         AnimationGraphCollection $graphs,
-        int $startMilliseconds,
         int $vertexRadius,
     ): void {
         $steps = [[[$action, $parentGraph]]];
+        $startMilliseconds = 0;
 
         do {
             $nextSteps = [];
@@ -161,9 +167,9 @@ class GraphSvgAnimationProcess
 
         $radii = IntegerCollection::fromMap(
             fn (AnimationGraph $graph): int => CoordinateService::getRadius(
-                    $vertexRadius * 2,
-                    $graph->vertexes->count(),
-                ) + $vertexRadius,
+                $vertexRadius * 2,
+                $graph->vertexes->count(),
+            ) + $vertexRadius,
             $graphs,
         );
         $centers = CoordinateService::insertCircles($radii);
@@ -184,14 +190,5 @@ class GraphSvgAnimationProcess
         }
 
         return $startMilliseconds + 500;
-    }
-
-    private function start(int $level): callable
-    {
-        $this->levels[$level] = ($this->levels[$level] ?? 0) + 1;
-
-        return function (callable $callback) {
-
-        };
     }
 }

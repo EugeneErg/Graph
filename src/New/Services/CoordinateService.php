@@ -19,10 +19,7 @@ class CoordinateService
 
     public static function getRadius(int $subRadius, int $count): int
     {
-        try {
-            return (int)ceil($subRadius / sin(pi() / $count));
-        } catch (\Throwable $throwable) {
-        }
+        return (int) ceil($subRadius / sin(pi() / $count));
     }
 
     public static function getFinalAngle(Angle $angle, int $number, ?Angle $startAngle = null): Angle
@@ -63,7 +60,7 @@ class CoordinateService
             $angles = new AngleCollection([Angle::pi(1/2), Angle::pi(1/2)]);
             $scale = 1;
         } else {
-            $maxRadius = $radii->reduce(fn(int $current, int $next): int => max($current, $next), 0);
+            $maxRadius = $radii->reduce(fn (int $current, int $next): int => max($current, $next), 0);
             $left = 2 * $maxRadius;
             $right = $maxRadius + $maxRadius / sin(M_PI / $radii->count());
 
@@ -78,7 +75,7 @@ class CoordinateService
                     fn(Angle $result, Angle $next): Angle => $result->plus($next),
                     new Angle(),
                 );
-                $resultRadius > M_PI ? $right = $resultRadius : $left = $resultRadius;
+                $radian->greaterThan($pi) ? $right = $resultRadius : $left = $resultRadius;
             } while (!$radian->isEqual($pi, 0.001) && abs($resultRadius - $left) >= 0.001);
 
             $maxAngle = Angle::max(...$angles);
