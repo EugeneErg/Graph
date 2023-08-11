@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace EugeneErg\Graph\New\Actions;
 
 use EugeneErg\Collections\IntegerCollection;
+use EugeneErg\Graph\New\Animations\Collections\ColorTrackCollection;
 use EugeneErg\Graph\New\Animations\Collections\DataTransferObjectCollection;
 use EugeneErg\Graph\New\Animations\Collections\LineCollection;
 use EugeneErg\Graph\New\Animations\DataTransferObjects\Circle;
 use EugeneErg\Graph\New\Animations\DataTransferObjects\Line;
+use EugeneErg\Graph\New\Animations\Effects\BrushObjectsAroundEffect;
+use EugeneErg\Graph\New\Animations\Effects\BrushObjectsEffect;
 use EugeneErg\Graph\New\Animations\Segments\IntegerSegment;
 use EugeneErg\Graph\New\Animations\Tracks\ColorTrack;
 use EugeneErg\Graph\New\Animations\Tracks\IntegerTrack;
@@ -33,6 +36,14 @@ class MoveConnectedGraphAction extends AbstractAction
         int $startMilliseconds,
     ): array {
         if ($this->parent->children->last() === $this) {
+            $startMilliseconds = (new BrushObjectsEffect('#fff', 300))->apply(
+                ColorTrackCollection::fromMap(
+                    fn (AnimationVertex $vertex): ColorTrack => $vertex->circle->color,
+                    $parentGraph->vertexes,
+                ),
+                $startMilliseconds,
+            );
+
             return [$startMilliseconds, $parentGraph];
         }
 
@@ -113,6 +124,22 @@ class MoveConnectedGraphAction extends AbstractAction
 
         $graph = new AnimationGraph($vertexes);
         $graphs->splice($graphs->search($parentGraph) + 1, 0, new AnimationGraphCollection([$graph]));
+
+        $startMilliseconds = (new BrushObjectsAroundEffect('#0f0', 300))->apply(
+            ColorTrackCollection::fromMap(
+                fn (AnimationVertex $vertex): ColorTrack => $vertex->circle->color,
+                $graph->vertexes,
+            ),
+            $startMilliseconds,
+        );
+
+        (new BrushObjectsEffect('#fff', 300))->apply(
+            ColorTrackCollection::fromMap(
+                fn (AnimationVertex $vertex): ColorTrack => $vertex->circle->color,
+                $graph->vertexes,
+            ),
+            $startMilliseconds,
+        );
 
         return [$startMilliseconds, $parentGraph];
     }
