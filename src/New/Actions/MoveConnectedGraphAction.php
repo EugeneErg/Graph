@@ -47,13 +47,13 @@ class MoveConnectedGraphAction extends AbstractAction
             return [$startMilliseconds, $parentGraph];
         }
 
-        $connectedVertexes = (new IntegerCollection)->fromFlip(IntegerCollection::fromIntersect(
+        $connectedVertexes = IntegerCollection::fromFlip(IntegerCollection::fromIntersect(
             true,
             false,
             IntegerCollection::fromKeys($parentGraph->vertexes),
             $this->vertexes
         ), false);
-        $needVertexes = (new IntegerCollection)->fromFlip($this->vertexes);
+        $needVertexes = IntegerCollection::fromFlip($this->vertexes);
 
         foreach ($connectedVertexes as $vertex => $index) {
             if ($this->vertexesIncludesAllConnections($needVertexes, $parentGraph->vertexes[$vertex]->connections)) {

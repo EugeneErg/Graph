@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:EugeneErg/Collections.git",
-                "reference": "66eb7525141fc483430f9f44386bae555f8b406b"
+                "reference": "89a16a6fe172609675d768652acf32da5bfeaa18"
             },
             "require": {
                 "php": ">=8.1"
@@ -28,7 +28,7 @@
                 "MIT"
             ],
             "description": "Typed collections",
-            "time": "2023-04-15T07:26:46+00:00"
+            "time": "2023-08-13T15:46:00+00:00"
         }
     ],
     "packages-dev": [
@@ -1691,6 +1691,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "eugeneerg/collections": 20,
         "phpunit/phpunit": 20
     },
     "prefer-stable": false,
