@@ -111,6 +111,8 @@ class MoveConnectedGraphAction extends AbstractAction
                             $circles[$vertexA]->center,
                             $circles[$vertexB]->center,
                         );
+                    } else {
+                        $vertexConnections[$vertexB] = $connection;
                     }
                 }
 

@@ -57,8 +57,9 @@ class CoordinateService
 
         if ($radii->count() === 2) {
             $resultRadius = $radii->reduce(fn (int $current, int $next): int => $current + $next, 0);
-            $angles = new AngleCollection([Angle::pi(1/2), Angle::pi(1/2)]);
+            $angles = new AngleCollection([Angle::pi(1 / 2), Angle::pi(1 / 2)]);
             $scale = 1;
+        //todo } elseif ($radii->count() === 3) {
         } else {
             $maxRadius = $radii->reduce(fn (int $current, int $next): int => max($current, $next), 0);
             $left = 2 * $maxRadius;

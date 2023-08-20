@@ -63,7 +63,7 @@ class TreeService
         IntegerCollection $articulationVertex,
         Canvas $canvas,
         IntegerMatrix $result,
-        int $maxColor = 0
+        int $maxColor = 0,
     ): bool {
         $color = $maxColor;
         $hasResult = false;
